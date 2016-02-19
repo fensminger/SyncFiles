@@ -1,0 +1,19 @@
+{
+  "generator-jhipster": {
+    "baseName": "synfilessb",
+    "packageName": "org.fer.syncfiles",
+    "packageFolder": "org/fer/syncfiles",
+    "authenticationType": "oauth2",
+    "hibernateCache": "no",
+    "clusteredHttpSession": "no",
+    "websocket": "spring-websocket",
+    "databaseType": "mongodb",
+    "devDatabaseType": "mongodb",
+    "prodDatabaseType": "mongodb",
+    "useCompass": true,
+    "buildTool": "maven",
+    "frontendBuilder": "grunt",
+    "javaVersion": "8",
+    "rememberMeKey": "87962a34d9fabcf135c988875f52604dbcc72f83"
+  }
+}

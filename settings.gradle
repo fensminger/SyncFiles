@@ -1,0 +1,2 @@
+rootProject.name = 'SyncFilesParent'
+include "common", "client", "server"

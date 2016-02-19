@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="410.0" prefWidth="615.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml" fx:controller="org.fer.syncfiles.SynchroAllResultController">
+  <children>
+    <Label fx:id="lbResSynchro" layoutY="215.0" prefWidth="210.0" text="Résultat de la synchronisation :" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="391.0" />
+    <TableView id="resultList" fx:id="resultListTable" onKeyTyped="#onKeyTyped" onMouseClicked="#onMouseClicked" prefHeight="191.0" prefWidth="587.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+      <columns>
+        <TableColumn minWidth="200.0" prefWidth="75.0" text="Nom" fx:id="nameCol" />
+        <TableColumn minWidth="200.0" prefWidth="75.0" text="Message" fx:id="msgCol" />
+        <TableColumn minWidth="150.0" prefWidth="75.0" text="Date d'exéuction" fx:id="executionDateCol" />
+        <TableColumn minWidth="100.0" prefWidth="75.0" text="Durée (en s)" fx:id="durationCol" />
+      </columns>
+    </TableView>
+    <ListView id="resListView" fx:id="resDetailListView" prefHeight="161.0" prefWidth="587.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="235.0" />
+    <Label id="lbResSynchro" fx:id="resDetailLabel" layoutX="224.0" layoutY="215.0" prefWidth="377.0" />
+  </children>
+  <stylesheets>
+    <URL value="@sync.css" />
+  </stylesheets>
+</AnchorPane>

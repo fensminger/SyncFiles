@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="510.0" prefWidth="679.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml" fx:controller="org.fer.syncfiles.SyncParamController">
+  <children>
+    <Label layoutX="14.0" layoutY="14.0" text="Nom de la synchronisation" />
+    <TextField id="synchroName" fx:id="name" layoutY="11.0" prefWidth="399.0" AnchorPane.leftAnchor="202.0" AnchorPane.rightAnchor="14.0" />
+    <Label layoutX="14.0" layoutY="38.0" text="Synchronisation toutes les" />
+    <Label layoutX="14.0" layoutY="53.0" text="(Expression cron de Quartz)" />
+    <TextField id="cron" fx:id="cronExp" layoutY="43.0" prefWidth="399.0" AnchorPane.leftAnchor="202.0" AnchorPane.rightAnchor="14.0" />
+    <TextField fx:id="masterDir" layoutY="75.0" prefWidth="352.0" AnchorPane.leftAnchor="202.0" AnchorPane.rightAnchor="61.0" />
+    <Button layoutY="74.0" mnemonicParsing="false" onAction="#btMasterDir" text="..." AnchorPane.rightAnchor="17.0" />
+    <TextField fx:id="slaveDir" layoutY="108.0" prefWidth="352.0" AnchorPane.leftAnchor="202.0" AnchorPane.rightAnchor="61.0" />
+    <Button layoutY="107.0" mnemonicParsing="false" onAction="#btSlaveDir" text="..." AnchorPane.rightAnchor="17.0" />
+    <RadioButton fx:id="cbInclude" layoutY="144.0" mnemonicParsing="false" text="inclure" AnchorPane.leftAnchor="114.0">
+      <toggleGroup>
+        <ToggleGroup fx:id="tgIncludeExclude" />
+      </toggleGroup>
+    </RadioButton>
+    <Label layoutY="144.0" text="Répertoire à" AnchorPane.leftAnchor="14.0" />
+    <RadioButton fx:id="cbExclude" layoutY="144.0" mnemonicParsing="false" selected="true" text="exclure" toggleGroup="$tgIncludeExclude" AnchorPane.leftAnchor="191.0" />
+    <Label layoutX="14.0" layoutY="80.0" text="Répertoire maître" />
+    <Label layoutX="14.0" layoutY="111.0" text="Répertoire esclave" />
+    <ListView fx:id="includeExcludeList" prefHeight="289.0" prefWidth="524.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="141.0" AnchorPane.topAnchor="171.0" />
+    <Button mnemonicParsing="false" onAction="#btOk" prefWidth="78.0" text="Ok" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="108.0" />
+    <Button mnemonicParsing="false" onAction="#btCancel" text="Annuler" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="17.0" />
+    <Label fx:id="errorMsg" alignment="TOP_LEFT" prefHeight="35.0" prefWidth="407.0" styleClass="ErrMsg" text="Label" textFill="RED" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="194.0" />
+    <VBox layoutY="171.0" prefHeight="289.0" prefWidth="110.0" spacing="10.0" AnchorPane.rightAnchor="17.0">
+      <children>
+        <Button mnemonicParsing="false" onAction="#btIncludeExcludePattern" prefWidth="110.0" text="Ajouter">
+          <VBox.margin>
+            <Insets />
+          </VBox.margin>
+        </Button>
+        <Button mnemonicParsing="false" onAction="#btIncludeExcludeDir" prefWidth="110.0" text="Ajout Dir." />
+        <Button mnemonicParsing="false" onAction="#btRemoveDir" prefWidth="110.0" text="Supprimer" />
+        <Button mnemonicParsing="false" onAction="#btModifyDir" prefWidth="110.0" text="Modifier" />
+      </children>
+    </VBox>
+  </children>
+  <stylesheets>
+    <URL value="@sync.css" />
+  </stylesheets>
+</AnchorPane>

@@ -1,0 +1,39 @@
+nas:
+    server: localhost
+    port: 9999
+
+cache.enable: true
+
+server:
+    port: 9999
+    address: 127.0.0.1
+
+spring:
+    profiles:
+        active: dev
+    data:
+        mongodb:
+            host: localhost
+            port: 27017
+            database: synfilessb
+
+    mail:
+        baseUrl: http://localhost:8080
+
+    thymeleaf:
+        mode: XHTML
+        cache: false
+
+metrics:
+    jmx.enabled: true
+    spark:
+        enabled: false
+        host: localhost
+        port: 9998
+    graphite:
+        enabled: false
+        host: localhost
+        port: 2003
+        prefix: synfilessb
+
+

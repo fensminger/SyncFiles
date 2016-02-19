@@ -1,0 +1,23 @@
+{
+    "synfilessbApp": {
+        "param" : {
+            "home": {
+                "title": "Params",
+                "createLabel": "Créer un nouveau Param",
+                "createOrEditLabel": "Créer ou éditer un Param"
+            },
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Param {{ id }} ?"
+            },
+            "detail": {
+                "title": "Param"
+            },
+            "name": "Name",
+            "cronExp": "CronExp",
+            "masterDir": "MasterDir",
+            "slaveDir": "SlaveDir",
+            "includeDir": "IncludeDir"
+        }
+    }
+}
+

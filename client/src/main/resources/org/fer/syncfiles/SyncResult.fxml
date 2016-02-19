@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="410.0" prefWidth="615.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml" fx:controller="org.fer.syncfiles.controller.SynchroResultController">
+  <children>
+    <TextArea fx:id="resMsgError" editable="false" prefHeight="45.0" prefWidth="587.0" wrapText="true" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="39.0" />
+    <Label fx:id="lbResSynchro" prefWidth="587.0" text="Résultat de la synchronisation" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
+    <ListView fx:id="resListView" prefHeight="272.0" prefWidth="587.0" AnchorPane.bottomAnchor="44.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="94.0" />
+    <Button mnemonicParsing="false" onAction="#btClose" prefWidth="115.0" text="Fermer" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="263.0" AnchorPane.rightAnchor="237.0" />
+  </children>
+  <stylesheets>
+    <URL value="@sync.css" />
+  </stylesheets>
+</AnchorPane>

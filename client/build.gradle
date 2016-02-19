@@ -1,0 +1,22 @@
+apply plugin: 'java'
+
+group = 'org.fer.syncfile'
+version = '0.0.2-SNAPSHOT'
+
+description = """"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+
+     maven { url "https://oss.sonatype.org/content/groups/staging" }
+}
+dependencies {
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version:'2.4.4'
+    compile group: 'org.fer.syncfile', name: 'SyncFilesCommon', version:'0.0.2-SNAPSHOT'
+}

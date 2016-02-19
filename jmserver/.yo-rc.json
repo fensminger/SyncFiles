@@ -1,0 +1,24 @@
+{
+  "generator-jhipster": {
+    "baseName": "jmserver",
+    "packageName": "org.fer.syncfiles",
+    "packageFolder": "org/fer/syncfiles",
+    "authenticationType": "xauth",
+    "hibernateCache": "no",
+    "clusteredHttpSession": "no",
+    "websocket": "spring-websocket",
+    "databaseType": "mongodb",
+    "devDatabaseType": "mongodb",
+    "prodDatabaseType": "mongodb",
+    "searchEngine": "no",
+    "useSass": false,
+    "buildTool": "maven",
+    "frontendBuilder": "grunt",
+    "enableTranslation": true,
+    "enableSocialSignIn": false,
+    "rememberMeKey": "54af37b56194f8a95a7653d332e5ef8f47b1b608",
+    "testFrameworks": [
+      "gatling"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="173.0" prefWidth="679.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml" fx:controller="org.fer.syncfiles.SyncMsgSynErrorController">
+  <children>
+    <TextArea editable="false" prefHeight="106.0" prefWidth="648.0" text="Une ou des erreurs de synchronisation sont arrivées en tache de fond. Il serait peut-être intéressant d'effectuer une sauvegarde manuelle." wrapText="true" AnchorPane.bottomAnchor="53.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="14.0" />
+    <HBox alignment="TOP_RIGHT" prefHeight="44.0" prefWidth="648.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="17.0">
+      <children>
+        <Button mnemonicParsing="false" onAction="#btDisplayError" prefWidth="194.0" text="Afficher les erreurs" />
+        <Button mnemonicParsing="false" onAction="#btIgnoreAll" prefWidth="194.0" text="Tout ignorer" />
+        <Button mnemonicParsing="false" onAction="#btClose" prefWidth="194.0" text="Fermer" />
+      </children>
+    </HBox>
+  </children>
+  <stylesheets>
+    <URL value="@sync.css" />
+  </stylesheets>
+</AnchorPane>
