@@ -1,0 +1,32 @@
+[
+    {
+        "bytes": 0,
+        "count": 0,
+        "name": "73b3f3b8-6822-40f6-b3ec-f639b5249c77"
+    },
+    {
+        "bytes": 0,
+        "count": 0,
+        "name": "73b3f3b8-6822-40f6-b3ec-f639b5249c77_segments"
+    },
+    {
+        "bytes": 375394,
+        "count": 9,
+        "name": "HubiC-Backup_2014-05-25T06:57:04Z_8e967fdb-e89c-450f-a995-e427388c0f19_Nexus+7"
+    },
+    {
+        "bytes": 0,
+        "count": 0,
+        "name": "HubiC-Backup_2014-05-25T06:57:04Z_8e967fdb-e89c-450f-a995-e427388c0f19_Nexus+7_segments"
+    },
+    {
+        "bytes": 768236221076,
+        "count": 328919,
+        "name": "default"
+    },
+    {
+        "bytes": 24182839608,
+        "count": 287,
+        "name": "default_segments"
+    }
+]

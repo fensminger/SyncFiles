@@ -171,7 +171,9 @@ public class AuthBatch {
             List<NameValuePair> paramList = new ArrayList<NameValuePair>();
             for(String key : params.keySet()) {
                 paramList.add(new BasicNameValuePair(key, params.get(key)));
-                logger.info("Paramètres : " + key + " : " + params.get(key));
+                if (!"user_pwd".equals(key)) {
+                    logger.info("Paramètres : " + key + " : " + params.get(key));
+                }
             }
             httpPost.setEntity(new UrlEncodedFormEntity(paramList));
             httpPost.setHeader("ContentType", "application/x-www-form-urlencoded");
