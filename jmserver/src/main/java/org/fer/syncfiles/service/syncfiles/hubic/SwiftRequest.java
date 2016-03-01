@@ -2,11 +2,12 @@ package org.fer.syncfiles.service.syncfiles.hubic;
 
 import org.apache.catalina.util.URLEncoder;
 import org.apache.http.*;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
@@ -15,13 +16,13 @@ import org.apache.http.message.BasicStatusLine;
 import org.apache.http.util.EntityUtils;
 import org.fer.syncfiles.service.syncfiles.hubic.Consumer.ObjectConsumer;
 import org.fer.syncfiles.service.syncfiles.hubic.domain.ObjectDetailInfo;
+import org.fer.syncfiles.service.syncfiles.hubic.domain.StringStatusLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.IntegrationTest;
+import org.springframework.http.*;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,6 +49,11 @@ public class SwiftRequest implements Closeable {
     }
 
     public <T> T get(String url, Header[] headers, List<NameValuePair> params, ResponseHandler<? extends T> responseHandler) throws IOException {
+        HttpGet httpGet = getHttpGet(url, headers, params);
+        return httpClient.execute(httpGet, responseHandler);
+    }
+
+    private HttpGet getHttpGet(String url, Header[] headers, List<NameValuePair> params) {
         URLEncoder urlEncoder = new URLEncoder();
         final String paramString;
         if (params!=null) {
@@ -61,7 +67,21 @@ public class SwiftRequest implements Closeable {
         }
         httpGet.setHeader("X-Auth-Token", swiftAccess.getToken());
         httpGet.setHeader("Accept", "application/json; charset=utf-8");
-        return httpClient.execute(httpGet, responseHandler);
+        return httpGet;
+    }
+
+    public StringStatusLine getStringResponse(String url, Header[] headers, List<NameValuePair> params) {
+        HttpGet httpGet = getHttpGet(url, headers, params);
+        try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
+            if (response.getStatusLine().getStatusCode()!=HttpStatus.SC_OK) {
+                throw new RuntimeException("Error on getWithStringResult" + response.getStatusLine().getStatusCode() + " : " + response.getStatusLine().getReasonPhrase());
+            }
+            return new StringStatusLine(EntityUtils.toString(response.getEntity(), "utf-8"), response.getStatusLine());
+        } catch (ClientProtocolException e) {
+            throw new RuntimeException("Error on getWithStringResult" + e.getMessage(), e);
+        } catch (IOException e) {
+            throw new RuntimeException("Error on getWithStringResult" + e.getMessage(), e);
+        }
     }
 
     public <T> T getHead(String url, Header[] headers, List<NameValuePair> params, ResponseHandler<? extends T> responseHandler) throws IOException {
@@ -82,20 +102,25 @@ public class SwiftRequest implements Closeable {
         return httpClient.execute(httpHead, responseHandler);
     }
 
-    public CloseableHttpResponse get(String url, Header[] headers, List<NameValuePair> params) throws IOException {
-        URLEncoder urlEncoder = new URLEncoder();
+    public CloseableHttpResponse delete(String url, Header[] headers, List<NameValuePair> params) throws IOException {
+        // URLEncodedUtils
         final String paramString;
         if (params!=null) {
             paramString = "?" + URLEncodedUtils.format(params, "utf-8");
         } else {
             paramString = "";
         }
-        HttpGet httpGet = new HttpGet(swiftAccess.getEndpoint()+urlEncoder.encode(url)+paramString);
+        HttpDelete httpDelete = new HttpDelete(swiftAccess.getEndpoint()+url+paramString);
         if (headers!=null) {
-            httpGet.setHeaders(headers);
+            httpDelete.setHeaders(headers);
         }
-        httpGet.setHeader("X-Auth-Token", swiftAccess.getToken());
-        httpGet.setHeader("Accept", "application/json; charset=utf-8");
+        httpDelete.setHeader("X-Auth-Token", swiftAccess.getToken());
+//        httpDelete.setHeader("Accept", "application/json; charset=utf-8");
+        return httpClient.execute(httpDelete);
+    }
+
+    public CloseableHttpResponse get(String url, Header[] headers, List<NameValuePair> params) throws IOException {
+        HttpGet httpGet = getHttpGet(url, headers, params);
         return httpClient.execute(httpGet);
     }
 
@@ -119,7 +144,7 @@ public class SwiftRequest implements Closeable {
         this.swiftAccess = swiftAccess;
     }
 
-    public StatusLine listObjects(String container, Integer limit, String marker, ObjectConsumer objectConsumer) throws IOException {
+    public StatusLine listObjects(String container, Integer limit, String marker, String prefix, ObjectConsumer objectConsumer) throws IOException {
         List<NameValuePair> params = new ArrayList<>();
         if (limit!=null) {
             params.add(new BasicNameValuePair("limit", limit.toString()));
@@ -127,19 +152,20 @@ public class SwiftRequest implements Closeable {
         if (marker!=null) {
             params.add(new BasicNameValuePair("marker", marker));
         }
-        return get("/" + container, null, params, httpResponse -> {
-            Integer nbObjects = new Integer(httpResponse.getFirstHeader("X-Container-Object-Count").getValue());
-            if (httpResponse.getStatusLine().getStatusCode()== HttpStatus.SC_OK) {
-                try (InputStream inputStream = httpResponse.getEntity().getContent()) {
-                    objectConsumer.accept(inputStream);
-                }
+        if (prefix!=null) {
+            params.add(new BasicNameValuePair("prefix", prefix));
+        }
+        StringStatusLine response = getStringResponse("/" + container, null, params);
+        String body = response.getContent();
+        if (body==null || "".equals(body)) {
+            return new BasicStatusLine(response.getStatusLine().getProtocolVersion(), 204, "Normal end readings objects");
+        } else {
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes("utf-8"));
+            try (InputStream inputStream = byteArrayInputStream) {
+                objectConsumer.accept(inputStream);
             }
-            if (nbObjects==0) {
-                return new BasicStatusLine(null, 204, "Normal end readings objects");
-            } else {
-                return httpResponse.getStatusLine();
-            }
-        });
+            return response.getStatusLine();
+        }
     }
 
     public ObjectDetailInfo loadObjectMetaData(String container, String fileName) throws IOException {
@@ -157,7 +183,7 @@ public class SwiftRequest implements Closeable {
         ObjectDetailInfo objectDetailInfo = new ObjectDetailInfo();
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US);
         for(Header header : httpResponse.getAllHeaders()) {
-            log.info(header.getName() + " -> " + header.getValue());
+            log.trace(header.getName() + " -> " + header.getValue());
             switch (header.getName()) {
                 case "Content-Type":
                     objectDetailInfo.setContentType(header.getValue());
@@ -179,6 +205,7 @@ public class SwiftRequest implements Closeable {
                     objectDetailInfo.setDeleteAt(new Date(new Long(header.getValue())));
                     break;
                 case "X-Object-Manifest":
+                    log.info("X-Object-Manifest" + header.getName() + " -> " + header.getValue());
                     objectDetailInfo.setManifestPrefix(header.getValue());
                     break;
                 case "X-Static-Large-Object":
@@ -191,4 +218,44 @@ public class SwiftRequest implements Closeable {
         return objectDetailInfo;
     }
 
+    public CloseableHttpResponse loadObject(String container, String fileName, boolean loadManifest) throws IOException {
+        final String url = "/" + container + "/" + fileName;
+        List<NameValuePair> params = new ArrayList<>();
+        if (loadManifest) {
+            params.add(new BasicNameValuePair("multipart-manifest", "get"));
+        }
+        return get(url, null, params);
+    }
+
+    public void uploadObject(String container, String fileName, String md5, File fileToUpload) throws IOException {
+        URLEncoder urlEncoder = new URLEncoder();
+        String s = "?temp_url_expires=68000&temp_url_sig=fdsfdsfssfds";
+        HttpPut httpPut = new HttpPut(swiftAccess.getEndpoint()+"/"+container+"/"+urlEncoder.encode(fileName));
+        httpPut.setHeader("X-Auth-Token", swiftAccess.getToken());
+//        httpPut.setHeader("Accept", "application/json; charset=utf-8");
+        if (md5!=null) {
+//            httpPut.setHeader("ETag", md5);
+        }
+        FileEntity entity = new FileEntity(fileToUpload);
+        httpPut.setEntity(entity);
+        CloseableHttpResponse response = httpClient.execute(httpPut);
+        log.info("Response of upload : " + response.getStatusLine());
+    }
+
+    public void deleteObject(String container, String fileName) throws IOException {
+        URLEncoder urlEncoder = new URLEncoder();
+        String url = "/"+container + "/" + urlEncoder.encode(fileName);
+        try (CloseableHttpResponse response = delete(url, null, null)) {
+            EntityUtils.consume(response.getEntity());
+            Header firstHeader = response.getFirstHeader("Content-Length");
+            if (!"0".equals(firstHeader.getValue())) {
+                throw new IOException("Unable to delete the file " + fileName + ", length="+firstHeader);
+            }
+            if (response.getStatusLine().getStatusCode()!=204) {
+                throw new IOException("Unable to delete the file " + fileName + ", statusCode="+response.getStatusLine().getStatusCode()
+                + " -> " + response.getStatusLine().getReasonPhrase());
+            }
+        }
+
+    }
 }

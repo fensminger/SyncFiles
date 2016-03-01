@@ -4,7 +4,10 @@ import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import com.google.gson.Gson;
+import org.apache.http.Header;
 import org.apache.http.StatusLine;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.fer.syncfiles.service.syncfiles.hubic.Consumer.ContainerConsumer;
 import org.fer.syncfiles.service.syncfiles.hubic.Consumer.ObjectConsumer;
 import org.fer.syncfiles.service.syncfiles.hubic.domain.ContainerInfo;
@@ -13,7 +16,9 @@ import org.fer.syncfiles.service.syncfiles.hubic.domain.ObjectInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Consumer;
@@ -37,13 +42,13 @@ public class HubicService {
         swiftRequest.listContainers(new ContainerConsumer(containerConsumer));
     }
 
-    public void consumeObjects(String container, Consumer<ObjectInfo> objectConsumer) throws IOException {
+    public void consumeObjects(String container, String prefix, Consumer<ObjectInfo> objectConsumer) throws IOException {
         ObjectConsumer objectConsumerObj = new ObjectConsumer(objectConsumer);
         String marker = null;
         String prevMarker = null;
         StatusLine statusLine = null;
         int nbLecture = 0;
-        while((statusLine=swiftRequest.listObjects(container, 10000, marker, objectConsumerObj)).getStatusCode()==200) {
+        while((statusLine=swiftRequest.listObjects(container, 10000, marker, prefix, objectConsumerObj)).getStatusCode()==200) {
             marker = objectConsumerObj.getMarker().getName();
             log.info("Lot number (10000) : " + (++nbLecture) + ", marker : " + marker);
             if (prevMarker==marker) {
@@ -61,6 +66,22 @@ public class HubicService {
         return swiftRequest.loadObjectMetaData(container, fileName);
     }
 
+    public CloseableHttpResponse loadObject(String container, String fileName, boolean loadManifest) throws IOException {
+        CloseableHttpResponse response = swiftRequest.loadObject(container, fileName, loadManifest);
+//        for (Header header : response.getAllHeaders()) {
+//            log.info("Header of " + fileName + " : " + header.getName() + "="+ header.getValue());
+//        }
+        return  response;
+    }
+
+    public void uploadObject(String container, String fileName, String md5, File fileToUpload) throws IOException {
+        swiftRequest.uploadObject(container, fileName, md5, fileToUpload);
+    }
+
+    public void deleteObject(String container, String fileName) throws IOException {
+        swiftRequest.deleteObject(container, fileName);
+    }
+
     public SwiftAccess authenticate(String clientId, String clientSecret, int port, String user, String pwd) throws IOException, InterruptedException {
         HubicApi hubicApiInstance = HubicApi.instance();
         final String secretState = "RandomString_" + new Random().nextInt(999_999);
@@ -68,8 +89,8 @@ public class HubicService {
         final OAuth20Service service = new ServiceBuilder()
             .apiKey(clientId)
             .apiSecret(clientSecret)
-//            .scope("usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.drw")
-            .scope("credentials.r") // replace with desired scope
+            .scope("usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.drw")
+//            .scope("credentials.r") // replace with desired scope
             .state(secretState)
 //            .callback("https://api.hubic.com/sandbox/")
             .callback("http://localhost:"+port+"/")

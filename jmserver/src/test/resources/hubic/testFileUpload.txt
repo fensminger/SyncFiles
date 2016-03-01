@@ -1,0 +1,3 @@
+Première ligne
+Et quelques caractères spéciaux €$€$*FIN
+
