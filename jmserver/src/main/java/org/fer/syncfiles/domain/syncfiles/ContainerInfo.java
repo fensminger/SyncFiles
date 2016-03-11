@@ -1,4 +1,4 @@
-package org.fer.syncfiles.service.syncfiles.hubic.domain;
+package org.fer.syncfiles.domain.syncfiles;
 
 /**
  * Created by fensm on 23/02/2016.

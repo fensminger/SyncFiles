@@ -2,9 +2,7 @@ package org.fer.syncfiles.service.syncfiles;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.boon.core.Sys;
 import org.fer.syncfiles.service.syncfiles.hubic.*;
-import org.fer.syncfiles.service.syncfiles.hubic.domain.ObjectDetailInfo;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,8 +32,14 @@ public class HubicServiceTest extends HubicTestPassword {
     public void hubicContainerTest() throws IOException, InterruptedException {
         final HubicService hubicService = new HubicService(new SwiftRequest());
 
-        SwiftAccess swiftAccess = hubicService.authenticate(clientId, clientSecret, port, user, pwd);
 
+        SwiftAccess swiftAccess = null;
+        try {
+            swiftAccess = hubicService.authenticate(clientId, clientSecret, port, user, pwd);
+        } catch (IOException e) {
+            // Test retry
+            swiftAccess = hubicService.authenticate(clientId, clientSecret, port, user, pwd);
+        }
 
 //        hubicService.consumeContainers(containerInfo -> {
 //            System.out.println(containerInfo);
@@ -64,6 +67,11 @@ public class HubicServiceTest extends HubicTestPassword {
         String fileToUpload = "testFileUpload.txt";
         File file = new File(this.getClass().getResource("/hubic/"+fileToUpload).getFile());
         hubicService.uploadObject("default", fileToUpload, getMd5(file), file);
+
+        if (swiftAccess.isExpire()) {
+            hubicService.refreshToken();
+        }
+
 
         try (CloseableHttpResponse res = hubicService.loadObject("default", fileToUpload, false)) {
             log.info("download status : " + res.getStatusLine());
@@ -127,4 +135,17 @@ public class HubicServiceTest extends HubicTestPassword {
         }
     }
 
+    @Test
+    public void expiresDateTest() throws ParseException {
+        String dateStr = "2016-03-08T07:42:46+01:00";
+//        String dateStr = "2016-03-08T07:42:46";
+
+        SwiftAccess swiftAccess = new SwiftAccess(null,null,dateStr,null);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+        Date date = sdf.parse(dateStr);
+
+        log.info("Date : " + date);
+        log.info("Is expires : " + swiftAccess.isExpire());
+    }
 }

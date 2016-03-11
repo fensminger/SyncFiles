@@ -1,11 +1,22 @@
-package org.fer.syncfiles.service.syncfiles.hubic.domain;
+package org.fer.syncfiles.domain.syncfiles;
+
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 /**
  * Created by fensm on 25/02/2016.
  */
+@Document(collection = "hubicDetailObject")
+@CompoundIndexes({
+    @CompoundIndex(name = "search_indexes", def = "{'paramSyncFilesId': 1}")
+})
 public class ObjectDetailInfo {
+
+    private String id;
+    private String paramSyncFilesId;
 
     private String contentType;
     private long contentLength;

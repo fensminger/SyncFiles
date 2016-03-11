@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Document(collection = "jhi_user")
+@Document(collection = "paramSyncFiles")
 public class ParamSyncFiles implements Serializable {
 //	private static final Logger log = Logger.getLogger(ParamSyncFiles.class);
 

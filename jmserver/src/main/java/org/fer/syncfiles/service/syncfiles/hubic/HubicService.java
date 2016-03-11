@@ -4,21 +4,19 @@ import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import com.google.gson.Gson;
-import org.apache.http.Header;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.fer.syncfiles.service.syncfiles.hubic.Consumer.ContainerConsumer;
 import org.fer.syncfiles.service.syncfiles.hubic.Consumer.ObjectConsumer;
-import org.fer.syncfiles.service.syncfiles.hubic.domain.ContainerInfo;
-import org.fer.syncfiles.service.syncfiles.hubic.domain.ObjectDetailInfo;
-import org.fer.syncfiles.service.syncfiles.hubic.domain.ObjectInfo;
+import org.fer.syncfiles.domain.syncfiles.ContainerInfo;
+import org.fer.syncfiles.domain.syncfiles.ObjectDetailInfo;
+import org.fer.syncfiles.domain.syncfiles.ObjectInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Consumer;
@@ -29,7 +27,10 @@ import java.util.function.Consumer;
 public class HubicService {
     private final Logger log = LoggerFactory.getLogger(HubicService.class);
 
+    OAuth20Service service = null;
     private SwiftRequest swiftRequest;
+    private String clientId;
+    private String clientSecret;
 
     public HubicService() {
     }
@@ -48,16 +49,16 @@ public class HubicService {
         String prevMarker = null;
         StatusLine statusLine = null;
         int nbLecture = 0;
-        while((statusLine=swiftRequest.listObjects(container, 10000, marker, prefix, objectConsumerObj)).getStatusCode()==200) {
+        while ((statusLine = swiftRequest.listObjects(container, 10000, marker, prefix, objectConsumerObj)).getStatusCode() == 200) {
             marker = objectConsumerObj.getMarker().getName();
             log.info("Lot number (10000) : " + (++nbLecture) + ", marker : " + marker);
-            if (prevMarker==marker) {
+            if (prevMarker == marker) {
                 break;
             } else {
                 prevMarker = marker;
             }
         }
-        if (statusLine==null || statusLine.getStatusCode()!=200) {
+        if (statusLine == null || statusLine.getStatusCode() != 200) {
             throw new IOException("Problem to download list of objects : " + statusLine.getStatusCode() + " -> " + statusLine.getReasonPhrase());
         }
     }
@@ -71,7 +72,7 @@ public class HubicService {
 //        for (Header header : response.getAllHeaders()) {
 //            log.info("Header of " + fileName + " : " + header.getName() + "="+ header.getValue());
 //        }
-        return  response;
+        return response;
     }
 
     public void uploadObject(String container, String fileName, String md5, File fileToUpload) throws IOException {
@@ -86,14 +87,17 @@ public class HubicService {
         HubicApi hubicApiInstance = HubicApi.instance();
         final String secretState = "RandomString_" + new Random().nextInt(999_999);
 
-        final OAuth20Service service = new ServiceBuilder()
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+
+        service = new ServiceBuilder()
             .apiKey(clientId)
             .apiSecret(clientSecret)
             .scope("usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.drw")
 //            .scope("credentials.r") // replace with desired scope
             .state(secretState)
 //            .callback("https://api.hubic.com/sandbox/")
-            .callback("http://localhost:"+port+"/")
+            .callback("http://localhost:" + port + "/")
             .build(hubicApiInstance);
 
         log.info("=== Hubics's OAuth Workflow ===");
@@ -108,6 +112,7 @@ public class HubicService {
         log.info("And paste the authorization code here");
         System.out.print(">>");
 
+        final AuthHttpServer httpServer = new AuthHttpServer(port);
         new Thread(() -> {
             AuthBatch authBatch = new AuthBatch();
             try {
@@ -115,17 +120,19 @@ public class HubicService {
                 // Les NAS sont plutôt lents...
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.warn(e.getMessage());
             }
-            authBatch.startHubic(authorizationUrl, user, pwd);
+            authBatch.startHubic(authorizationUrl, user, pwd, httpServer);
         }).start();
 
-        AuthHttpServer httpServer = new AuthHttpServer(port);
-        Map<String, String> params = null ;
+        Map<String, String> params = null;
         // the server is being started
-        params = httpServer.startAndWaitForData() ;
+        params = httpServer.startAndWaitForData();
         httpServer.stopServer();
 
+        if (params.size()==0) {
+            throw new IOException("Unable to authenticate.");
+        }
 
         String code = params.get("code");
         log.info("===> code : " + code);
@@ -169,6 +176,29 @@ public class HubicService {
 
     }
 
+    public void refreshToken() {
+
+        final OAuthRequest request = new OAuthRequest(service.getApi().getAccessTokenVerb(), service.getApi().getAccessTokenEndpoint(), service);
+
+        AccessToken at = new Gson().fromJson(swiftRequest.getSwiftAccess().getAccessToken().getRawResponse(), AccessToken.class);
+
+        String authenticationCode = clientId + ":" + clientSecret ;
+        byte[] bytesEncodedAuthenticationCode = Base64.encodeBase64(authenticationCode.getBytes());
+        request.addHeader ("Authorization", "Basic " + new String(bytesEncodedAuthenticationCode)) ;
+
+        request.addBodyParameter("refresh_token", at.getRefreshToken());
+        request.addBodyParameter("grant_type", "refresh_token");
+        Response response = request.send();
+        String body = response.getBody();
+        if (response.getCode()!=200) {
+            throw new RuntimeException("Unable to refresh token " + response.getCode() + " : " + body);
+        }
+        Token newToken = service.getApi().getAccessTokenExtractor().extract(response.getBody());
+// {"expires_in":21600,"access_token":"06lWcO3bkjcjtDLrSNaRpdAUKdmZxqTD9dI6sG0Dhbxj0I3q6JF33WI562OBEZgI","token_type":"Bearer"}
+        SwiftAccess swiftAccess = signRequest(service, newToken);
+        swiftRequest.setSwiftAccess(swiftAccess);
+    }
+
     private SwiftAccess retrieveToken(OAuth20Service service, String code) {
         final Verifier verifier = new Verifier(code);
         // Trade the Request Token and Verfier for the Access Token
@@ -188,15 +218,15 @@ public class HubicService {
         service.signRequest(accessToken, request);
         final Response response = request.send();
 
-        SwiftAccess swiftAccess = new Gson().fromJson(response.getBody(), SwiftAccess.class) ;
+        SwiftAccess swiftAccess = new Gson().fromJson(response.getBody(), SwiftAccess.class);
         swiftAccess.setAccessToken(accessToken);
 
         log.info("");
-        log.info(""+response.getCode());
+        log.info("" + response.getCode());
         log.info(response.getBody());
 
         log.info("");
-        log.info(""+swiftAccess);
+        log.info("" + swiftAccess);
 
         return swiftAccess;
     }

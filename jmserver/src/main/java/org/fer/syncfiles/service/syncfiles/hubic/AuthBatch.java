@@ -57,12 +57,12 @@ public class AuthBatch {
         super();
     }
 
-	public boolean startHubic(final String url, String login, String password)
+	public boolean startHubic(final String url, String login, String password, AuthHttpServer httpServer)
 	{
-        return tryOneHubicConnection(url, login, password);
+        return tryOneHubicConnection(url, login, password, httpServer);
 	}
 
-    private boolean tryOneHubicConnection(String url, String login, String password) {
+    private boolean tryOneHubicConnection(String url, String login, String password, AuthHttpServer httpServer) {
         try {
             ConnectionKeepAliveStrategy myStrategy = (response, context) -> {
                 // Honor 'keep-alive' header
@@ -235,6 +235,13 @@ public class AuthBatch {
 
         } catch (IOException | NoSuchAlgorithmException | KeyManagementException e) {
             logger.error("Impossible de se connecter à hubic. " + e.getMessage(), e);
+            if (httpServer!=null) {
+                try {
+                    httpServer.stopWaiting();
+                } catch (InterruptedException e1) {
+                    logger.error("Unable to stop serveur : " + e1.getMessage(), e1);
+                }
+            }
             return false;
         }
 

@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.Serializable;
 import java.util.Date;
 
-@Document(collection = "jhi_user")
+@Document(collection = "fileInfo")
 @CompoundIndexes({
     @CompoundIndex(name = "search_indexes", def = "{'paramSyncFilesId': 1, 'originFile': 1, 'relativePathString':1}")
 })

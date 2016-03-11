@@ -10,17 +10,14 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.message.BasicStatusLine;
 import org.apache.http.util.EntityUtils;
 import org.fer.syncfiles.service.syncfiles.hubic.Consumer.ObjectConsumer;
-import org.fer.syncfiles.service.syncfiles.hubic.domain.ObjectDetailInfo;
+import org.fer.syncfiles.domain.syncfiles.ObjectDetailInfo;
 import org.fer.syncfiles.service.syncfiles.hubic.domain.StringStatusLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.http.*;
 
 import java.io.*;
 import java.text.ParseException;
@@ -257,5 +254,9 @@ public class SwiftRequest implements Closeable {
             }
         }
 
+    }
+
+    public SwiftAccess getSwiftAccess() {
+        return swiftAccess;
     }
 }

@@ -14,9 +14,17 @@
 
 package org.fer.syncfiles.service.syncfiles.hubic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.scribejava.core.model.Token;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SwiftAccess {
+    private static final Logger log = LoggerFactory.getLogger(SwiftAccess.class);
 
 	private final String token ;
 	private final String endpoint ;
@@ -24,15 +32,30 @@ public class SwiftAccess {
 
 	private Token accessToken ;
 
-	public SwiftAccess(String token, String endpoint, String expires, Token accessToken) {
+    private Date expiresDate = null;
+
+    public SwiftAccess(String token, String endpoint, String expires, Token accessToken) {
 		super();
 		this.token = token;
 		this.endpoint = endpoint;
 		this.expires = expires;
 		this.accessToken = accessToken ;
-	}
+        initExpiresDate(expires);
+    }
 
-	public String getToken() {
+    private void initExpiresDate(String expires) {
+        if (expires!=null && expiresDate == null) {
+            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+            try {
+                expiresDate = sdf.parse(expires);
+            } catch (ParseException e) {
+                expiresDate = null;
+                log.warn("Unable to parse SwiftAccess expires date : " + expires + " -> " + e.getMessage());
+            }
+        }
+    }
+
+    public String getToken() {
 		return token;
 	}
 
@@ -51,6 +74,22 @@ public class SwiftAccess {
 	public void setAccessToken (Token token){
 		accessToken = token ;
 	}
+
+    @JsonIgnore
+    private Date getExpiresDate() {
+        initExpiresDate(expires);
+        return expiresDate;
+    }
+
+    @JsonIgnore
+    public boolean isExpire() {
+        if (expires==null) {
+            return true;
+        } else {
+            log.info("Expire token : " + expires + " -> " + getExpiresDate());
+            return (getExpiresDate().getTime()-1000L*60L*60L*10L) <= new Date().getTime();
+        }
+    }
 
     @Override
     public String toString() {

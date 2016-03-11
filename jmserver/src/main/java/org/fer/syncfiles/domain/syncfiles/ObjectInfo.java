@@ -1,17 +1,32 @@
-package org.fer.syncfiles.service.syncfiles.hubic.domain;
+package org.fer.syncfiles.domain.syncfiles;
+
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 /**
  * Created by fensm on 24/02/2016.
  */
+@Document(collection = "hubicObject")
+@CompoundIndexes({
+    @CompoundIndex(name = "search_indexes", def = "{'paramSyncFilesId': 1}")
+})
 public class ObjectInfo {
+
+    private String id;
+    private String paramSyncFilesId;
 
     private long size;
     private String contentType;
     private String hash;
     private String lastModified;
     private String name;
+
+    public ObjectInfo() {
+        super();
+    }
 
     //        "bytes": 3231182,
     //        "content_type": "application/octet-stream",
@@ -44,6 +59,42 @@ public class ObjectInfo {
 
     public String getName() {
         return name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public void setLastModified(String lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getParamSyncFilesId() {
+        return paramSyncFilesId;
+    }
+
+    public void setParamSyncFilesId(String paramSyncFilesId) {
+        this.paramSyncFilesId = paramSyncFilesId;
     }
 
     @Override
