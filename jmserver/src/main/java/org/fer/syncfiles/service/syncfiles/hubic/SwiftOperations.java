@@ -267,7 +267,7 @@ public class SwiftOperations {
 //
 //    	CheckAccount () ;
 //
-//        container.delete();
+//        container.deleteParamSyncFiles();
 //    }
 //
 //
@@ -535,7 +535,7 @@ public class SwiftOperations {
 //	        for (StoredObject so : eagerFetchStoredObjects(container))
 //	        {
 //	        	if (so.exists())
-//	        		so.delete();
+//	        		so.deleteParamSyncFiles();
 //	        }
 //	        logger.info(String.format("Container %s has been emptied", container.getName()));
 //    	}
@@ -557,9 +557,9 @@ public class SwiftOperations {
 //        for (StoredObject so : eagerFetchStoredObjects(container))
 //        {
 //            if (so.exists())
-//                so.delete();
+//                so.deleteParamSyncFiles();
 //        }
-//        container.delete();
+//        container.deleteParamSyncFiles();
 //        logger.info(String.format("Container %s has been removed", container.getName()));
 //    }
 //
@@ -1306,7 +1306,7 @@ public class SwiftOperations {
 //		CheckAccount () ;
 //
 //    	if (!SwiftUtils.isDirectory(storedObject))
-//    		throw new AssertionError ("The object to delete must be a directory.") ;
+//    		throw new AssertionError ("The object to deleteParamSyncFiles must be a directory.") ;
 //
 //    	List<StoredObject> deletedObjects = new ArrayList<> () ;
 //

@@ -185,7 +185,7 @@ public class UserResource {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     /**
-     * DELETE  USER :login -> delete the "login" User.
+     * DELETE  USER :login -> deleteParamSyncFiles the "login" User.
      */
     @RequestMapping(value = "/users/{login}",
         method = RequestMethod.DELETE,

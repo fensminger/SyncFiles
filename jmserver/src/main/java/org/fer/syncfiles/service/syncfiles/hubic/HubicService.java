@@ -27,12 +27,13 @@ import java.util.function.Consumer;
 public class HubicService {
     private final Logger log = LoggerFactory.getLogger(HubicService.class);
 
-    OAuth20Service service = null;
+    private OAuth20Service service = null;
     private SwiftRequest swiftRequest;
     private String clientId;
     private String clientSecret;
 
     public HubicService() {
+        this(new SwiftRequest());
     }
 
     public HubicService(SwiftRequest swiftRequest) {
@@ -40,10 +41,12 @@ public class HubicService {
     }
 
     public void consumeContainers(Consumer<ContainerInfo> containerConsumer) throws IOException {
+        refreshTokenIfExpired();
         swiftRequest.listContainers(new ContainerConsumer(containerConsumer));
     }
 
     public void consumeObjects(String container, String prefix, Consumer<ObjectInfo> objectConsumer) throws IOException {
+        refreshTokenIfExpired();
         ObjectConsumer objectConsumerObj = new ObjectConsumer(objectConsumer);
         String marker = null;
         String prevMarker = null;
@@ -64,10 +67,12 @@ public class HubicService {
     }
 
     public ObjectDetailInfo loadObjectMetaData(String container, String fileName) throws IOException {
+        refreshTokenIfExpired();
         return swiftRequest.loadObjectMetaData(container, fileName);
     }
 
     public CloseableHttpResponse loadObject(String container, String fileName, boolean loadManifest) throws IOException {
+        refreshTokenIfExpired();
         CloseableHttpResponse response = swiftRequest.loadObject(container, fileName, loadManifest);
 //        for (Header header : response.getAllHeaders()) {
 //            log.info("Header of " + fileName + " : " + header.getName() + "="+ header.getValue());
@@ -76,10 +81,18 @@ public class HubicService {
     }
 
     public void uploadObject(String container, String fileName, String md5, File fileToUpload) throws IOException {
+        refreshTokenIfExpired();
         swiftRequest.uploadObject(container, fileName, md5, fileToUpload);
     }
 
+    private void refreshTokenIfExpired() {
+        if (swiftRequest.getSwiftAccess().isExpire()) {
+            refreshToken();
+        }
+    }
+
     public void deleteObject(String container, String fileName) throws IOException {
+        refreshTokenIfExpired();
         swiftRequest.deleteObject(container, fileName);
     }
 

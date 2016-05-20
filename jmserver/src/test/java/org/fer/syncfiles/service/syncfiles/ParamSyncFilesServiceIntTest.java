@@ -1,11 +1,8 @@
 package org.fer.syncfiles.service.syncfiles;
 
 import org.fer.syncfiles.Application;
-import org.fer.syncfiles.domain.User;
 import org.fer.syncfiles.domain.syncfiles.*;
-import org.fer.syncfiles.repository.UserRepository;
 import org.fer.syncfiles.service.UserService;
-import org.fer.syncfiles.service.util.RandomUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -21,8 +18,6 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,7 +54,7 @@ public class ParamSyncFilesServiceIntTest {
         assertThat(paramSyncFilesSaved.getSyncState()).isEqualTo(paramSyncFiles.getSyncState());
         assertThat(paramSyncFilesSaved.getCreationDate()).isEqualTo(paramSyncFiles.getCreationDate());
 
-        final ParamSyncFiles paramSyncFilesLoaded = paramSyncFilesService.findByName(paramSyncFiles.getName());
+        final ParamSyncFiles paramSyncFilesLoaded = paramSyncFilesService.findParamSyncFilesByName(paramSyncFiles.getName());
 
         assertThat(paramSyncFilesLoaded.getName()).isEqualTo(paramSyncFiles.getName());
         assertThat(paramSyncFilesLoaded.getMasterDir()).isEqualTo(paramSyncFiles.getMasterDir());
@@ -67,8 +62,8 @@ public class ParamSyncFilesServiceIntTest {
         assertThat(paramSyncFilesLoaded.getSyncState()).isEqualTo(paramSyncFiles.getSyncState());
         assertThat(paramSyncFilesLoaded.getCreationDate()).isEqualTo(paramSyncFiles.getCreationDate());
 
-        paramSyncFilesService.delete(paramSyncFilesSaved.getId());
-        final ParamSyncFiles paramSyncFilesNotFound = paramSyncFilesService.findByName(paramSyncFiles.getName());
+        paramSyncFilesService.deleteParamSyncFiles(paramSyncFilesSaved.getId());
+        final ParamSyncFiles paramSyncFilesNotFound = paramSyncFilesService.findParamSyncFilesByName(paramSyncFiles.getName());
 
         assertThat(paramSyncFilesNotFound).isNull();
     }

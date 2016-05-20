@@ -32,3 +32,6 @@ server/src/main/webapp/bower_components/
 client/.settings/org.eclipse.core.resources.prefs
 jmserver/src/test/java/org/fer/syncfiles/service/syncfiles/HubicTestPassword.java
 dbSyncFiles.lck
+jmserver/src/main/resources/config/hubicAuthenticate.properties
+client-angular2/.DS_Store
+client-angular2/node_modules/

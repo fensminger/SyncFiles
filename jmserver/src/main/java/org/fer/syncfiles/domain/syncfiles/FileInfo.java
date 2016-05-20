@@ -47,7 +47,10 @@ public class FileInfo implements Serializable {
 
     private String paramKey;
 
+    private String contentType;
+
     private FileInfoAction fileInfoAction;
+    private String lastModifiefTimeStr;
 
     public FileInfo() {
 		super();
@@ -262,6 +265,14 @@ public class FileInfo implements Serializable {
         this.paramSyncFilesId = paramSyncFilesId;
     }
 
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
     @Override
     public String toString() {
         return "FileInfo{" +
@@ -303,5 +314,13 @@ public class FileInfo implements Serializable {
         this.lastAccessTime = fileInfoNew.getLastAccessTime();
         this.lastModifiedTime = fileInfoNew.getLastModifiedTime();
         this.size = fileInfoNew.getSize();
+    }
+
+    public void setLastModifiefTimeStr(String lastModifiefTimeStr) {
+        this.lastModifiefTimeStr = lastModifiefTimeStr;
+    }
+
+    public String getLastModifiefTimeStr() {
+        return lastModifiefTimeStr;
     }
 }
