@@ -49,7 +49,7 @@ import {
   </div>
   
     <uif-dialog (confirmSelected)="confirmDelete($event)" [display]="confirmDialog" [dialogId]="'confirm'">
-        Voulez-vous supprimer cette synchronisation ?
+        Voulez-vous <b>supprimer</b> cette synchronisation ?
     </uif-dialog>
   `
 })
@@ -75,11 +75,11 @@ export class SynchroList {
     );
   }
 
-    openDialog() {
+    private openDialog() : void {
         this.confirmDialog = true;
     }
 
-    confirmDelete(isConfirmed) {
+    confirmDelete(isConfirmed) : void {
         this.confirmDialog = false;
         if (isConfirmed) {
             this.remove(this._index, this._id);
@@ -90,7 +90,7 @@ export class SynchroList {
     console.log('you submitted value: ', value);
   }
 
-    dialogConfirmRemove(index : number, id : number) {
+    dialogConfirmRemove(index : number, id : number) :void {
         this._index = index;
         this._id = id;
         this.openDialog();

@@ -40,7 +40,9 @@ var SynchroFilesService = (function () {
         return Observable_1.Observable.throw(errMsg);
     };
     SynchroFilesService.prototype.saveDetail = function (detail) {
-        return this.http.post("/api/sync-files/param/save", JSON.stringify(detail), { headers: this.headers });
+        return this.http.post("/api/sync-files/param/save", JSON.stringify(detail), { headers: this.headers })
+            .map(this.extractData)
+            .catch(this.handleError);
     };
     SynchroFilesService.prototype.removeDetail = function (id) {
         return this.http.delete("/api/sync-files/param/remove/" + id, { headers: this.headers });

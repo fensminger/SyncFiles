@@ -40,7 +40,9 @@ export class SynchroFilesService {
     }
 
     public saveDetail(detail : any) : Observable<Response> {
-        return this.http.post("/api/sync-files/param/save", JSON.stringify(detail), {headers:this.headers});
+        return this.http.post("/api/sync-files/param/save", JSON.stringify(detail), {headers:this.headers})
+            .map(this.extractData)
+            .catch(this.handleError);
     }
 
     public removeDetail(id : number) : Observable<Response> {

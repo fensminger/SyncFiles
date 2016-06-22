@@ -48,7 +48,7 @@ require('../images/favicon.ico');
               </button>
               <span class="navbar-brand" href="#">Home</span>
             </div>
-        
+
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="navbar-collapse" [ngClass]="{collapse: menuClosed}" #menu>
               <ul class="nav navbar-nav">

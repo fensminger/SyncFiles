@@ -25,7 +25,17 @@ export class SynchroDetail implements OnInit {
     isHttpRequest :boolean;
     id : String;
     version : number;
-    model = {};
+    model = {
+        includeExcludePatterns : []
+    };
+    modelModified = {
+        name : null,
+        cronExp : null,
+        masterDir : null,
+        slaveDir : null,
+        includeExcludePatterns : []
+    };
+    includeExcludePatterns = [];
 
     constructor(private _synchroFilesService : SynchroFilesService,
                 private _routeParams : RouteParams,
@@ -49,6 +59,11 @@ export class SynchroDetail implements OnInit {
                 (r : any) => {
                     this.isHttpRequest = false;
                     this.model = r;
+                    if (this.model.includeExcludePatterns) {
+                        this.includeExcludePatterns.length = this.model.includeExcludePatterns.length;
+                    }
+                    this.modelModified = JSON.parse(JSON.stringify(this.model));
+                    console.log("Chargement de : " + JSON.stringify(this.model));
                 },
                 (e : any) => {
                     this.isHttpRequest = false;
@@ -59,13 +74,19 @@ export class SynchroDetail implements OnInit {
     }
 
     createSynchro(value : any) {
-        console.log('Synchro à sauvegarder : ' + JSON.stringify(value));
+        console.log('Synchro à sauvegarder : ' + JSON.stringify(this.model));
         this.isHttpRequest = true;
         value.version = this.version;
-        this._synchroFilesService.saveDetail(value).subscribe(
+        this.modelModified.name = this.synchroForm.find('name').value;
+        this.modelModified.cronExp = this.synchroForm.find('cronExp').value;
+        this.modelModified.masterDir = this.synchroForm.find('masterDir').value;
+        this.modelModified.slaveDir = this.synchroForm.find('slaveDir').value;
+        this._synchroFilesService.saveDetail(this.modelModified).subscribe(
             (r : any) => {
                 this.isHttpRequest = false;
-                console.log("OK" + r.text());
+                this.model = r;
+                this.modelModified = JSON.parse(JSON.stringify(this.model));
+                console.log("OK" + JSON.stringify(r));
                 this.alerts.push({msg: 'Sauvegarde effectu\u00E9e avec succ\u00E8s', type: 'info', closable: true});
             },
             (e : any) => {
@@ -83,4 +104,20 @@ export class SynchroDetail implements OnInit {
         this.alerts.splice(i, 1);
     }
 
+    public addPattern() : void {
+        if (!this.modelModified.includeExcludePatterns) {
+            this.model.includeExcludePatterns = [];
+            this.modelModified.includeExcludePatterns = [];
+            this.includeExcludePatterns = [];
+        }
+        this.model.includeExcludePatterns.push("");
+        this.modelModified.includeExcludePatterns.push("");
+        this.includeExcludePatterns.push("");
+        console.log("Model : " + JSON.stringify(this.modelModified));
+    }
+
+    public chgPattern(i : number, event : any) {
+        this.modelModified.includeExcludePatterns[i] = event.target.value;
+        console.log("Model : " + JSON.stringify(this.modelModified));
+    }
 }

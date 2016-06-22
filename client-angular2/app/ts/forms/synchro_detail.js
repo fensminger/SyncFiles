@@ -20,7 +20,17 @@ var SynchroDetail = (function () {
         this._synchroFilesService = _synchroFilesService;
         this._routeParams = _routeParams;
         this._fb = _fb;
-        this.model = {};
+        this.model = {
+            includeExcludePatterns: []
+        };
+        this.modelModified = {
+            name: null,
+            cronExp: null,
+            masterDir: null,
+            slaveDir: null,
+            includeExcludePatterns: []
+        };
+        this.includeExcludePatterns = [];
         this.alerts = [];
         title.setTitle("SyncFiles - Detail d'une synchronisation");
         this.id = _routeParams.get('id');
@@ -39,6 +49,11 @@ var SynchroDetail = (function () {
             this._synchroFilesService.loadOne(this.id).subscribe(function (r) {
                 _this.isHttpRequest = false;
                 _this.model = r;
+                if (_this.model.includeExcludePatterns) {
+                    _this.includeExcludePatterns.length = _this.model.includeExcludePatterns.length;
+                }
+                _this.modelModified = JSON.parse(JSON.stringify(_this.model));
+                console.log("Chargement de : " + JSON.stringify(_this.model));
             }, function (e) {
                 _this.isHttpRequest = false;
                 console.log("Error : " + e);
@@ -47,12 +62,18 @@ var SynchroDetail = (function () {
     };
     SynchroDetail.prototype.createSynchro = function (value) {
         var _this = this;
-        console.log('Synchro à sauvegarder : ' + JSON.stringify(value));
+        console.log('Synchro à sauvegarder : ' + JSON.stringify(this.model));
         this.isHttpRequest = true;
         value.version = this.version;
-        this._synchroFilesService.saveDetail(value).subscribe(function (r) {
+        this.modelModified.name = this.synchroForm.find('name').value;
+        this.modelModified.cronExp = this.synchroForm.find('cronExp').value;
+        this.modelModified.masterDir = this.synchroForm.find('masterDir').value;
+        this.modelModified.slaveDir = this.synchroForm.find('slaveDir').value;
+        this._synchroFilesService.saveDetail(this.modelModified).subscribe(function (r) {
             _this.isHttpRequest = false;
-            console.log("OK" + r.text());
+            _this.model = r;
+            _this.modelModified = JSON.parse(JSON.stringify(_this.model));
+            console.log("OK" + JSON.stringify(r));
             _this.alerts.push({ msg: 'Sauvegarde effectu\u00E9e avec succ\u00E8s', type: 'info', closable: true });
         }, function (e) {
             _this.isHttpRequest = false;
@@ -62,6 +83,21 @@ var SynchroDetail = (function () {
     };
     SynchroDetail.prototype.closeAlert = function (i) {
         this.alerts.splice(i, 1);
+    };
+    SynchroDetail.prototype.addPattern = function () {
+        if (!this.modelModified.includeExcludePatterns) {
+            this.model.includeExcludePatterns = [];
+            this.modelModified.includeExcludePatterns = [];
+            this.includeExcludePatterns = [];
+        }
+        this.model.includeExcludePatterns.push("");
+        this.modelModified.includeExcludePatterns.push("");
+        this.includeExcludePatterns.push("");
+        console.log("Model : " + JSON.stringify(this.modelModified));
+    };
+    SynchroDetail.prototype.chgPattern = function (i, event) {
+        this.modelModified.includeExcludePatterns[i] = event.target.value;
+        console.log("Model : " + JSON.stringify(this.modelModified));
     };
     SynchroDetail = __decorate([
         core_1.Component({
