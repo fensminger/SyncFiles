@@ -28,7 +28,6 @@ import {
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Détail</th>
                     <th>Nom</th>
                     <th>Rép. maître</th>
                     <th>Rép. esclave</th>
@@ -37,8 +36,7 @@ import {
             </thead>
             <tbody>
                 <tr *ngFor="let synchro of synchroFileList;let i = index">
-                    <td><a [routerLink]="['/Detail', {id : synchro.id}]">Détail</a></td>
-                    <td>{{synchro.name}}</td>
+                    <td><a [routerLink]="['/Detail', {id : synchro.id}]">{{synchro.name}}</a></td>
                     <td>{{synchro.masterDir}}</td>
                     <td>{{synchro.slaveDir}} </td>
                     <td><a (click)="dialogConfirmRemove(i, synchro.id)"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a></td>

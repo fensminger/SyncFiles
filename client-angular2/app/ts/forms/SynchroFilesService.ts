@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Http, Response, Headers} from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Http, Response, Headers } from '@angular/http';
+import { Observable } from 'rxjs';
 
 
 @Injectable()
@@ -13,7 +13,7 @@ export class SynchroFilesService {
         this.headers.append('Content-Type', 'application/json');
     }
 
-    public loadAll() : Observable<Response> {
+    public loadAll() : Observable<any> {
         return this.http.get('/api/sync-files/param/load-all')
             .map(this.extractData)
             .catch(this.handleError);

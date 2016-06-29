@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
-var Observable_1 = require('rxjs/Observable');
+var rxjs_1 = require('rxjs');
 var SynchroFilesService = (function () {
     function SynchroFilesService(http) {
         this.headers = new http_1.Headers();
@@ -37,7 +37,7 @@ var SynchroFilesService = (function () {
     SynchroFilesService.prototype.handleError = function (error) {
         var errMsg = error.message || 'Server error';
         console.error(errMsg);
-        return Observable_1.Observable.throw(errMsg);
+        return rxjs_1.Observable.throw(errMsg);
     };
     SynchroFilesService.prototype.saveDetail = function (detail) {
         return this.http.post("/api/sync-files/param/save", JSON.stringify(detail), { headers: this.headers })
