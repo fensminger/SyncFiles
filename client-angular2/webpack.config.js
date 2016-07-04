@@ -89,7 +89,7 @@ function makeConfig(options) {
       new ReloadPlugin( isDevServer ? 'localhost' : ''),
       new WebpackNotifierPlugin({
         title: 'ng-book',
-        contentImage: path.join(appDir, 'images', 'ng-book-2-minibook.png')
+        // contentImage: path.join(appDir, 'images/notifier.png')
       }),
     ],
     resolveLoader: {
@@ -105,7 +105,7 @@ function makeConfig(options) {
       extensions: ['', '.ts', '.js', '.json', '.css'],
       alias: {
         'app': 'app',
-        'scripts': npmRoot
+        'scripts': npmRoot,
       }
     },
     module: {
@@ -114,10 +114,9 @@ function makeConfig(options) {
       ],
 
       loaders: [
-        { test: /\.(png|jpg|gif|ico)$/,   loader: 'file-loader?limit=50000&name=[path][name].[ext]' },
+        { test: /\.(png|jpg|gif|ico)$/,   loader: 'url-loader?limit=50000&name=[path][name].[ext]' },
         { test: /\.json$/, loader: 'json' },
-        // { test: /^(?!.*\.min\.css$).*\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap')},
-        { test: /^.*\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap')},
+        { test: /^(?!.*\.min\.css$).*\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap')},
         { test: /\.scss$/, loaders: ['style-loader',
                                      ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap'),
                                      'sass-loader' +

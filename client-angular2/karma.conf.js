@@ -1,24 +1,34 @@
 // Karma configuration
-var path = require('path');
+var path                = require('path');
 var cwd = process.cwd();
 
 module.exports = function(config) {
   config.set({
+
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
+
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['jasmine'],
 
+    // plugins: [require('karma-webpack'), require('karma-jasmine'), 'karma-spec-reporter'],
+ 
+
     // list of files / patterns to load in the browser
     files: [
+      // { pattern: './node_modules/es5-shim/es5-shim.js', watched: false },
+      // { pattern: './node_modules/core-js/es6/core-js/es6.js', watched: false },
+      { pattern: './vendor/core-js/es6.js', watched: false },
       { pattern: 'test.bundle.js', watched: false }
     ],
+
 
     // list of files to exclude
     exclude: [
     ],
+
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
@@ -29,16 +39,21 @@ module.exports = function(config) {
     webpack: {
       resolve: {
         root: [path.resolve(cwd)],
-        modulesDirectories: ['node_modules', 'app', 'app/ts', 'test', '.'],
-        extensions: ['', '.ts', '.js', '.css'],
+        modulesDirectories: [
+          'node_modules', 'app', 'app/ts', 'test', '.'
+        ],
+        extensions: ["", ".ts", ".js", ".css"],
         alias: {
           'app': 'app'
         }
       },
       module: {
         loaders: [
-          { test: /\.ts$/, loader: 'ts-loader', exclude: [/node_modules/]}
-        ]
+          { test: /\.ts$/, loader: 'awesome-typescript-loader?ignoreWarnings[]=2304', exclude: [/node_modules/]},
+          { test: /reflect-metadata/, loader: "imports?require=>false" },
+          { test: /es6-symbol/, loader: "imports?require=>false" },
+
+        ],
       },
       stats: {
         colors: true,
@@ -47,7 +62,7 @@ module.exports = function(config) {
       watch: true,
       debug: true
     },
-
+   
     webpackServer: {
       noInfo: true
     },
