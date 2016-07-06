@@ -11,7 +11,7 @@ import {AlertComponent} from 'ng2-bootstrap/ng2-bootstrap';
 import {SfcInput} from './sfc_input';
 import {SynchroFilesService} from './SynchroFilesService';
 import {Response} from "@angular/http";
-import {RouteParams} from "@angular/router-deprecated";
+import {ActivatedRoute, ROUTER_DIRECTIVES} from "@angular/router";
 
 @Component({
   selector: 'synchro-detail',
@@ -38,11 +38,10 @@ export class SynchroDetail implements OnInit {
     includeExcludePatterns = [];
 
     constructor(private _synchroFilesService : SynchroFilesService,
-                private _routeParams : RouteParams,
-                private _fb: FormBuilder, title : Title) {
+                private _fb: FormBuilder, title : Title,
+                private route: ActivatedRoute) {
         title.setTitle("SyncFiles - Detail d'une synchronisation");
 
-        this.id = _routeParams.get('id');
         console.log("Paramètre" + this.id);
         this.synchroForm = _fb.group({
             'name': ['', Validators.required],
@@ -50,6 +49,7 @@ export class SynchroDetail implements OnInit {
             'masterDir': ['', Validators.required],
             'slaveDir': ['', Validators.required],
         });
+        route.params.subscribe(params => { this.id = params['id']; });
     }
 
     ngOnInit() {

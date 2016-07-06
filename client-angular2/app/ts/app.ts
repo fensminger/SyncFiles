@@ -6,10 +6,9 @@ import {NgClass} from '@angular/common';
 import {bootstrap} from '@angular/platform-browser-dynamic';
 import {
     ROUTER_DIRECTIVES,
-    ROUTER_PROVIDERS,
-    Router,
-    RouteConfig,
-} from '@angular/router-deprecated';
+    provideRouter,
+    RouterConfig,
+} from '@angular/router';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import { HTTP_PROVIDERS } from '@angular/http';
 
@@ -52,8 +51,8 @@ require('../images/favicon.ico');
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="navbar-collapse" [ngClass]="{collapse: menuClosed}" #menu>
               <ul class="nav navbar-nav">
-                <li><a [routerLink]="['/Home']" (click)="openCloseMobileMenu()">Home</a></li>
-                <li><a [routerLink]="['/Detail']" (click)="openCloseMobileMenu()">Création d'une synchronisation</a></li>
+                <li><a [routerLink]="['/home']" (click)="openCloseMobileMenu()">Home</a></li>
+                <li><a [routerLink]="['/detail']" (click)="openCloseMobileMenu()">Création d'une synchronisation</a></li>
               </ul>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
@@ -61,16 +60,10 @@ require('../images/favicon.ico');
         <router-outlet></router-outlet>
   `
 })
-@RouteConfig([
-    { path: '/', name: 'root', redirectTo: ['/Home'] },
-    { path: '/home', name: 'Home', component: SynchroList },
-    { path: '/detail', name: 'Detail', component: SynchroDetail },
-    { path: '/detail/:id', name: 'DetailUpdate', component: SynchroDetail }
-])
 class SynchroApp {
     menuClosed : boolean = true;
 
-    constructor(public router: Router) {
+    constructor() {
     }
 
     openCloseMobileMenu(elt : HTMLDivElement) {
@@ -83,9 +76,16 @@ class SynchroApp {
     }
 }
 
+const routes: RouterConfig = [
+    { path: '', redirectTo: 'home', terminal: true },
+    { path: 'home', component: SynchroList },
+    { path: 'detail', component: SynchroDetail },
+    { path: 'detail/:id', component: SynchroDetail }
+];
+
 bootstrap(SynchroApp, [
-    ROUTER_PROVIDERS,
-    HTTP_PROVIDERS,
-    SynchroFilesService,
+    provideRouter(routes), // <-- installs our routes
     provide(LocationStrategy, {useClass: HashLocationStrategy}),
+    HTTP_PROVIDERS,
+    SynchroFilesService
 ]);

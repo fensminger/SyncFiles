@@ -13,7 +13,7 @@ import {ConfirmDialog} from './confirm-dialog';
 import {Response} from "@angular/http";
 import {
     ROUTER_DIRECTIVES,
-} from '@angular/router-deprecated';
+} from '@angular/router';
 
 @Component({
   selector: 'synchro-list',
@@ -36,7 +36,7 @@ import {
             </thead>
             <tbody>
                 <tr *ngFor="let synchro of synchroFileList;let i = index">
-                    <td><a [routerLink]="['/Detail', {id : synchro.id}]">{{synchro.name}}</a></td>
+                    <td><a [routerLink]="['/detail', {id : synchro.id}]">{{synchro.name}}</a></td>
                     <td>{{synchro.masterDir}}</td>
                     <td>{{synchro.slaveDir}} </td>
                     <td><a (click)="dialogConfirmRemove(i, synchro.id)"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a></td>
