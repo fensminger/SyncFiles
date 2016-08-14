@@ -97,7 +97,7 @@ public class SwiftAccess {
             "token='" + token + '\'' +
             ", endpoint='" + endpoint + '\'' +
             ", expires='" + expires + '\'' +
-            ", accessToken=" + accessToken.getToken() + ", secret=" + accessToken.getSecret() + ", rawResponse=" + accessToken.getRawResponse() +
+            ", accessToken=" + accessToken.getRawResponse() +
             '}';
     }
 }

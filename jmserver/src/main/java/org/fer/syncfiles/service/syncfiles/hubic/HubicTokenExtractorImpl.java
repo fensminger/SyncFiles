@@ -14,23 +14,24 @@
 
 package org.fer.syncfiles.service.syncfiles.hubic;
 
-import com.github.scribejava.core.extractors.AccessTokenExtractor;
+import com.github.scribejava.core.extractors.TokenExtractor;
+import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.Token;
 import com.github.scribejava.core.utils.Preconditions;
 import com.google.gson.Gson;
 
 
-public class HubicTokenExtractorImpl implements AccessTokenExtractor {
+public class HubicTokenExtractorImpl implements TokenExtractor<OAuth2AccessToken> {
 
 	private static final String EMPTY_SECRET = "";
 
 	private final Gson gson = new Gson();
 
-	public Token extract(String response)
+	public OAuth2AccessToken extract(String response)
 	{
 		Preconditions.checkEmptyString(response, "Response body is incorrect. Can't extract a token from an empty string");
 		AccessToken at = gson.fromJson(response, AccessToken.class);
-		return new Token(at.getAccessToken(), EMPTY_SECRET, response);
+		return new OAuth2AccessToken(at.getAccessToken(), response);
 	}
 
 	public AccessToken getAccessToken (String response)

@@ -43,6 +43,9 @@ export class SynchroDetail implements OnInit {
         title.setTitle("SyncFiles - Detail d'une synchronisation");
 
         console.log("Paramètre" + this.id);
+
+        // console.log('lodash version:', _.VERSION);
+        
         this.synchroForm = _fb.group({
             'name': ['', Validators.required],
             'cronExp' : [''],

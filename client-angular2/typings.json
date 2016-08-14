@@ -7,5 +7,8 @@
     "underscore": "github:DefinitelyTyped/DefinitelyTyped/underscore/underscore.d.ts#38fb591c6eba840e0b53d1110302b8e4fb04651c",
     "core-js": "registry:dt/core-js#0.0.0+20160317120654",
     "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#8cf8164641be73e8f1e652c2a5b967c7210b6729"
+  },
+  "dependencies": {
+    "lodash": "registry:npm/lodash#4.0.0+20160701205107"
   }
 }

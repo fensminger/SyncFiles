@@ -21,11 +21,6 @@ import java.util.Locale;
 public class HubicServiceTest extends HubicTestPassword {
     private final Logger log = LoggerFactory.getLogger(HubicServiceTest.class);
 
-
-    final String clientId = "api_hubic_hB3LO1RcO0Rz2xhqiYZBvYyFv0OQ5mmM";
-    final String clientSecret = "h0USSa0WU81zauQNI77om1gWNuE7KSJX7YmJsGU2FXVJISNpjy7MQxu7NV8Dg8F7";
-    final int port = 9000;
-
     int count = 0;
 
     @Test

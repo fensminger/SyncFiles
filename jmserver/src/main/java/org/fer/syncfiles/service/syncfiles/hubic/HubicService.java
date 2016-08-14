@@ -202,46 +202,57 @@ public class HubicService {
         request.addBodyParameter("refresh_token", at.getRefreshToken());
         request.addBodyParameter("grant_type", "refresh_token");
         Response response = request.send();
-        String body = response.getBody();
-        if (response.getCode()!=200) {
-            throw new RuntimeException("Unable to refresh token " + response.getCode() + " : " + body);
-        }
-        Token newToken = service.getApi().getAccessTokenExtractor().extract(response.getBody());
+        String body = null;
+        try {
+            body = response.getBody();
+            if (response.getCode()!=200) {
+                throw new RuntimeException("Unable to refresh token " + response.getCode() + " : " + body);
+            }
+            OAuth2AccessToken newToken = service.getApi().getAccessTokenExtractor().extract(response.getBody());
 // {"expires_in":21600,"access_token":"06lWcO3bkjcjtDLrSNaRpdAUKdmZxqTD9dI6sG0Dhbxj0I3q6JF33WI562OBEZgI","token_type":"Bearer"}
-        SwiftAccess swiftAccess = signRequest(service, newToken);
-        swiftRequest.setSwiftAccess(swiftAccess);
+            SwiftAccess swiftAccess = signRequest(service, newToken);
+            swiftRequest.setSwiftAccess(swiftAccess);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to read token " + e.getMessage(),e);
+        }
     }
 
     private SwiftAccess retrieveToken(OAuth20Service service, String code) {
-        final Verifier verifier = new Verifier(code);
+//        final Verifier verifier = new Verifier(code);
         // Trade the Request Token and Verfier for the Access Token
         log.info("Trading the Request Token for an Access Token...");
-        final Token accessToken = service.getAccessToken(verifier);
-        log.info("Got the Access Token!");
-        log.info("(if your curious it looks like this: " + accessToken + " )");
-        log.info("");
-
-
-        return signRequest(service, accessToken);
+        try {
+            final OAuth2AccessToken accessToken = service.getAccessToken(code);
+            log.info("Got the Access Token!");
+            log.info("(if your curious it looks like this: " + accessToken + " )");
+            log.info("");
+            return signRequest(service, accessToken);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to retrieve token : " + e.getMessage(), e);
+        }
     }
 
-    private SwiftAccess signRequest(OAuth20Service service, Token accessToken) {
-        final OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.hubic.com/1.0/account/credentials", service);
-        request.setConnectionKeepAlive(false);
-        service.signRequest(accessToken, request);
-        final Response response = request.send();
+    private SwiftAccess signRequest(OAuth20Service service, OAuth2AccessToken accessToken) {
+        try {
+            final OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.hubic.com/1.0/account/credentials", service);
+            request.setConnectionKeepAlive(false);
+            service.signRequest(accessToken, request);
+            final Response response = request.send();
 
-        SwiftAccess swiftAccess = new Gson().fromJson(response.getBody(), SwiftAccess.class);
-        swiftAccess.setAccessToken(accessToken);
+            SwiftAccess swiftAccess = new Gson().fromJson(response.getBody(), SwiftAccess.class);
+            swiftAccess.setAccessToken(accessToken);
 
-        log.info("");
-        log.info("" + response.getCode());
-        log.info(response.getBody());
+            log.info("");
+            log.info("" + response.getCode());
+            log.info(response.getBody());
 
-        log.info("");
-        log.info("" + swiftAccess);
+            log.info("");
+            log.info("" + swiftAccess);
 
-        return swiftAccess;
+            return swiftAccess;
+        } catch (IOException e) {
+            throw new RuntimeException("unable to sign request : " + e.getMessage(), e);
+        }
     }
 
 }

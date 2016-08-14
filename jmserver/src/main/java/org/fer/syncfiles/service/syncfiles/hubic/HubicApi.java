@@ -16,18 +16,18 @@ package org.fer.syncfiles.service.syncfiles.hubic;
 
 
 import com.github.scribejava.core.builder.api.DefaultApi20;
-import com.github.scribejava.core.extractors.AccessTokenExtractor;
+import com.github.scribejava.core.extractors.OAuth2AccessTokenExtractor;
 import com.github.scribejava.core.model.OAuthConfig;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import com.github.scribejava.core.utils.OAuthEncoder;
 import com.github.scribejava.core.utils.Preconditions;
 
-
 public class HubicApi extends DefaultApi20 {
 
-	private static final String AUTHORIZE_URL = "https://api.hubic.com/oauth/auth/?client_id=%s&redirect_uri=%s&response_type=code&state=%s";
-	private static final String SCOPED_AUTHORIZE_URL = AUTHORIZE_URL + "&scope=%s";
+    private static final String AUTHORIZE_URL = "https://api.hubic.com/oauth/auth/";
+//    private static final String AUTHORIZE_URL = "https://api.hubic.com/oauth/auth/?client_id=%s&redirect_uri=%s&response_type=code&state=%s";
+//	private static final String SCOPED_AUTHORIZE_URL = AUTHORIZE_URL + "&scope=%s";
 
 	public static final String CREDENTIALS_URL = "https://api.hubic.com/1.0/account/credentials" ;
 
@@ -40,29 +40,37 @@ public class HubicApi extends DefaultApi20 {
 		return "https://api.hubic.com/oauth/token";
 	}
 
-	@Override
+    @Override
+    protected String getAuthorizationBaseUrl() {
+        // return "https://api.hubic.com/oauth/auth";
+        return AUTHORIZE_URL;
+//        return String.format(AUTHORIZE_URL, config.getApiKey(),
+//            OAuthEncoder.encode(config.getCallback()));
+    }
+
+    @Override
 	public Verb getAccessTokenVerb() {
 		return Verb.POST;
 	}
 
-	@Override
-	public String getAuthorizationUrl(OAuthConfig config)
-	{
-		Preconditions.checkValidUrl(config.getCallback(), "Must provide a valid url as callback.") ;
-		if (config.hasScope())
-		{
-			return String.format(SCOPED_AUTHORIZE_URL, config.getApiKey(),
-					OAuthEncoder.encode(config.getCallback()),
-                OAuthEncoder.encode(config.getState()),
-                OAuthEncoder.encode(config.getScope())
-            );
-		}
-		else
-		{
-			return String.format(AUTHORIZE_URL, config.getApiKey(),
-					OAuthEncoder.encode(config.getCallback()));
-		}
-	}
+//	@Override
+//	public String getAuthorizationUrl(OAuthConfig config)
+//	{
+//		Preconditions.checkValidUrl(config.getCallback(), "Must provide a valid url as callback.") ;
+//		if (config.hasScope())
+//		{
+//			return String.format(SCOPED_AUTHORIZE_URL, config.getApiKey(),
+//					OAuthEncoder.encode(config.getCallback()),
+//                OAuthEncoder.encode(config.getState()),
+//                OAuthEncoder.encode(config.getScope())
+//            );
+//		}
+//		else
+//		{
+//			return String.format(AUTHORIZE_URL, config.getApiKey(),
+//					OAuthEncoder.encode(config.getCallback()));
+//		}
+//	}
 
 	@Override
 	public OAuth20Service createService(OAuthConfig config)
@@ -70,12 +78,12 @@ public class HubicApi extends DefaultApi20 {
 		return new HubicOAuth20ServiceImpl(this, config);
 	}
 
-	@Override
-	public AccessTokenExtractor getAccessTokenExtractor()
-	{
-		return new HubicTokenExtractorImpl();
-	}
-
+//	@Override
+//	public AccessTokenExtractor getAccessTokenExtractor()
+//	{
+//		return new HubicTokenExtractorImpl();
+//	}
+//
     private static class InstanceHolder {
         private static final HubicApi INSTANCE = new HubicApi();
 
