@@ -35,3 +35,4 @@ dbSyncFiles.lck
 jmserver/src/main/resources/config/hubicAuthenticate.properties
 client-angular2/.DS_Store
 client-angular2/node_modules/
+jmserver/src/main/java/org/fer/syncfiles/HubicTestPassword.java

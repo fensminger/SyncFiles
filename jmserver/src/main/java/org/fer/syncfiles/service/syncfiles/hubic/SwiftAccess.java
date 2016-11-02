@@ -86,8 +86,8 @@ public class SwiftAccess {
         if (expires==null) {
             return true;
         } else {
-            log.info("Expire token : " + expires + " -> " + getExpiresDate());
-            return (getExpiresDate().getTime()-1000L*60L*60L*10L) <= new Date().getTime();
+            log.debug("Expire token : " + expires + " -> " + getExpiresDate());
+            return (getExpiresDate().getTime()-1000L*10L*1L) <= new Date().getTime();
         }
     }
 

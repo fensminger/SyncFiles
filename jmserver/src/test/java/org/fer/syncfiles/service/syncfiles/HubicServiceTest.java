@@ -2,6 +2,8 @@ package org.fer.syncfiles.service.syncfiles;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.fer.syncfiles.HubicTestPassword;
+import org.fer.syncfiles.InfoHubicObject;
 import org.fer.syncfiles.service.syncfiles.hubic.*;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -63,10 +65,7 @@ public class HubicServiceTest extends HubicTestPassword {
         File file = new File(this.getClass().getResource("/hubic/"+fileToUpload).getFile());
         hubicService.uploadObject("default", fileToUpload, getMd5(file), file);
 
-        if (swiftAccess.isExpire()) {
-            hubicService.refreshToken();
-        }
-
+        hubicService.refreshTokenIfExpired();
 
         try (CloseableHttpResponse res = hubicService.loadObject("default", fileToUpload, false)) {
             log.info("download status : " + res.getStatusLine());

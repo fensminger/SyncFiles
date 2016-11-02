@@ -1,0 +1,6 @@
+server.http.trifacta: http://devtrifacta:8080
+
+spring:
+    profiles:
+        active: dev
+

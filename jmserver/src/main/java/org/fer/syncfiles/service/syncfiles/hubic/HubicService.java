@@ -29,8 +29,12 @@ public class HubicService {
 
     private OAuth20Service service = null;
     private SwiftRequest swiftRequest;
+
     private String clientId;
     private String clientSecret;
+    private int port;
+    private String user;
+    private String pwd;
 
     public HubicService() {
         this(new SwiftRequest());
@@ -85,9 +89,12 @@ public class HubicService {
         swiftRequest.uploadObject(container, fileName, md5, fileToUpload);
     }
 
-    private void refreshTokenIfExpired() {
+    public void refreshTokenIfExpired() {
         if (swiftRequest.getSwiftAccess().isExpire()) {
-            refreshToken();
+//            String msgErr = "En cas de rafraichissement du token, on préfère faire une pause.";
+//            log.info(msgErr);
+//            throw new RuntimeException(msgErr);
+             refreshToken();
         }
     }
 
@@ -100,8 +107,12 @@ public class HubicService {
         HubicApi hubicApiInstance = HubicApi.instance();
         final String secretState = "RandomString_" + new Random().nextInt(999_999);
 
+        log.info("Start authenticate method.");
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        this.port = port;
+        this.user = user;
+        this.pwd = pwd;
 
         service = new ServiceBuilder()
             .apiKey(clientId)
@@ -153,15 +164,14 @@ public class HubicService {
         log.info("");
 
         log.info("And paste the state from server here. We have set 'secretState'='" + secretState + "'.");
-        System.out.print(">>");
         final String value = secretState;
         if (secretState.equals(value)) {
             log.info("State value does match!");
         } else {
-            log.info("Ooops, state value does not match!");
-            log.info("Expected = " + secretState);
-            log.info("Got      = " + value);
-            log.info("");
+            log.error("Ooops, state value does not match!");
+            log.error("Expected = " + secretState);
+            log.error("Got      = " + value);
+            log.error("");
         }
 
         SwiftAccess swiftAccess = retrieveToken(service, code);
@@ -189,7 +199,17 @@ public class HubicService {
 
     }
 
-    public void refreshToken() {
+    private void refreshToken() {
+
+        log.info("Le token est expiré.");
+//        this.swiftRequest = new SwiftRequest();
+//        try {
+//            this.authenticate(clientId, clientSecret, port, user, pwd);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e.getMessage(), e);
+//        }
+
+        // Real Refresh token
 
         final OAuthRequest request = new OAuthRequest(service.getApi().getAccessTokenVerb(), service.getApi().getAccessTokenEndpoint(), service);
 

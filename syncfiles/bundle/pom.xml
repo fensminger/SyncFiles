@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
+
+    <parent>
+        <groupId>org.fer.syncfiles</groupId>
+        <artifactId>sync-main</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <!-- groupID and version inherited from parent POM -->
+    <artifactId>syncfiles-bundle</artifactId>
+    <packaging>war</packaging>
+
+	<properties>
+		<maven.build.timestamp.format>yyyy-MM-dd_HH_mm_ss</maven.build.timestamp.format>
+	</properties>
+	
+    <build>
+        <finalName>paramtrifacta</finalName>
+        <plugins>
+
+            <!-- Par défaut le plugin war va générer un war en fusionnant les dépendances (principe des overlays,
+                voir http://maven.apache.org/plugins/maven-war-plugin/overlays.html) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+					 <archive>
+					   <manifest>
+						 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+					   </manifest>
+					   <manifestEntries>                                                                        
+						 <Implementation-Build>${project.name}-${project.version}_${maven.build.timestamp}.tar.gz</Implementation-Build>
+					   </manifestEntries>
+					 </archive>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.fer.syncfiles</groupId>
+            <artifactId>syncfiles-server</artifactId>
+            <!-- version specified by parent pom's <dependendyManagement> -->
+            <type>war</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fer.syncfiles</groupId>
+            <artifactId>syncfiles-web</artifactId>
+            <!-- version specified by parent pom's <dependendyManagement> -->
+            <type>war</type>
+        </dependency>
+
+    </dependencies>
+
+</project>

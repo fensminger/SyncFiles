@@ -1,0 +1,5 @@
+server.port: 9900
+management.port: 9901
+management.address: 127.0.0.1
+server.http.trifacta: http://devtrifacta:8080
+

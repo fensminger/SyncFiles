@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.MetricFilterAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.MetricRepositoryAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
@@ -67,7 +68,7 @@ public class Application {
     /**
      * Main method, used to run the application.
      */
-    public static void main(String[] args) throws UnknownHostException {
+    public static void main2(String[] args) throws UnknownHostException {
         SpringApplication app = new SpringApplication(Application.class);
         SimpleCommandLinePropertySource source = new SimpleCommandLinePropertySource(args);
         addDefaultProfile(app, source);

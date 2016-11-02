@@ -1,0 +1,42 @@
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <!-- Left Side -->
+            <div class="card card-w-title" *ngIf="syncFilesinfo==null || syncFilesinfo.length==0">
+                <h1>Synchronization is not running</h1>
+            </div>
+
+            <p-accordion *ngIf="syncFilesinfo!=null && syncFilesinfo.length>0" mul>
+                <p-accordionTab [selected]="ongletIndex==i" (onOpen)="onTabActivate($event)" *ngFor="let sync of syncFilesinfo; let i = index">
+                    <header>
+                        {{getTitle(sync)}}
+                    </header>
+                        <p-panel *ngIf="sync.msgError!=null" [header]="'Error : '+sync.msgError" [toggleable]="true" [collapsed]="true" styleClass="header-error">
+                            <code>
+                                {{sync.msgErrorStackTrace}}
+                            </code>
+                        </p-panel>
+                        <br *ngIf="sync.msgError!=null"/>
+                        <!-- running -->
+                        <p-dataTable [value]="sync.resumeNumber" [responsive]="true">
+                            <header>Analyse files</header>
+                            <p-column field="title" header=""></p-column>
+                            <p-column field="numberOfFiles" header="Total of files"></p-column>
+                            <p-column field="numberOfNewFiles" header="New files"></p-column>
+                            <p-column field="numberOfUpdatedFiles" header="Updated files"></p-column>
+                            <p-column field="numberOfDeletedFiles" header="Deleted files"></p-column>
+                        </p-dataTable>
+
+                        <br/>
+
+                        <p-panel header="Last synchronization messages..." [toggleable]="true" [collapsed]="false">
+                            <synchro-simple-msg [msgList]="sync.lastMsgList"></synchro-simple-msg>
+                        </p-panel>
+                </p-accordionTab>
+            </p-accordion>
+
+        </div>
+    </div>
+
+<br/>
+
+

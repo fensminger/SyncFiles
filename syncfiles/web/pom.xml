@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
+
+  <parent>
+    <groupId>org.fer.syncfiles</groupId>
+    <artifactId>sync-main</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <!-- groupId inherited from parent POM -->
+  <artifactId>syncfiles-web</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+
+  <build>
+
+    <plugins>
+
+      <!-- Extract the TS interface from the web service WAR and copy it into the main app directory -->
+      <!-- <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.10</version>
+        <executions>
+          <execution>
+            <id>unpack-ts</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <artifactItems>
+            <artifactItem>
+              <groupId>lu.bourse.refe</groupId>
+              <artifactId>refe-rest-ws</artifactId>
+              <version>0.0.1-SNAPSHOT</version>
+              <type>war</type>
+              <overWrite>false</overWrite>
+              <outputDirectory>${project.basedir}/src/main/webapp/app</outputDirectory>
+              <includes>**/*.d.ts</includes>
+            </artifactItem>
+          </artifactItems>
+        </configuration>
+      </plugin> -->
+
+
+      <!-- Package as a war file-->
+      <!-- TODO: use Angular CLI to prepare what needs to be deployed instead of taking all node_modules dir -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <!-- Ignore TS files, generated map files and typings -->
+          <warSourceExcludes>**/*.ts,**/*.js.map,typings/**</warSourceExcludes>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+		    <webResources>
+				<resource>
+				  <directory>dist</directory>
+				</resource>
+			</webResources>
+
+        </configuration>
+      </plugin>
+
+
+    </plugins>
+
+  </build>
+
+
+  <dependencies>
+    <!-- We depend on the backend just for extracting the domain.d.ts file; we must mark it as "provided"
+      otherwise the maven-war-plugin will merge it into this module's war -->
+    <!--<dependency>
+      <groupId>lu.bourse.refe</groupId>
+      <artifactId>refe-rest-ws</artifactId>
+      <type>war</type>
+      <scope>provided</scope>
+    </dependency>-->
+  </dependencies>
+
+
+  <profiles>
+
+    <profile>
+      <id>ci</id>
+
+      <build>
+        <plugins>
+          <!-- Installation locale de node/npm pour build sur PIC
+            voir https://github.com/eirslett/frontend-maven-plugin -->
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <!-- Use the latest released version: https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ -->
+            <version>1.0</version>
+            <executions>
+              <!--step 1: download and install node and npm into <installDirectory> -->
+              <execution>
+                <id>install-node-and-npm</id>
+                <goals>
+                  <goal>install-node-and-npm</goal>
+                </goals>
+                <!-- optional: default phase is "generate-resources" -->
+                <phase>generate-resources</phase>
+              </execution>
+              <!-- step 2: expecute npm install from local installation to retrieve dependencies -->
+              <execution>
+                <id>npm-install</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <!-- optional: default phase is "generate-resources" -->
+                <phase>generate-resources</phase>
+                <configuration>
+                  <arguments>install --verbose</arguments>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <nodeVersion>v6.2.2</nodeVersion>
+              <npmVersion>3.9.5</npmVersion>
+              <nodeDownloadRoot>https://nodejs.org/nodejs/dist/</nodeDownloadRoot>
+              <npmDownloadRoot>https://registry.npmjs.org/npm/-/</npmDownloadRoot>
+              <!-- Where package.json is -->
+              <workingDirectory>${project.basedir}/src/main/webapp</workingDirectory>
+              <!-- Where the downloaded files will be put (target) -->
+              <installDirectory>${project.build.directory}</installDirectory>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+
+    </profile>
+  </profiles>
+
+
+</project>

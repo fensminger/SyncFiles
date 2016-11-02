@@ -1,0 +1,4 @@
+*.tmp
+bundle/target/
+web/target/
+server/paramtrifacta-server.iml

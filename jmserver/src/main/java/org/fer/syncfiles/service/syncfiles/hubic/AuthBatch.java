@@ -63,6 +63,7 @@ public class AuthBatch {
 	}
 
     private boolean tryOneHubicConnection(String url, String login, String password, AuthHttpServer httpServer) {
+        logger.info("tryOneHubicConnection");
         try {
             ConnectionKeepAliveStrategy myStrategy = (response, context) -> {
                 // Honor 'keep-alive' header

@@ -3,6 +3,7 @@ package org.fer.syncfiles.web.rest.syncfiles;
 import org.fer.syncfiles.domain.syncfiles.ParamSyncFiles;
 import org.fer.syncfiles.security.AuthoritiesConstants;
 import org.fer.syncfiles.service.syncfiles.ParamSyncFilesService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ import java.util.List;
 @RequestMapping("/api/sync-files")
 public class ParamSyncFilesController {
 
-    @Inject
+    @Autowired
     private ParamSyncFilesService paramSyncFilesService;
 
     @RequestMapping(value = "/param/save",
