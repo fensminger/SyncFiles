@@ -4,13 +4,14 @@ import {BreadCrumbService} from './shared';
 import {Subscription} from 'rxjs/Subscription'
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import {SynchroRunningService} from './forms/synchro_running.service';
 
 declare var Ultima: any;
 
 @Component({
   selector: 'my-app',
   templateUrl: 'application.html',
-  providers: [BreadCrumbService]
+  providers: [BreadCrumbService, SynchroRunningService]
 })
 export class AppComponent implements AfterViewInit {
 

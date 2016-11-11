@@ -1,9 +1,12 @@
 package org.fer.syncfiles.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.fer.syncfiles.domain.ParamSyncFiles;
 import org.fer.syncfiles.domain.SyncfilesSynchroMsg;
+import org.fer.syncfiles.repository.SyncfilesSynchroMsgRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -11,6 +14,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -28,18 +32,33 @@ public class SyncfilesSocketHandler extends TextWebSocketHandler {
     private static final Logger log = LoggerFactory.getLogger(SyncfilesSocketHandler.class);
 
     protected Map<String, WebSocketSession> sessionMap = new HashMap<>();
-    protected Map<Long, SyncfilesSynchroMsg> syncfilesSynchroMsgMap = new ConcurrentHashMap<>();
-    protected AtomicLong currentId = new AtomicLong(1);
+    protected Map<String, SyncfilesSynchroMsg> syncfilesSynchroMsgMap = new ConcurrentHashMap<>();
 
     protected AtomicLong nbOfMessageToSend = new AtomicLong(0);
 
+    @Autowired
+    private SyncfilesSynchroMsgRepository syncfilesSynchroMsgRepository;
+
+    @PostConstruct
+    public void postConstruct() {
+        for(SyncfilesSynchroMsg m : syncfilesSynchroMsgRepository.findByRunning(true)) {
+            m.setRunning(false);
+            syncfilesSynchroMsgRepository.save(m);
+        }
+    }
+
     @Scheduled(fixedRate = 1000)
     protected void sendMessage() {
-        try {
-            if (nbOfMessageToSend.getAndSet(0L)==0) {
-                return;
-            }
+        if (nbOfMessageToSend.getAndSet(0L)==0) {
+            return;
+        }
 
+        forceSendMessage();
+    }
+
+    private void forceSendMessage() {
+        nbOfMessageToSend.set(0L);
+        try {
             ObjectMapper objectMapper = new ObjectMapper();
             String msg = objectMapper.writeValueAsString(syncfilesSynchroMsgMap.values());
             for(WebSocketSession session : sessionMap.values()) {
@@ -48,41 +67,61 @@ public class SyncfilesSocketHandler extends TextWebSocketHandler {
         } catch (IOException e) {
             log.error("Ignore socket error sending message : " + e.getMessage(), e);
         }
+        syncfilesSynchroMsgMap.values().stream()
+                .filter(SyncfilesSynchroMsg::isChanged)
+                .forEach(syncfilesSynchroMsg -> {
+                    syncfilesSynchroMsg.setChanged(false);
+                    SyncfilesSynchroMsg res = syncfilesSynchroMsgRepository.save(syncfilesSynchroMsg);
+                    syncfilesSynchroMsg.setVersion(res.getVersion());
+        });
     }
 
-    public long addNewSynchro(String type, String title, String message) {
+    public String addNewSynchro(String type, ParamSyncFiles paramSyncFiles, String message) {
         SyncfilesSynchroMsg syncfilesSynchroMsg = null;
         synchronized (syncfilesSynchroMsgMap) {
-            long id = currentId.getAndAdd(1);
-            syncfilesSynchroMsg = new SyncfilesSynchroMsg(id, type, title);
-            syncfilesSynchroMsg.setLastStateDate(new Date());
+            SyncfilesSynchroMsg syncfilesSynchroMsgRunning = syncfilesSynchroMsgMap.get(paramSyncFiles.getId());
+            if (syncfilesSynchroMsgRunning !=null && syncfilesSynchroMsgRunning.isRunning()) {
+                return null;
+            }
+            syncfilesSynchroMsg = new SyncfilesSynchroMsg(type, paramSyncFiles);
+            Date date = new Date();
+            syncfilesSynchroMsg.setLastStateDate(date);
+            syncfilesSynchroMsg.setStartDate(date);
             syncfilesSynchroMsg.setRunning(true);
+            syncfilesSynchroMsg.setChanged(false);
             if (message!=null) {
                 syncfilesSynchroMsg.addMessage(message);
             }
+            SyncfilesSynchroMsg syncfilesSynchroMsgExist = syncfilesSynchroMsgRepository.findOneByParamSyncFilesId(paramSyncFiles.getId());
+            if (syncfilesSynchroMsgExist!=null) {
+                syncfilesSynchroMsgRepository.delete(syncfilesSynchroMsgExist);
+            }
+            syncfilesSynchroMsg = syncfilesSynchroMsgRepository.save(syncfilesSynchroMsg);
         }
-        syncfilesSynchroMsgMap.put(syncfilesSynchroMsg.getId(), syncfilesSynchroMsg);
+        syncfilesSynchroMsgMap.put(paramSyncFiles.getId(), syncfilesSynchroMsg);
         nbOfMessageToSend.incrementAndGet();
-        sendMessage();
-        return syncfilesSynchroMsg.getId();
+        //sendMessage();
+        return paramSyncFiles.getId();
     }
 
-    public SyncfilesSynchroMsg getSyncfilesSynchroMsg(long id) {
+    public SyncfilesSynchroMsg getSyncfilesSynchroMsg(String id) {
         return syncfilesSynchroMsgMap.get(id);
     }
 
-    public void addMessage(long id, String msg) {
-        if (id==-1L) {
+    public void addMessage(String id, String msg) {
+        if (id==null) {
             return;
         }
         SyncfilesSynchroMsg syncfilesSynchroMsg = syncfilesSynchroMsgMap.get(id);
+        syncfilesSynchroMsg.setChanged(true);
         syncfilesSynchroMsg.addMessage(msg);
+        syncfilesSynchroMsg.setLastStateDate(new Date());
         nbOfMessageToSend.incrementAndGet();
         // sendMessage();
     }
 
-    public void addError(long id, String msgErr, Exception e) {
-        if (id==-1L) {
+    public void addError(String id, String msgErr, Exception e) {
+        if (id==null) {
             return;
         }
         StringWriter stringWriter = new StringWriter();
@@ -92,10 +131,12 @@ public class SyncfilesSocketHandler extends TextWebSocketHandler {
             String msgErrStackTrace = stringWriter.getBuffer().toString();
 //            msgErrStackTrace.replaceAll("\n","<br/>").replaceAll("\r","");
             SyncfilesSynchroMsg syncfilesSynchroMsg = syncfilesSynchroMsgMap.get(id);
+            syncfilesSynchroMsg.setChanged(true);
             syncfilesSynchroMsg.setLastStateDate(new Date());
             syncfilesSynchroMsg.setMsgError(msgErr);
             syncfilesSynchroMsg.setMsgErrorStackTrace(msgErrStackTrace);
             syncfilesSynchroMsg.setRunning(false);
+            syncfilesSynchroMsg.setLastStateDate(new Date());
             nbOfMessageToSend.incrementAndGet();
             // sendMessage();
         }
@@ -106,10 +147,12 @@ public class SyncfilesSocketHandler extends TextWebSocketHandler {
             return;
         }
         SyncfilesSynchroMsg syncfilesSynchroMsg = syncfilesSynchroMsgMap.get(id);
+        syncfilesSynchroMsg.setChanged(true);
         syncfilesSynchroMsg.setLastStateDate(new Date());
         syncfilesSynchroMsg.setMsgError(null);
         syncfilesSynchroMsg.setMsgErrorStackTrace(null);
         syncfilesSynchroMsg.setRunning(true);
+        syncfilesSynchroMsg.setLastStateDate(new Date());
         nbOfMessageToSend.incrementAndGet();
         // sendMessage();
     }
@@ -119,7 +162,7 @@ public class SyncfilesSocketHandler extends TextWebSocketHandler {
         log.info("Connection established : " + session.getId());
         this.sessionMap.put(session.getId(), session);
         nbOfMessageToSend.incrementAndGet();
-        // sendMessage();
+        forceSendMessage();
     }
 
     @Override
@@ -141,8 +184,13 @@ public class SyncfilesSocketHandler extends TextWebSocketHandler {
 //        }
     }
 
-    public void removeSynchro(Long syncfilesInfoId) {
-        if (syncfilesInfoId==-1L) {
+    public void removeSynchro(String syncfilesInfoId) {
+        SyncfilesSynchroMsg syncfilesSynchroMsg = syncfilesSynchroMsgMap.get(syncfilesInfoId);
+        if (syncfilesSynchroMsg!=null) {
+            syncfilesSynchroMsg.setChanged(true);
+            syncfilesSynchroMsg.setRunning(false);
+            syncfilesSynchroMsg.setLastStateDate(new Date());
+        } else {
             return;
         }
 
@@ -155,8 +203,12 @@ public class SyncfilesSocketHandler extends TextWebSocketHandler {
 
             syncfilesSynchroMsgMap.remove(syncfilesInfoId);
             nbOfMessageToSend.incrementAndGet();
-            sendMessage();
+//            sendMessage();
         }).start();
 
+    }
+
+    public SyncfilesSynchroMsg findMsgByParamSyncFilesById(String id) {
+        return syncfilesSynchroMsgRepository.findOneByParamSyncFilesId(id);
     }
 }

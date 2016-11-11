@@ -8,29 +8,13 @@
             <p-accordion *ngIf="syncFilesinfo!=null && syncFilesinfo.length>0" mul>
                 <p-accordionTab [selected]="ongletIndex==i" (onOpen)="onTabActivate($event)" *ngFor="let sync of syncFilesinfo; let i = index">
                     <header>
-                        {{getTitle(sync)}}
+                        {{sync.type}} - {{sync.paramSyncFiles.name}} 
+                        (
+                            <span *ngIf="sync.running">Running</span>
+                            <span *ngIf="!sync.running">Stopped</span>
+                        )
                     </header>
-                        <p-panel *ngIf="sync.msgError!=null" [header]="'Error : '+sync.msgError" [toggleable]="true" [collapsed]="true" styleClass="header-error">
-                            <code>
-                                {{sync.msgErrorStackTrace}}
-                            </code>
-                        </p-panel>
-                        <br *ngIf="sync.msgError!=null"/>
-                        <!-- running -->
-                        <p-dataTable [value]="sync.resumeNumber" [responsive]="true">
-                            <header>Analyse files</header>
-                            <p-column field="title" header=""></p-column>
-                            <p-column field="numberOfFiles" header="Total of files"></p-column>
-                            <p-column field="numberOfNewFiles" header="New files"></p-column>
-                            <p-column field="numberOfUpdatedFiles" header="Updated files"></p-column>
-                            <p-column field="numberOfDeletedFiles" header="Deleted files"></p-column>
-                        </p-dataTable>
-
-                        <br/>
-
-                        <p-panel header="Last synchronization messages..." [toggleable]="true" [collapsed]="false">
-                            <synchro-simple-msg [msgList]="sync.lastMsgList"></synchro-simple-msg>
-                        </p-panel>
+                    <synchro-detail-run [syncFilesinfo]="sync"></synchro-detail-run>
                 </p-accordionTab>
             </p-accordion>
 

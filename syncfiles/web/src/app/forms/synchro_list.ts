@@ -57,7 +57,7 @@ export class SynchroList {
     this._synchroFilesService.synchronize(id).subscribe(
       (r:any) => {
         this.isHttpRequest = false;
-        this.router.navigate(['running']);
+        this.router.navigate(['/detail', id, 'execution']);
       },
         (e : any) => {
           this.isHttpRequest = false;

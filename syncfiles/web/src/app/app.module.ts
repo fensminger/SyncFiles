@@ -17,8 +17,11 @@ import {HmacHttpClient} from './utils/hmac-http-client';
 import { ConfigService } from './config.service';
 import {SynchroList} from './forms/synchro_list';
 import {SynchroDetail} from './forms/synchro_detail';
+import {SynchroDetailEdit} from './forms/synchro_detail_edit';
 import {SynchroRun} from './forms/synchro_running';
+import {SynchroDetailRun} from './forms/synchro_detail_running';
 import {SynchroSimpleMsg} from './forms/synchro_simple_msg';
+import {SynchroRunningService} from './forms/synchro_running.service';
 
 import {AccordionModule} from 'primeng/primeng';
 import {AutoCompleteModule} from 'primeng/primeng';
@@ -181,7 +184,7 @@ import {NodeService} from './demo/service/nodeservice';
       FsqLabelComponent,  
       SynchroSimpleMsg,
       IsAuthorized,  
-      SynchroList, SynchroDetail, SynchroRun,
+      SynchroList, SynchroDetail, SynchroDetailEdit, SynchroRun, SynchroDetailRun,
 
       // Demo Ultima
         Application,

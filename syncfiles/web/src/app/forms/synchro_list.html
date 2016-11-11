@@ -1,5 +1,5 @@
 <div class="ui-g">
-    <div class="ui-g-12">
+    <div class="ui-g-12 ui-g-nopad">
         <div class="card card-w-title">
             <div class="ui-g ui-fluid">
                 <div class="ui-g-8 ui-sm-12 ui-g-nopad"><h1>My backups</h1></div>
@@ -10,7 +10,7 @@
                 <header>Synchronization List</header>
                 <p-column field="name" header="Name">
                     <template let-synchro="rowData" pTemplate type="body">
-                        <a [routerLink]="['/detail', synchro.id]">{{synchro.name}}</a>
+                        <a [routerLink]="['/detail', synchro.id, 'general']">{{synchro.name}}</a>
                     </template>
                 </p-column>
                 <p-column field="masterDir" header="Local directory"></p-column>

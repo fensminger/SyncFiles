@@ -1,23 +1,35 @@
 package org.fer.syncfiles.domain;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by fensm on 07/09/2016.
  */
+@Document(collection = "syncfilesSynchroMsg")
 public class SyncfilesSynchroMsg {
-    private Long id;
+    @Id
+    private String id;
+    @Version
+    private Long version;
 
     private String type;
-    private String title;
+    private ParamSyncFiles paramSyncFiles;
+    private String paramSyncFilesId;
 
-    private ArrayBlockingQueue<SyncfilesDetailSynchroMsg> lastMsgList;
+    private MsgLinkedBlockingQueue<SyncfilesDetailSynchroMsg> lastMsgList;
 
     private boolean running;
+    private Date startDate;
     private Date lastStateDate;
     private String msgError;
     private String msgErrorStackTrace;
@@ -27,13 +39,18 @@ public class SyncfilesSynchroMsg {
     private SyncfilesResumeMsg synchroResume = new SyncfilesResumeMsg("Files to Synchronize");
     private SyncfilesResumeMsg synchroReal = new SyncfilesResumeMsg("Synchronized files");
     private List<SyncfilesResumeMsg> resumeNumber = new ArrayList<>();
+    private boolean changed;
 
-    public SyncfilesSynchroMsg(long id, String type, String title) {
+    public SyncfilesSynchroMsg() {
         super();
-        this.lastMsgList = new ArrayBlockingQueue<>(100);
+    }
+
+    public SyncfilesSynchroMsg(String type, ParamSyncFiles paramSyncFiles) {
+        super();
+        this.lastMsgList = new MsgLinkedBlockingQueue<>();
         this.type = type;
-        this.title = title;
-        this.id = id;
+        this.paramSyncFiles = paramSyncFiles;
+        this.paramSyncFilesId = paramSyncFiles.getId();
         this.resumeNumber.add(localResume);
         this.resumeNumber.add(remoteResume);
         this.resumeNumber.add(synchroResume);
@@ -83,12 +100,12 @@ public class SyncfilesSynchroMsg {
         this.lastStateDate = lastStateDate;
     }
 
-    public Long getId() {
-        return id;
+    public String getId() {
+        return paramSyncFiles.getId();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getTitle() {
+        return paramSyncFiles.getJobName();
     }
 
     public String getType() {
@@ -99,12 +116,12 @@ public class SyncfilesSynchroMsg {
         this.type = type;
     }
 
-    public String getTitle() {
-        return title;
+    public ParamSyncFiles getParamSyncFiles() {
+        return paramSyncFiles;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setParamSyncFiles(ParamSyncFiles paramSyncFiles) {
+        this.paramSyncFiles = paramSyncFiles;
     }
 
     public SyncfilesResumeMsg getLocalResume() {
@@ -146,4 +163,41 @@ public class SyncfilesSynchroMsg {
     public void setSynchroReal(SyncfilesResumeMsg synchroReal) {
         this.synchroReal = synchroReal;
     }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public void setChanged(boolean changed) {
+        this.changed = changed;
+    }
+
+    public boolean isChanged() {
+        return changed;
+    }
+
+    public String getParamSyncFilesId() {
+        return paramSyncFilesId;
+    }
+
+    public void setParamSyncFilesId(String paramSyncFilesId) {
+        this.paramSyncFilesId = paramSyncFilesId;
+    }
+
 }

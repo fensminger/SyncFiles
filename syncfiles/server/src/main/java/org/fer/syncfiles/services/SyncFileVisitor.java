@@ -20,7 +20,6 @@ public class SyncFileVisitor extends SimpleFileVisitor<Path> {
 
     private final OriginFile originFile;
     private final SyncfilesSocketHandler syncfilesSocketHandler;
-    private final Long syncfilesInfoId;
     private FileInfoRepository fileInfoRepository;
     private FileUtils fileUtils;
 
@@ -33,8 +32,8 @@ public class SyncFileVisitor extends SimpleFileVisitor<Path> {
             , FileUtils fileUtils
             , ParamSyncFiles paramSyncFiles
             , Path prefix
-            , OriginFile originFile,
-                           Long syncfilesInfoId, SyncfilesSocketHandler syncfilesSocketHandler) {
+            , OriginFile originFile
+            , SyncfilesSocketHandler syncfilesSocketHandler) {
         super();
         this.fileInfoRepository = fileInfoRepository;
         this.fileUtils = fileUtils;
@@ -42,7 +41,6 @@ public class SyncFileVisitor extends SimpleFileVisitor<Path> {
         this.prefix = prefix;
         this.originFile = originFile;
         this.syncfilesSocketHandler = syncfilesSocketHandler;
-        this.syncfilesInfoId = syncfilesInfoId;
     }
 
     @Override
@@ -64,23 +62,23 @@ public class SyncFileVisitor extends SimpleFileVisitor<Path> {
                 fileInfo.setFileInfoAction(FileInfoAction.NOTHING);
                 fileInfoRepository.save(fileInfo);
                 infoFileSynchro.getNbFilesOk();
-                syncfilesSocketHandler.getSyncfilesSynchroMsg(syncfilesInfoId).getLocalResume().addNothingFile();
+                syncfilesSocketHandler.getSyncfilesSynchroMsg(paramSyncFiles.getId()).getLocalResume().addNothingFile();
             } else {
                 fileInfo.updateInfo(fileInfoNew);
                 calcHash(fileInfo);
                 fileInfo.setFileInfoAction(FileInfoAction.UPDATE);
                 fileInfoRepository.save(fileInfo);
                 infoFileSynchro.addNbFilesToUpdate();
-                syncfilesSocketHandler.addMessage(syncfilesInfoId, "Updated local File : " + fileInfo.getRelativePathString());
-                syncfilesSocketHandler.getSyncfilesSynchroMsg(syncfilesInfoId).getLocalResume().addUpdatedFile();
+                syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "Updated local File : " + fileInfo.getRelativePathString());
+                syncfilesSocketHandler.getSyncfilesSynchroMsg(paramSyncFiles.getId()).getLocalResume().addUpdatedFile();
             }
         } else {
             fileInfoNew.setFileInfoAction(FileInfoAction.CREATE);
             calcHash(fileInfoNew);
             fileInfoRepository.save(fileInfoNew);
             infoFileSynchro.addNbFilesToCreate();
-            syncfilesSocketHandler.addMessage(syncfilesInfoId, "New local File : " + fileInfoNew.getRelativePathString());
-            syncfilesSocketHandler.getSyncfilesSynchroMsg(syncfilesInfoId).getLocalResume().addNewFile();
+            syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "New local File : " + fileInfoNew.getRelativePathString());
+            syncfilesSocketHandler.getSyncfilesSynchroMsg(paramSyncFiles.getId()).getLocalResume().addNewFile();
         }
     }
 

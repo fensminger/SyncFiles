@@ -93,7 +93,7 @@ public class ParamSyncFilesServiceIntTest {
         log.info("\n");
         log.info(dir);
 
-        paramSyncFilesService.updateFilesTree(paramSyncFiles, -1L);
+        paramSyncFilesService.updateFilesTree(paramSyncFiles);
 
         HashMap<String, FileInfo> source1Map = new HashMap<>();
         for(FileInfo fileInfo : paramSyncFilesService.findFileInfoByParamSyncFilesIdAndOriginFile(paramSyncFiles.getId(), OriginFile.SOURCE)) {
@@ -104,7 +104,7 @@ public class ParamSyncFilesServiceIntTest {
 
         log.info("-----------------------------------------------------------------------------------------------------------------");
         paramSyncFiles.setMasterDir(dir2);
-        paramSyncFilesService.updateFilesTree(paramSyncFiles,  -1L);
+        paramSyncFilesService.updateFilesTree(paramSyncFiles);
 
         HashMap<String, FileInfo> source2Map = new HashMap<>();
         for(FileInfo fileInfo : paramSyncFilesService.findFileInfoByParamSyncFilesIdAndOriginFile(paramSyncFiles.getId(), OriginFile.SOURCE)) {

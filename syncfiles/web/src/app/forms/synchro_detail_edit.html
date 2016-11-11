@@ -1,0 +1,78 @@
+        <p-growl [value]="alerts"></p-growl>
+
+<form class="form-horizontal" (ngSubmit)="createSynchro(synchroForm.value)" [formGroup]="synchroForm" >
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <!-- Left Side -->
+            <div class="card card-w-title">
+                <h1>Synchronization detail</h1>
+                <div class="ui-g form-group">
+                    <div class="ui-g-12 ui-md-8 ui-lg-9 ui-xl-10 sf-line-space">
+                        <span class="md-inputfield">
+                            <input type="text" pInputText [formControl]="synchroForm.get('name')"  [(ngModel)]="model.name" id="nameId" name="name">
+                            <label>Name</label>
+                        </span>
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-3 ui-xl-2 sf-line-space">
+                        <div *ngIf="!synchroForm.get('name').valid" class="text-danger">* Obligatoire</div>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-8 ui-lg-9 ui-xl-10 sf-line-space">
+                        <span class="md-inputfield">
+                            <input type="text" pInputText name="cronExp" [formControl]="synchroForm.get('cronExp')"  [(ngModel)]="model.cronExp" id="cronExp">
+                            <label>Cron Expression</label>
+                        </span>
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-3 ui-xl-2 sf-line-space">
+                    </div>
+
+                    <div class="ui-g-12 ui-md-8 ui-lg-9 ui-xl-10 sf-line-space">
+                        <span class="md-inputfield">
+                            <input type="text" pInputText name="masterDir" [formControl]="synchroForm.get('masterDir')"  [(ngModel)]="model.masterDir" id="masterDir">
+                            <label>Local synchronization directory</label>
+                        </span>
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-3 ui-xl-2 sf-line-space">
+                        <div *ngIf="!synchroForm.get('masterDir').valid" class="text-danger">* Obligatoire</div>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-8 ui-lg-9 ui-xl-10 sf-line-space">
+                        <span class="md-inputfield">
+                            <input pInputText type="text" id="slaveDir" name="slaveDir" [formControl]="synchroForm.get('slaveDir')"  [(ngModel)]="model.slaveDir">
+                            <label>Remote synchronization directory</label>
+                        </span>
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-3 ui-xl-2 sf-line-space">
+                        <div *ngIf="!synchroForm.get('slaveDir').valid" class="text-danger">* Obligatoire</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-w-title">
+                <h1>Files to exclude or include</h1>
+                <div class="ui-g ui-fluid form-group">
+                    <div class="ui-g-11">
+                        <p-dropdown [style]="{'width':'auto'}" id="dropdown" [options]="patternTypes" [(ngModel)]="model.includeDir" [autoWidth]="false" name="include" [ngModelOptions]="{standalone: true}"></p-dropdown>
+                    </div>
+                    <div class="ui-g-1 sf-line-space">
+                        <button (click)="addPattern()" pButton type="button" icon="ui-icon-add" ></button>
+                    </div>
+
+                    <template ngFor let-pattern [ngForOf]="model.includeExcludePatterns" let-i="index">
+                        <div class="ui-g-11 ui-md-5 ui-lg-5 ui-xl-5">
+                            <input type="text" pInputText [value]="pattern" (input)="chgPattern(i, $event)" placeholder="Enter your pattern"/>
+                        </div>
+                        <div class="ui-g-1" >
+                            <button (click)="removePattern(i)" pButton type="button" icon="ui-icon-trash" class="red-btn"></button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+                    <button pButton type="submit" [disabled]="!synchroForm.valid" label="Save synchronization detail"></button>
+
+        </div>
+    </div>    
+
+</form>
+

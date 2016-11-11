@@ -27,6 +27,7 @@ const routes: Routes = [
     { path: 'running', component: SynchroRun },
     { path: 'detail', component: SynchroDetail },
     { path: 'detail/:id', component: SynchroDetail },
+    { path: 'detail/:id/:tabName', component: SynchroDetail },
   
   
     {path: 'authenticate', component: Login},
