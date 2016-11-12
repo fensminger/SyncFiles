@@ -1,10 +1,10 @@
 <div [ngClass]="{'layout-wrapper':true,'layout-compact':layoutCompact}">
-    
+
     <div [ngClass]="{'layout-container':true,'menu-layout-static':(layoutMode=='static'||layoutMode=='horizontal'),
             'menu-layout-overlay':(layoutMode=='overlay'),'menu-layout-horizontal':(layoutMode=='horizontal')}">
         <!-- Top Bar -->
         <div class="topbar clearfix">
-            <div class="topbar-left">            
+            <div class="topbar-left">
                 <div class="logo"></div>
             </div>
 
@@ -12,17 +12,17 @@
                 <a id="menu-button" href="#">
                     <i></i>
                 </a>
-                
+
                 <a id="topbar-menu-button" href="#">
                     <i class="material-icons">menu</i>
                 </a>
                 <ul class="topbar-items fadeInDown animated">
                     <li class="profile-item" [hidden]="profileMode!='top'&&layoutMode!='horizontal'">
-                        <a href="#">                            
+                        <a href="#">
                             <div class="profile-image"></div>
                             <span class="topbar-item-name">Admin</span>
                         </a>
-                        
+
                         <ul class="ultima-menu animated">
                             <li role="menuitem">
                                 <a href="#">
@@ -84,72 +84,15 @@
                     </li>
                     <li>
                         <a href="#">
-                            <i class="topbar-icon material-icons animated swing">message</i>
-                            <span class="topbar-badge animated rubberBand">5</span>
-                            <span class="topbar-item-name">Messages</span>
-                        </a>
-                        <ul class="ultima-menu animated">
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <img src="assets/ultimang/layout/images/avatar1.png" width="35"/>
-                                    <span>Give me a call</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <img src="assets/ultimang/layout/images/avatar2.png" width="35"/>
-                                    <span>Sales reports attached</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <img src="assets/ultimang/layout/images/avatar3.png" width="35"/>
-                                    <span>About your invoice</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <img src="assets/ultimang/layout/images/avatar2.png" width="35"/>
-                                    <span>Meeting today at 10pm</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <img src="assets/ultimang/layout/images/avatar4.png" width="35"/>
-                                    <span>Out of office</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">
                             <i class="topbar-icon material-icons">timer</i>
-                            <span class="topbar-badge animated rubberBand">4</span>
-                            <span class="topbar-item-name">Notifications</span>
+                            <span class="topbar-badge animated rubberBand">{{syncFilesInfo.length}}</span>
+                            <span class="topbar-item-name">Running jobs</span>
                         </a>
                         <ul class="ultima-menu animated">
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="material-icons">bug_report</i>
-                                    <span>Pending tasks</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="material-icons">event</i>
-                                    <span>Meeting today at 3pm</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="material-icons">file_download</i>
-                                    <span>Download documents</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="material-icons">flight</i>
-                                    <span>Book flight</span>
+                            <li role="menuitem" *ngFor="let sync of syncFilesInfo; let i = index">
+                                <a [routerLink]="['/detail', sync.paramSyncFiles.id, 'execution']">
+                                    <!--<i class="material-icons">bug_report</i>-->
+                                    <span>{{getTitleSynchroMenu(sync)}}</span>
                                 </a>
                             </li>
                         </ul>
@@ -160,12 +103,12 @@
                             <label>Search</label>
                             <i class="topbar-icon material-icons">search</i>
                         </span>
-                        
+
                     </li>
                 </ul>
             </div>
         </div>
-        
+
         <!-- Menu -->
         <div [ngClass]="{'layout-menu':true,'layout-menu-dark':darkMenu}">
             <div class="nano">
@@ -304,10 +247,10 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="layout-main">
             <router-outlet></router-outlet>
-            
+
             <div class="footer" style="padding-left:0;padding-right:0;">
                 <div class="card clearfix">
                     <span class="footer-text-left">SyncFiles</span>

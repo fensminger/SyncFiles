@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {ActivatedRoute} from "@angular/router";
 import {SynchroRunningService} from "./synchro_running.service";
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'synchro-detail',
@@ -17,7 +18,8 @@ export class SynchroDetail implements OnInit {
 
     constructor(private title : Title,
                 private synchroRunningService : SynchroRunningService,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private location: Location) {
         title.setTitle("SyncFiles - Detail");
 
     }
@@ -26,8 +28,10 @@ export class SynchroDetail implements OnInit {
     console.log('change tab');
     if (e.index==0) {
         this.tabName = "general";
+        this.location.replaceState(this.location.path(false).replace("execution", "general"));
     } else {
         this.tabName = "execution";
+        this.location.replaceState(this.location.path(false).replace("general", "execution"));
     }
   }
     

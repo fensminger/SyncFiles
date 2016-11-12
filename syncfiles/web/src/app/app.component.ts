@@ -1,5 +1,4 @@
-import { Component, AfterViewInit, ElementRef, OnInit, OnDestroy } from '@angular/core';
-import {InputText,Menubar, MenuItem, Breadcrumb, Toolbar} from 'primeng/primeng';
+import {Component, AfterViewInit, ElementRef, OnInit} from '@angular/core';
 import {BreadCrumbService} from './shared';
 import {Subscription} from 'rxjs/Subscription'
 import * as _ from 'lodash';
@@ -13,104 +12,45 @@ declare var Ultima: any;
   templateUrl: 'application.html',
   providers: [BreadCrumbService, SynchroRunningService]
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
 
-    layoutCompact: boolean = true;
+  layoutCompact: boolean = true;
 
-    layoutMode: string = 'static';
-    
-    darkMenu: boolean = false;
-    
-    profileMode: string = 'inline';
+  layoutMode: string = 'static';
 
-    constructor(private el: ElementRef) {}
+  darkMenu: boolean = false;
 
-    ngAfterViewInit() {
-        Ultima.init(this.el.nativeElement);
-    }
-    
-    changeTheme(event, theme) {
-        let themeLink: HTMLLinkElement = <HTMLLinkElement> document.getElementById('theme-css');
-        let layoutLink: HTMLLinkElement = <HTMLLinkElement> document.getElementById('layout-css');
-        
-        themeLink.href = '/assets/ultimang/theme/theme-' + theme +'.css';
-        layoutLink.href = '/assets/ultimang/layout/css/layout-' + theme +'.css';
-        event.preventDefault();
-    }
+  profileMode: string = 'inline';
 
-  /*
-  private menu: MenuItem[];
-  private breadCrumpItems : MenuItem[];
-  public subscription : Subscription;
+  syncFilesInfo : any[] = [];
 
-  public title = 'app works!';
+  constructor(private el: ElementRef, private synchroRunningService : SynchroRunningService) {
+  }
 
-  constructor(private breadCrumbService : BreadCrumbService) {
-    console.log('lodash version:' + _.VERSION);
-    let dateStr = moment().subtract(10, 'days').calendar();
-    console.log('Calcul de date avec moment : ' + dateStr);
-    this.breadCrumpItems = [];
-    this.subscription = breadCrumbService.breadCrumbSubjectObs.subscribe(b => {
-      console.log("Mise a jour du breadcrumb" + JSON.stringify(b));
-      this.breadCrumpItems.length = 0;
-      _(b).forEach(element => {
-        this.breadCrumpItems.push(element);
-      });
-    });
+  ngAfterViewInit() {
+    Ultima.init(this.el.nativeElement);
+  }
+
+  changeTheme(event, theme) {
+    let themeLink: HTMLLinkElement = <HTMLLinkElement> document.getElementById('theme-css');
+    let layoutLink: HTMLLinkElement = <HTMLLinkElement> document.getElementById('layout-css');
+
+    themeLink.href = '/assets/ultimang/theme/theme-' + theme + '.css';
+    layoutLink.href = '/assets/ultimang/layout/css/layout-' + theme + '.css';
+    event.preventDefault();
   }
 
   ngOnInit() {
-    this.menu = [
-      {
-        label: 'Synchro',
-        icon: 'fa-cube',
-        routerLink: ['/home']
-      },
-      {
-        label: 'Add Synchro',
-        icon: 'fa-edit',
-        routerLink: ['/detail']
-      },
-      {
-        label: 'Running',
-        icon: 'fa-rocket',
-        routerLink: ['/running']
-      },
-      {
-        label: 'Tests',
-        icon: 'fa-ambulance',
-        items: [
-          {label: 'Test 1', icon: 'fa-question', routerLink: ['/test-page']},
-          {label: 'Test 2', icon: 'fa-gitlab', routerLink: ['/']}
-        ]
+    this.synchroRunningService.syncFilesinfoObservable.subscribe(
+      s => {
+        this.syncFilesInfo = s;
       }
-    ];
+    );
   }
 
-  ngOnDestroy() {
-    // prevent memory leak when component destroyed
-    this.subscription.unsubscribe();
-  }
-  
-
-  public alerts:Array<Object> = [
-    {
-      type: 'danger',
-      msg: 'Oh snap! Change a few things up and try submitting again.'
-    },
-    {
-      type: 'success',
-      msg: 'Well done! You successfully read this important alert message.',
-      closable: true
-    }
-  ];
-
-  public closeAlert(i:number):void {
-    this.alerts.splice(i, 1);
+  public getTitleSynchroMenu(sync : any): any {
+    let running = (sync.running)?"Running":"Stopped";
+    return sync.type + " - " + sync.paramSyncFiles.name + " (" + running + ")";
   }
 
-  public addAlert():void {
-    this.alerts.push({msg: 'Another alert!', type: 'warning', closable: true});
-  }
-  */
 }
