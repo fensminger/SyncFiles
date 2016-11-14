@@ -15,10 +15,11 @@
                 </p-column>
                 <p-column field="masterDir" header="Local directory"></p-column>
                 <p-column field="slaveDir" header="Remote directory"></p-column>
-                <p-column header="Actions" [style]="{'width':'95px'}">
+                <p-column header="Actions" [style]="{'width':'135px'}">
                     <template let-synchro="rowData" pTemplate type="body">
-                        <button (click)="startSynchro(i, synchro.id)" pButton type="button" icon="ui-icon-arrow-1-e" ></button>
-                        <button (click)="dialogConfirmRemove(i, synchro.id)" pButton type="button" icon="ui-icon-trash" class="red-btn"></button>
+                        <button (click)="startSynchro(i, synchro.id)" pButton type="button" icon="ui-icon-arrow-1-e" pTooltip="Start synchronisation" tooltipPosition="top"></button>
+                        <button (click)="showLastSynchro(i, synchro.id)" pButton type="button" icon="ui-icon-autorenew" pTooltip="Show last synchronisation" tooltipPosition="top"></button>
+                        <button (click)="dialogConfirmRemove(i, synchro.id)" pButton type="button" icon="ui-icon-trash" pTooltip="Remove synchronisation" tooltipPosition="left" class="red-btn"></button>
                     </template>
                 </p-column>
             </p-dataTable>

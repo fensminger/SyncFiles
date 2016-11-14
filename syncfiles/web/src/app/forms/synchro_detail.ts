@@ -3,10 +3,12 @@ import {Title} from '@angular/platform-browser';
 import {ActivatedRoute} from "@angular/router";
 import {SynchroRunningService} from "./synchro_running.service";
 import {Location} from '@angular/common';
+import {SynchroFilesService} from './SynchroFilesService';
 
 @Component({
   selector: 'synchro-detail',
   viewProviders: [Title],
+    providers: [SynchroFilesService],
     templateUrl : 'synchro_detail.html',
     styleUrls: ['synchro_detail.css']
 })
@@ -19,7 +21,8 @@ export class SynchroDetail implements OnInit {
     constructor(private title : Title,
                 private synchroRunningService : SynchroRunningService,
                 private route: ActivatedRoute,
-                private location: Location) {
+                private location: Location,
+                private synchroFilesService : SynchroFilesService) {
         title.setTitle("SyncFiles - Detail");
 
     }
@@ -71,5 +74,16 @@ export class SynchroDetail implements OnInit {
 
   public ngOnDestroy() {
   }
+
+  startSynchro() :void {
+    this.syncFilesinfo.running = true;
+    this.synchroFilesService.synchronize(this.syncFilesinfo.paramSyncFilesId).subscribe(
+      (r:any) => {
+      },
+        (e : any) => {
+          console.log("Error startSynchro : " + JSON.stringify(e));
+        }
+    );
+  }    
 
 }

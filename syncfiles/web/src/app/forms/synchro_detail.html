@@ -3,6 +3,14 @@
        <synchro-detail-edit></synchro-detail-edit>
     </p-tabPanel>
     <p-tabPanel header="Last Execution" leftIcon="ui-icon-import-export" [selected]="tabName=='execution'">
+       <div class="ui-g ui-fluid" *ngIf="syncFilesinfo==null || !syncFilesinfo.running">
+            <div class="ui-g-6">
+                <button pButton type="button" (click)="startSynchro()" label="Start new simulation"></button>
+            </div>
+            <div class="ui-g-6">
+                <button pButton type="button" (click)="startSynchro()" label="Start new synchronization"></button>
+            </div>
+       </div>
         <synchro-detail-run *ngIf="tabName=='execution'" [syncFilesinfo]="syncFilesinfo"></synchro-detail-run>
     </p-tabPanel>
 </p-tabView>

@@ -66,6 +66,10 @@ export class SynchroList {
     );
   }    
 
+  showLastSynchro(index : number, id : string) :void {
+    this.router.navigate(['/detail', id, 'execution']);
+  }
+
   remove(index : number, id : number) {
     this.isHttpRequest = true;
     this._synchroFilesService.removeDetail(id).subscribe(
