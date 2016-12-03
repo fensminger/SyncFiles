@@ -24,6 +24,7 @@ export class SynchroFilesService {
     }
 
     private extractData(res: Response) {
+        //console.log("extractData:"+res.text())
         if (res.status < 200 || res.status >= 300) {
             throw new Error('Response status: ' + res.status + ' : ' + res.text());
         }
@@ -52,6 +53,13 @@ export class SynchroFilesService {
             .map((res: Response) => {
                 return res.text;
             })
+            .catch(this.handleError);
+    }
+
+    
+    public viewList(id :string, originFile : string, pageNumber : number, pageSize : number) : Observable<any> {
+        return this.http.get("/api/sync-files/view/list/"+id+"/"+originFile+"/"+pageNumber+"/"+pageSize, {headers:this.headers})
+            .map(this.extractData)
             .catch(this.handleError);
     }
 

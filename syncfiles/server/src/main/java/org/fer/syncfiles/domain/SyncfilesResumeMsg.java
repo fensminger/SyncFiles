@@ -5,13 +5,19 @@ package org.fer.syncfiles.domain;
  */
 public class SyncfilesResumeMsg {
     private String title;
+    private int index;
     private long numberOfFiles = 0;
     private long numberOfNewFiles = 0;
     private long numberOfUpdatedFiles = 0;
     private long numberOfDeletedFiles = 0;
 
-    public SyncfilesResumeMsg(String title) {
+    public SyncfilesResumeMsg() {
+        super();
+    }
+
+    public SyncfilesResumeMsg(String title, int index) {
         this.title = title;
+        this.index = index;
     }
 
     public String getTitle() {
@@ -71,5 +77,13 @@ public class SyncfilesResumeMsg {
 
     public void setNumberOfDeletedFiles(long numberOfDeletedFiles) {
         this.numberOfDeletedFiles = numberOfDeletedFiles;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

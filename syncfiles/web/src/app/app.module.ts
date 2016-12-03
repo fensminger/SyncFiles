@@ -1,4 +1,4 @@
-import { NgModule }      from '@angular/core';
+import { NgModule, LOCALE_ID }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule, Http,RequestOptions, XHRBackend } from '@angular/http';
@@ -22,6 +22,9 @@ import {SynchroRun} from './forms/synchro_running';
 import {SynchroDetailRun} from './forms/synchro_detail_running';
 import {SynchroSimpleMsg} from './forms/synchro_simple_msg';
 import {SynchroRunningService} from './forms/synchro_running.service';
+import {SynchroRunningInfos} from './forms/synchro_running_infos';
+import {SynchroRunningList} from './forms/synchro_running_list';
+import {SynchroRunningTree} from './forms/synchro_running_tree';
 
 import {AccordionModule} from 'primeng/primeng';
 import {AutoCompleteModule} from 'primeng/primeng';
@@ -184,7 +187,8 @@ import {NodeService} from './demo/service/nodeservice';
       FsqLabelComponent,  
       SynchroSimpleMsg,
       IsAuthorized,  
-      SynchroList, SynchroDetail, SynchroDetailEdit, SynchroRun, SynchroDetailRun,
+      SynchroList, SynchroDetail, SynchroDetailEdit, SynchroRun, SynchroDetailRun, SynchroRunningInfos,
+      SynchroRunningList, SynchroRunningTree,
 
       // Demo Ultima
         Application,
@@ -212,7 +216,8 @@ import {NodeService} from './demo/service/nodeservice';
 //        },
 //        deps: [XHRBackend, RequestOptions, AccountEventsService],
 //        multi:false}
-  , CarService,CountryService,EventService,NodeService
+  , CarService,CountryService,EventService,NodeService,
+  { provide: LOCALE_ID, useValue: "fr" }, //replace "en-US" with your locale
   ]                    // services
 })
 export class AppModule { }

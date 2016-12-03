@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import {Title} from '@angular/platform-browser';
 import {Response} from "@angular/http";
@@ -15,7 +16,8 @@ export class SynchroRun implements OnInit, OnDestroy {
   ongletIndex : number;
   syncFilesinfo : any;
 
-  constructor(title : Title, private synchroRunningService : SynchroRunningService) {
+  constructor(title : Title, private synchroRunningService : SynchroRunningService
+    , private router: Router) {
     title.setTitle("SyncFiles - Running synchronization");
   }
 
@@ -49,4 +51,5 @@ export class SynchroRun implements OnInit, OnDestroy {
     console.log('TabClick');
       this.ongletIndex = e.index;
   }
+
 }

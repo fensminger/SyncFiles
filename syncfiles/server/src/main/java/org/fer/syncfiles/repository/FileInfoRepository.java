@@ -3,6 +3,8 @@ package org.fer.syncfiles.repository;
 import org.fer.syncfiles.domain.FileInfo;
 import org.fer.syncfiles.domain.FileInfoAction;
 import org.fer.syncfiles.domain.OriginFile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
@@ -17,6 +19,7 @@ public interface FileInfoRepository extends MongoRepository<FileInfo, String> {
             String paramSyncFilesId, OriginFile originFile, String relativePathString);
 
     public List<FileInfo> findByParamSyncFilesIdAndOriginFile(String paramSyncFilesId, OriginFile originFile);
+    public Page<FileInfo> findByParamSyncFilesIdAndOriginFile(String paramSyncFilesId, OriginFile originFile, Pageable pageable);
     public List<FileInfo> findByParamSyncFilesIdAndOriginFileAndIsDirectory(String paramSyncFilesId, OriginFile originFile, boolean isDirectory);
 
     public List<FileInfo> findByParamSyncFilesIdAndOriginFileAndFileInfoAction(String paramSyncFilesId, OriginFile originFile, FileInfoAction fileInfoAction);

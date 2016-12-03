@@ -20,11 +20,13 @@ import {ChartsDemo} from './demo/view/chartsdemo';
 import {FileDemo} from './demo/view/filedemo';
 import {UtilsDemo} from './demo/view/utilsdemo';
 import {Documentation} from './demo/view/documentation';
+import {SynchroRunningInfos} from './forms/synchro_running_infos';
 
 
 const routes: Routes = [
     { path: 'home', component: SynchroList },
     { path: 'running', component: SynchroRun },
+    { path: 'running-infos/:id/:index', component: SynchroRunningInfos },
     { path: 'detail', component: SynchroDetail },
     { path: 'detail/:id', component: SynchroDetail },
     { path: 'detail/:id/:tabName', component: SynchroDetail },

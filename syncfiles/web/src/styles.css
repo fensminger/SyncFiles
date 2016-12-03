@@ -2,3 +2,25 @@
 .header-error > div:first-child {
     background-color: #e60000 !important;
 }
+
+@media (min-width: 480px) {
+    .name-list {
+        width: 60%;
+        white-space: nowrap;
+    }
+
+    .size-action {
+        width: 10%;
+        text-align: left;
+    }
+
+    .size-list {
+        width: 15%;
+        text-align: right;
+    }
+
+    .date-list {
+        width: 15%;
+        text-align: center;
+    }
+}

@@ -1,8 +1,9 @@
 package org.fer.syncfiles.rest;
 
-import org.fer.syncfiles.domain.ParamSyncFiles;
-import org.fer.syncfiles.domain.SyncfilesSynchroMsg;
+import org.fer.syncfiles.domain.*;
+import org.fer.syncfiles.dto.FileInfoPage;
 import org.fer.syncfiles.security.AuthoritiesConstants;
+import org.fer.syncfiles.services.InfosFilesService;
 import org.fer.syncfiles.services.ParamSyncFilesService;
 import org.fer.syncfiles.services.SyncfilesSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,6 +29,9 @@ public class ParamSyncFilesController {
     @Autowired
     @Qualifier("syncfilesSocketHandler")
     private SyncfilesSocketHandler syncfilesSocketHandler;
+
+    @Autowired
+    private InfosFilesService infosFilesService;
 
     @RequestMapping(value = "/param/save",
         method = RequestMethod.POST,
@@ -81,5 +86,24 @@ public class ParamSyncFilesController {
         return syncfilesSocketHandler.findMsgByParamSyncFilesById(id);
     }
 
+    @RequestMapping(value = "/view/list/{id}/{originFile}/{pageNumber}/{pageSize}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Secured(AuthoritiesConstants.ANONYMOUS)
+    public @ResponseBody FileInfoPage viewList(
+            @PathVariable String id
+            , @PathVariable OriginFile originFile
+            , @PathVariable int pageNumber
+            , @PathVariable int pageSize
+
+            , @RequestParam(required = false) String filterName
+            , @RequestParam(required = false) Date startDate
+            , @RequestParam(required = false) Date endDate
+            , @RequestParam(required = false) FileInfoAction fileInfoAction
+            , @RequestParam(required = false) SyncState syncState
+        ) throws IOException {
+        return infosFilesService.loadFileInfo(id, originFile, pageNumber, pageSize,
+                filterName, startDate, endDate, fileInfoAction, syncState);
+    }
 
 }

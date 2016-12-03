@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import {Title} from '@angular/platform-browser';
 import {$WebSocket} from 'angular2-websocket/angular2-websocket';
@@ -15,7 +16,8 @@ export class SynchroDetailRun {
   @Input('syncFilesinfo')
   syncFilesinfo : any;
 
-  constructor(title : Title) {
+  constructor(title : Title
+    , private router: Router) {
     title.setTitle("SyncFiles - Running synchronization");
   }
 
@@ -24,6 +26,11 @@ export class SynchroDetailRun {
     let res = sync.id + ' - ' + sync.title + ' (' + datePipe.transform(sync.lastStateDate, "dd/MM/yyyy HH:mm:ss") + ')';
     // console.log("getTitle : " + res);
     return res;
+  }
+
+  showRunningInfos(id : string, index : number) :boolean {
+    this.router.navigate(['/running-infos', id, index]);
+    return false;
   }
 
 }

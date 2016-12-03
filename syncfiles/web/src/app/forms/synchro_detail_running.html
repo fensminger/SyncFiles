@@ -19,7 +19,14 @@
     <p-dataTable [value]="syncFilesinfo.resumeNumber" [responsive]="true">
         <header>Analyse files</header>
         <p-column field="title" header=""></p-column>
-        <p-column field="numberOfFiles" header="Total of files"></p-column>
+        <p-column field="numberOfFiles" header="Total of files">
+            <template let-sync="rowData" pTemplate type="body">
+                <a (click)="showRunningInfos(syncFilesinfo.id, sync.index)" class="menu-button" href="">
+                    <span *ngIf="sync.index<2">{{sync.numberOfFiles-sync.numberOfDeletedFiles}}</span>
+                    <span *ngIf="sync.index>=2">{{sync.numberOfFiles}}</span>
+                </a>
+            </template>
+        </p-column>
         <p-column field="numberOfNewFiles" header="New files"></p-column>
         <p-column field="numberOfUpdatedFiles" header="Updated files"></p-column>
         <p-column field="numberOfDeletedFiles" header="Deleted files"></p-column>

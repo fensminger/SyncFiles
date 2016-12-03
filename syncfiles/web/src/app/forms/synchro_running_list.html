@@ -1,0 +1,26 @@
+<p-dataTable [value]="infosList?.fileInfoList" [lazy]="true" [rows]="numberRowPerPages" [paginator]="true" 
+            [totalRecords]="infosList?.totalElements" (onLazyLoad)="loadLazyInfos($event)" 
+            [responsive]="true" [stacked]="stacked">
+    <header>Files</header>
+    <p-column styleClass="name-list" field="relativePathString" header="Name">
+        <template let-col let-fileInfo="rowData" pTemplate type="body">
+            <div style="font-size : 80%">{{getPath(fileInfo.relativePathString)}}</div>
+            <div [pTooltip]="fileInfo.relativePathString" tooltipPosition="bottom">{{getName(fileInfo.relativePathString)}}</div>
+        </template>
+    </p-column>
+    <p-column styleClass="size-action" field="fileInfoAction" header="To Do">
+        <template let-col let-fileInfo="rowData" pTemplate type="body">
+            {{fileInfo.fileInfoAction}}
+        </template>
+    </p-column>
+    <p-column styleClass="size-list" field="size" header="Size">
+        <template let-col let-fileInfo="rowData" pTemplate type="body">
+            {{fileInfo.size | number:'1.0'}}
+        </template>
+    </p-column>
+    <p-column styleClass="date-list" field="lastModifiedTime" header="Last Modified Time">
+        <template let-col let-fileInfo="rowData" pTemplate type="body">
+            {{fileInfo.lastModifiedTime | date:"dd/MM/yyyy HH:mm:ss"}}
+        </template>
+    </p-column>
+</p-dataTable>

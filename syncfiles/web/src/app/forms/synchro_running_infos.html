@@ -1,0 +1,8 @@
+<p-tabView (onChange)="onChange($event)" >
+    <p-tabPanel header="View List" leftIcon="ui-icon-settings">
+        <synchro-running-list *ngIf="index==0" ></synchro-running-list>
+    </p-tabPanel>
+    <p-tabPanel header="Tree List" leftIcon="ui-icon-import-export">
+        <synchro-running-tree *ngIf="index==1" ></synchro-running-tree>
+    </p-tabPanel>
+</p-tabView>

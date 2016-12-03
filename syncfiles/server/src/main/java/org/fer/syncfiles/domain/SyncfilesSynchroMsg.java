@@ -34,10 +34,10 @@ public class SyncfilesSynchroMsg {
     private String msgError;
     private String msgErrorStackTrace;
 
-    private SyncfilesResumeMsg localResume = new SyncfilesResumeMsg("Local files");
-    private SyncfilesResumeMsg remoteResume = new SyncfilesResumeMsg("Remote files");
-    private SyncfilesResumeMsg synchroResume = new SyncfilesResumeMsg("Files to Synchronize");
-    private SyncfilesResumeMsg synchroReal = new SyncfilesResumeMsg("Synchronized files");
+    private SyncfilesResumeMsg localResume = new SyncfilesResumeMsg("Local files",0);
+    private SyncfilesResumeMsg remoteResume = new SyncfilesResumeMsg("Remote files",1);
+    private SyncfilesResumeMsg synchroResume = new SyncfilesResumeMsg("Files to Synchronize",2);
+    private SyncfilesResumeMsg synchroReal = new SyncfilesResumeMsg("Synchronized files",3);
     private List<SyncfilesResumeMsg> resumeNumber = new ArrayList<>();
     private boolean changed;
 
