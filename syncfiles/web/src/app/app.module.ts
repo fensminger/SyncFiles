@@ -25,6 +25,7 @@ import {SynchroRunningService} from './forms/synchro_running.service';
 import {SynchroRunningInfos} from './forms/synchro_running_infos';
 import {SynchroRunningList} from './forms/synchro_running_list';
 import {SynchroRunningTree} from './forms/synchro_running_tree';
+import {InputDebounceComponent} from './components/input_debouce.component';
 
 import {AccordionModule} from 'primeng/primeng';
 import {AutoCompleteModule} from 'primeng/primeng';
@@ -188,7 +189,7 @@ import {NodeService} from './demo/service/nodeservice';
       SynchroSimpleMsg,
       IsAuthorized,  
       SynchroList, SynchroDetail, SynchroDetailEdit, SynchroRun, SynchroDetailRun, SynchroRunningInfos,
-      SynchroRunningList, SynchroRunningTree,
+      SynchroRunningList, SynchroRunningTree, InputDebounceComponent,
 
       // Demo Ultima
         Application,

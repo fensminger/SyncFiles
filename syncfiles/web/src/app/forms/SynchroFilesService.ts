@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
+import {URLSearchParams} from '@angular/http';
 
 
 @Injectable()
@@ -57,8 +58,13 @@ export class SynchroFilesService {
     }
 
     
-    public viewList(id :string, originFile : string, pageNumber : number, pageSize : number) : Observable<any> {
-        return this.http.get("/api/sync-files/view/list/"+id+"/"+originFile+"/"+pageNumber+"/"+pageSize, {headers:this.headers})
+    public viewList(id :string, originFile : string, pageNumber : number, pageSize : number, params : URLSearchParams) : Observable<any> {
+        return this.http.get("/api/sync-files/view/list/"+id+"/"+originFile+"/"+pageNumber+"/"+pageSize
+                , {
+                    headers:this.headers,
+                    search: params
+                }
+                )
             .map(this.extractData)
             .catch(this.handleError);
     }

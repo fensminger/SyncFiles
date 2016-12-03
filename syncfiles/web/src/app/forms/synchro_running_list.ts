@@ -1,5 +1,6 @@
 import {Component, OnInit, Pipe, PipeTransform} from '@angular/core';
 import {Title} from '@angular/platform-browser';
+import {URLSearchParams} from '@angular/http';
 import {ActivatedRoute} from "@angular/router";
 import {SynchroRunningService} from "./synchro_running.service";
 import {Location} from '@angular/common';
@@ -23,18 +24,21 @@ export class ReplacePipe implements PipeTransform {
 })
 export class SynchroRunningList implements OnInit {
 
+    pageNumber : number;
     numberRowPerPages = 50;
 
     tabName : string;
     infosList : any;
     id : string;
 
+    filterName : string;
+
     constructor(private title : Title,
                 private synchroRunningService : SynchroRunningService,
                 private route: ActivatedRoute,
                 private location: Location,
                 private synchroFilesService : SynchroFilesService) {
-
+                    this.pageNumber = 1;
     }
 
 
@@ -48,8 +52,10 @@ export class SynchroRunningList implements OnInit {
   public ngOnDestroy() {
   }
 
-  private loadInfos(pageNumber : number) {
-    this.synchroFilesService.viewList(this.id, "SOURCE", pageNumber, this.numberRowPerPages).subscribe(
+  private loadInfos() {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('filterName', this.filterName);
+    this.synchroFilesService.viewList(this.id, "SOURCE", this.pageNumber, this.numberRowPerPages, params).subscribe(
         (r : any) => {
             this.infosList = r;
             console.log("Data loaded");
@@ -71,7 +77,8 @@ export class SynchroRunningList implements OnInit {
         
         //imitate db connection over a network
         console.log("Event : " + JSON.stringify(event ));
-        this.loadInfos(Math.floor(event.first/this.numberRowPerPages));
+        this.pageNumber = Math.floor(event.first/this.numberRowPerPages); 
+        this.loadInfos();
     }
 
     getName(path:string) : string {
@@ -91,4 +98,12 @@ export class SynchroRunningList implements OnInit {
             return path.substr(0, pos);
         }
     }
+
+    public searchChanged(value) {
+        this.filterName = value;
+        //console.log(value);
+        // Make cool HTTP requests
+        this.loadInfos();
+    }
+    
 }

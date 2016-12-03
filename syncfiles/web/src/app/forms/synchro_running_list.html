@@ -1,3 +1,6 @@
+<form ngForm="searchForm">  
+    <input-debounce delay="500" placeholder="Search..." (value)="searchChanged($event)"></input-debounce>
+</form>  
 <p-dataTable [value]="infosList?.fileInfoList" [lazy]="true" [rows]="numberRowPerPages" [paginator]="true" 
             [totalRecords]="infosList?.totalElements" (onLazyLoad)="loadLazyInfos($event)" 
             [responsive]="true" [stacked]="stacked">
