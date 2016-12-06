@@ -29,7 +29,16 @@ export class SynchroDetailRun {
   }
 
   showRunningInfos(id : string, index : number) :boolean {
-    this.router.navigate(['/running-infos', id, index]);
+    let originFile : string;
+    if (index==0) {
+      originFile = "SOURCE";
+    } else if (index==1) { 
+      originFile = "TARGET";
+    } else {
+      originFile = "SYNCHRO";
+    }
+    console.log("showRunningInfos : " + index + " ->" + originFile);
+    this.router.navigate(['/running-infos', id, originFile, 0]);
     return false;
   }
 

@@ -8,11 +8,13 @@ import org.fer.syncfiles.services.ParamSyncFilesService;
 import org.fer.syncfiles.services.SyncfilesSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -97,13 +99,48 @@ public class ParamSyncFilesController {
             , @PathVariable int pageSize
 
             , @RequestParam(required = false) String filterName
-            , @RequestParam(required = false) Date startDate
-            , @RequestParam(required = false) Date endDate
-            , @RequestParam(required = false) FileInfoAction fileInfoAction
-            , @RequestParam(required = false) SyncState syncState
+            , @RequestParam(required = false) @DateTimeFormat(iso= DateTimeFormat.ISO.DATE) Date startDate
+            , @RequestParam(required = false) @DateTimeFormat(iso= DateTimeFormat.ISO.DATE) Date endDate
+            , @RequestParam(required = false) String fileInfoActionsStr
+            , @RequestParam(required = false) String syncStateStr
         ) throws IOException {
+
+        if (fileInfoActionsStr==null || syncStateStr==null) {
+            return new FileInfoPage(1, pageSize, 0, 0, null);
+        }
+
+        final List<FileInfoAction> fileInfoActionList = getFileInfoActions(fileInfoActionsStr);
+
+        final List<SyncState> syncStateList = getSyncStates(syncStateStr);
+
         return infosFilesService.loadFileInfo(id, originFile, pageNumber, pageSize,
-                filterName, startDate, endDate, fileInfoAction, syncState);
+                filterName, startDate, endDate, fileInfoActionList, syncStateList);
+    }
+
+    private List<FileInfoAction> getFileInfoActions(String fileInfoActionsStr) {
+        if (fileInfoActionsStr==null) {
+            return null;
+        }
+
+        final List<FileInfoAction> fileInfoActionList = new ArrayList<>();
+        String[] fileInfoActionStrList = fileInfoActionsStr.split(",");
+        for(String fileInfoActionStr : fileInfoActionStrList) {
+            fileInfoActionList.add(FileInfoAction.valueOf(fileInfoActionStr));
+        }
+        return fileInfoActionList;
+    }
+
+    private List<SyncState> getSyncStates(String syncStateStr) {
+        if (syncStateStr==null) {
+            return null;
+        }
+
+        final List<SyncState> syncStateList = new ArrayList<>();
+        String[] syncStateStrList = syncStateStr.split(",");
+        for(String syncState : syncStateStrList) {
+            syncStateList.add(SyncState.valueOf(syncState));
+        }
+        return syncStateList;
     }
 
 }

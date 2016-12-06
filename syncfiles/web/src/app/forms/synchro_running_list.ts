@@ -6,6 +6,7 @@ import {SynchroRunningService} from "./synchro_running.service";
 import {Location} from '@angular/common';
 import {SynchroFilesService} from './SynchroFilesService';
 import {LazyLoadEvent} from 'primeng/primeng';
+import {SelectItem} from 'primeng/primeng';
 
 @Pipe({name: 'replace'})
 export class ReplacePipe implements PipeTransform {
@@ -27,11 +28,19 @@ export class SynchroRunningList implements OnInit {
     pageNumber : number;
     numberRowPerPages = 50;
 
-    tabName : string;
     infosList : any;
     id : string;
+    originFile : string;
 
     filterName : string;
+    startDate : Date;
+    endDate : Date;
+
+    fileInfoAction: SelectItem[];
+    selectedInfoAction : string[] = [];
+
+    synchroStateAction: SelectItem[];
+    selectedSynchroStateAction : string[] = [];
 
     constructor(private title : Title,
                 private synchroRunningService : SynchroRunningService,
@@ -39,12 +48,28 @@ export class SynchroRunningList implements OnInit {
                 private location: Location,
                 private synchroFilesService : SynchroFilesService) {
                     this.pageNumber = 1;
+        this.fileInfoAction = [];
+        this.fileInfoAction.push({label:'Create', value:'CREATE'});
+        this.fileInfoAction.push({label:'Delete', value:'DELETE'});
+        this.fileInfoAction.push({label:'Nothing', value:'NOTHING'});
+        this.fileInfoAction.push({label:'Update', value:'UPDATE'});
+        for(let item of this.fileInfoAction) {
+            this.selectedInfoAction.push(item.value);
+        }
+
+        this.synchroStateAction = [];
+        this.synchroStateAction.push({label:'Finished', value:'FINISHED'});
+        this.synchroStateAction.push({label:'Error', value:'ERROR'});
+        this.synchroStateAction.push({label:'Waiting for update', value:'WAITING_FOR_UPDATE'});
+        for(let item of this.synchroStateAction) {
+            this.selectedSynchroStateAction.push(item.value);
+        }
     }
 
 
   public ngOnInit() {
     this.route.params.subscribe(params => { 
-        this.tabName = params['tabName'];
+        this.originFile = params['originFile'];
         this.id = params['id']; 
     });
   }
@@ -55,7 +80,42 @@ export class SynchroRunningList implements OnInit {
   private loadInfos() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('filterName', this.filterName);
-    this.synchroFilesService.viewList(this.id, "SOURCE", this.pageNumber, this.numberRowPerPages, params).subscribe(
+
+    let fileInfoActionsStr : string = "";
+    let isFirst = true;
+    for(let action of this.selectedInfoAction) {
+        if (isFirst) {
+            isFirst = false;
+        } else {
+            fileInfoActionsStr +=",";
+        }
+        fileInfoActionsStr += action;
+    }
+    if (fileInfoActionsStr!="") {
+        params.set('fileInfoActionsStr', fileInfoActionsStr);
+    }
+
+    let syncStateActionsStr : string = "";
+    isFirst = true;
+    for(let action of this.selectedSynchroStateAction) {
+        if (isFirst) {
+            isFirst = false;
+        } else {
+            syncStateActionsStr +=",";
+        }
+        syncStateActionsStr += action;
+    }
+    if (syncStateActionsStr!="") {
+        params.set('syncStateStr', syncStateActionsStr);
+    }
+
+    if (this.startDate!=null) {
+        params.set('startDate', this.startDate.toISOString());
+    }
+    if (this.endDate!=null) {
+        params.set('endDate', this.endDate.toISOString());
+    }
+    this.synchroFilesService.viewList(this.id, this.originFile, this.pageNumber, this.numberRowPerPages, params).subscribe(
         (r : any) => {
             this.infosList = r;
             console.log("Data loaded");
@@ -105,5 +165,29 @@ export class SynchroRunningList implements OnInit {
         // Make cool HTTP requests
         this.loadInfos();
     }
+
+    public changeFileInfoAction(value) {
+        console.log("changeFileInfoAction : " + this.selectedInfoAction);
+        this.loadInfos();
+    }
     
+    public changeSyncStateAction(value) {
+        console.log("changeSyncStateAction : " + this.selectedSynchroStateAction);
+        this.loadInfos();
+    }
+    
+    public dateChange(value) {
+        console.log(value + " : " + this.startDate + " -> " + this.endDate);
+        this.loadInfos();
+        
+    }
+
+    public removeStartDate() {
+        this.startDate = null;
+        this.loadInfos();
+    }
+    public removeEndDate() {
+        this.endDate = null;
+        this.loadInfos();
+    }
 }

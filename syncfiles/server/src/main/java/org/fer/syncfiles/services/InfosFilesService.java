@@ -41,7 +41,7 @@ public class InfosFilesService {
     private MongoTemplate mongoTemplate;
 
     public FileInfoPage loadFileInfo(String paramSyncFilesId, OriginFile originFile, int pageNumber, int pageSize
-            , String filterName, Date startDate, Date endDate, FileInfoAction fileInfoAction, SyncState syncState) {
+            , String filterName, Date startDate, Date endDate, List<FileInfoAction> fileInfoActionList, List<SyncState> syncStateList) {
         Sort sort = new Sort(Sort.Direction.ASC, "relativePathString");
         Query query = query(where("paramSyncFilesId").is(paramSyncFilesId).and("originFile").is(originFile));
 
@@ -49,20 +49,25 @@ public class InfosFilesService {
             query.addCriteria(where("relativePathString").regex(filterName));
         }
 
-        if (startDate!=null) {
-            query.addCriteria(where("lastModifiedTime").gte(startDate));
+        if (startDate!=null && endDate!=null) {
+            query.addCriteria(where("lastModifiedTime").gte(startDate).lte(endDate));
+        } else {
+
+            if (startDate != null) {
+                query.addCriteria(where("lastModifiedTime").gte(startDate));
+            }
+
+            if (endDate != null) {
+                query.addCriteria(where("lastModifiedTime").lte(endDate));
+            }
         }
 
-        if (endDate!=null) {
-            query.addCriteria(where("lastModifiedTime").lte(endDate));
+        if (fileInfoActionList!=null) {
+            query.addCriteria(where("fileInfoAction").in(fileInfoActionList));
         }
 
-        if (fileInfoAction!=null) {
-            query.addCriteria(where("fileInfoAction").is(fileInfoAction));
-        }
-
-        if (syncState!=null) {
-            query.addCriteria(where("syncState").is(syncState));
+        if (syncStateList!=null) {
+            query.addCriteria(where("syncState").in(syncStateList));
         }
 
         long totalElements = mongoTemplate.count(query, FileInfo.class);

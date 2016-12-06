@@ -3,7 +3,11 @@ import {Observable} from 'rxjs/Rx';
 
 @Component({
     selector: 'input-debounce',
-    template: '<input type="text" class="form-control" pInputText [placeholder]="placeholder" [(ngModel)]="inputValue">'
+    template: `
+        <span class="md-inputfield">
+            <input type="text" class="form-control" pInputText [(ngModel)]="inputValue">
+            <label>{{placeholder}}</label>
+        </span>`
 })
 export class InputDebounceComponent {  
     @Input() placeholder: string;
