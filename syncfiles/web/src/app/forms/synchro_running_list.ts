@@ -38,9 +38,11 @@ export class SynchroRunningList implements OnInit {
 
     fileInfoAction: SelectItem[];
     selectedInfoAction : string[] = [];
+    fileInfoActionMap : Map<string, string> = new Map();
 
     synchroStateAction: SelectItem[];
     selectedSynchroStateAction : string[] = [];
+    syncStateActionMap : Map<string, string> = new Map();
 
     constructor(private title : Title,
                 private synchroRunningService : SynchroRunningService,
@@ -55,14 +57,17 @@ export class SynchroRunningList implements OnInit {
         this.fileInfoAction.push({label:'Update', value:'UPDATE'});
         for(let item of this.fileInfoAction) {
             this.selectedInfoAction.push(item.value);
+            this.fileInfoActionMap[item.value] = item.label;
         }
 
         this.synchroStateAction = [];
         this.synchroStateAction.push({label:'Finished', value:'FINISHED'});
         this.synchroStateAction.push({label:'Error', value:'ERROR'});
+        this.synchroStateAction.push({label:'Updating', value:'UPDATING'});
         this.synchroStateAction.push({label:'Waiting for update', value:'WAITING_FOR_UPDATE'});
         for(let item of this.synchroStateAction) {
             this.selectedSynchroStateAction.push(item.value);
+            this.syncStateActionMap[item.value] = item.label;
         }
     }
 

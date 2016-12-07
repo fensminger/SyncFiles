@@ -130,6 +130,7 @@ public class ParamSyncFilesService {
                     fileInfoDir.setDirectory(true);
                     fileInfoDir.setOriginFile(originFile);
                     fileInfoDir.setFileInfoAction(FileInfoAction.NOTHING);
+                    fileInfoDir.setSyncState(SyncState.FINISHED);
                     fileInfoDir.setParamSyncFilesId(paramSyncFilesId);
                     fileInfoRepository.save(fileInfoDir);
                 }
@@ -302,17 +303,20 @@ public class ParamSyncFilesService {
                 FileInfo remoteFileInfo = remoteFileInfoOptional.get();
                 if (localFileInfo.getHash().equals(remoteFileInfo.getHash())) {
                     FileInfo nothingTargetFileInfo = new FileInfo(paramSyncFiles.getId(), OriginFile.SYNCHRO, FileInfoAction.NOTHING, localFileInfo);
+                    nothingTargetFileInfo.setSyncState(SyncState.FINISHED);
                     fileInfoRepository.save(nothingTargetFileInfo);
                     // syncfilesSocketHandler.getSyncfilesSynchroMsg(syncfilesInfoId).getSynchroResume().addNothingFile();
                     syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "The file is not changed : " + nothingTargetFileInfo.getRelativePathString());
                 } else {
                     FileInfo updateTargetFileInfo = new FileInfo(paramSyncFiles.getId(), OriginFile.SYNCHRO, FileInfoAction.UPDATE, localFileInfo);
+                    updateTargetFileInfo.setSyncState(SyncState.WAITING_FOR_UPDATE);
                     fileInfoRepository.save(updateTargetFileInfo);
                     syncfilesSocketHandler.getSyncfilesSynchroMsg(paramSyncFiles.getId()).getSynchroResume().addUpdatedFile();
                     syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "The file is to update : " + updateTargetFileInfo.getRelativePathString());
                 }
             } else {
                 FileInfo newTargetFileInfo = new FileInfo(paramSyncFiles.getId(), OriginFile.SYNCHRO, FileInfoAction.CREATE, localFileInfo);
+                newTargetFileInfo.setSyncState(SyncState.WAITING_FOR_UPDATE);
                 fileInfoRepository.save(newTargetFileInfo);
                 syncfilesSocketHandler.getSyncfilesSynchroMsg(paramSyncFiles.getId()).getSynchroResume().addNewFile();
                 syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "New file to copy to remote : " + newTargetFileInfo.getRelativePathString());
@@ -325,6 +329,7 @@ public class ParamSyncFilesService {
             Optional<FileInfo> localFileInfoOptional = fileInfoRepository.findByParamSyncFilesIdAndOriginFileAndRelativePathString(paramSyncFiles.getId(), OriginFile.SOURCE, remoteFileInfo.getRelativePathString());
             if (!localFileInfoOptional.isPresent() || localFileInfoOptional.get().getFileInfoAction().equals(FileInfoAction.DELETE)) {
                 FileInfo deleteFileInfo = new FileInfo(paramSyncFiles.getId(), OriginFile.SYNCHRO, FileInfoAction.DELETE, remoteFileInfo);
+                deleteFileInfo.setSyncState(SyncState.WAITING_FOR_UPDATE);
                 fileInfoRepository.save(deleteFileInfo);
                 syncfilesSocketHandler.getSyncfilesSynchroMsg(paramSyncFiles.getId()).getSynchroResume().addDeletedFile();
                 syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "Delete file to remote : " + deleteFileInfo.getRelativePathString());
@@ -333,7 +338,7 @@ public class ParamSyncFilesService {
 
         listDirectory(paramSyncFiles.getId(), OriginFile.SYNCHRO);
 
-        syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "Finish analyse synchronisation to do");
+        syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "Finish synchronisation simulated");
     }
 
     public void synchronizeToRemote(ParamSyncFiles paramSyncFiles) throws Exception {
@@ -344,25 +349,31 @@ public class ParamSyncFilesService {
                 if (!fileInfo.isDirectory()) {
                     switch (fileInfo.getFileInfoAction()) {
                         case CREATE:
+                            updateSyncState(fileInfo, SyncState.UPDATING);
                             File fileToUpload = new File(paramSyncFiles.getMasterDir() + "/" + fileInfo.getRelativePathString());
                             if (fileToUpload.isFile()) {
                                 hubicService.uploadObject("default", paramSyncFiles.getSlaveDir() + "/" + fileInfo.getRelativePathString(), fileInfo.getHash(), fileToUpload);
                             }
                             syncfilesSocketHandler.getSyncfilesSynchroMsg(paramSyncFiles.getId()).getSynchroReal().addNewFile();
                             syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "File is created to remote : " + fileInfo.getRelativePathString());
+                            updateSyncState(fileInfo, SyncState.FINISHED);
                             break;
                         case UPDATE:
+                            updateSyncState(fileInfo, SyncState.UPDATING);
                             fileToUpload = new File(paramSyncFiles.getMasterDir() + "/" + fileInfo.getRelativePathString());
                             if (fileToUpload.isFile()) {
                                 hubicService.uploadObject("default", paramSyncFiles.getSlaveDir() + "/" + fileInfo.getRelativePathString(), fileInfo.getHash(), fileToUpload);
                             }
                             syncfilesSocketHandler.getSyncfilesSynchroMsg(paramSyncFiles.getId()).getSynchroReal().addUpdatedFile();
                             syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "File is updated to remote : " + fileInfo.getRelativePathString());
+                            updateSyncState(fileInfo, SyncState.FINISHED);
                             break;
                         case DELETE:
+                            updateSyncState(fileInfo, SyncState.UPDATING);
                             hubicService.deleteObject("default", paramSyncFiles.getSlaveDir() + "/" + fileInfo.getRelativePathString());
                             syncfilesSocketHandler.getSyncfilesSynchroMsg(paramSyncFiles.getId()).getSynchroReal().addDeletedFile();
                             syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "File is deleted to remote : " + fileInfo.getRelativePathString());
+                            updateSyncState(fileInfo, SyncState.FINISHED);
                             break;
                         case NOTHING:
                             // syncfilesSocketHandler.getSyncfilesSynchroMsg(syncfilesInfoId).getSynchroReal().addNothingFile();
@@ -371,9 +382,6 @@ public class ParamSyncFilesService {
                             break;
                     }
 
-                    fileInfo.setErrorMessage(null);
-                    fileInfo.setSyncState(SyncState.FINISHED);
-                    fileInfoRepository.save(fileInfo);
                 }
             } catch (Exception e) {
                 fileInfo.setSyncState(SyncState.ERROR);
@@ -383,5 +391,11 @@ public class ParamSyncFilesService {
             }
         }
         syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "Finish synchronisation.");
+    }
+
+    private void updateSyncState(FileInfo fileInfo, SyncState syncState) {
+        fileInfo.setErrorMessage(null);
+        fileInfo.setSyncState(syncState);
+        fileInfoRepository.save(fileInfo);
     }
 }

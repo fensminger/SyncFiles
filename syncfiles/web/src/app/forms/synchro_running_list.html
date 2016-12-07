@@ -46,7 +46,7 @@
 </form>  
 <p-dataTable [value]="infosList?.fileInfoList" [lazy]="true" [rows]="numberRowPerPages" [paginator]="true" 
             [totalRecords]="infosList?.totalElements" (onLazyLoad)="loadLazyInfos($event)" 
-            [responsive]="true" [stacked]="stacked">
+            [responsive]="true" [stacked]="stacked" >
     <header>Files</header>
     <p-column styleClass="name-list" field="relativePathString" header="Name">
         <template let-col let-fileInfo="rowData" pTemplate type="body">
@@ -56,12 +56,12 @@
     </p-column>
     <p-column styleClass="size-action" field="fileInfoAction" header="To Do">
         <template let-col let-fileInfo="rowData" pTemplate type="body">
-            {{fileInfo.fileInfoAction}}
+            {{fileInfoActionMap[fileInfo.fileInfoAction]}}
         </template>
     </p-column>
     <p-column *ngIf="originFile=='SYNCHRO'" styleClass="size-action" field="syncState" header="Synchro. state">
         <template let-col let-fileInfo="rowData" pTemplate type="body">
-            {{fileInfo.syncState}}
+            {{syncStateActionMap[fileInfo.syncState]}}
         </template>
     </p-column>
     <p-column styleClass="size-list" field="size" header="Size">
