@@ -16,40 +16,16 @@ export class ReplacePipe implements PipeTransform {
   }
 }
 
-@Component({
-  selector: 'synchro-running-list',
-  viewProviders: [Title],
-    providers: [SynchroFilesService],
-    templateUrl : 'synchro_running_list.html',
-    styleUrls: ['synchro_running_list.css']
-})
-export class SynchroRunningList implements OnInit {
+export class SynchroRunningGenInfos {
+    protected fileInfoAction: SelectItem[];
+    protected selectedInfoAction : string[] = [];
+    protected fileInfoActionMap : Map<string, string> = new Map();
 
-    pageNumber : number;
-    numberRowPerPages = 50;
+    protected synchroStateAction: SelectItem[];
+    protected selectedSynchroStateAction : string[] = [];
+    protected syncStateActionMap : Map<string, string> = new Map();
 
-    infosList : any;
-    id : string;
-    originFile : string;
-
-    filterName : string;
-    startDate : Date;
-    endDate : Date;
-
-    fileInfoAction: SelectItem[];
-    selectedInfoAction : string[] = [];
-    fileInfoActionMap : Map<string, string> = new Map();
-
-    synchroStateAction: SelectItem[];
-    selectedSynchroStateAction : string[] = [];
-    syncStateActionMap : Map<string, string> = new Map();
-
-    constructor(private title : Title,
-                private synchroRunningService : SynchroRunningService,
-                private route: ActivatedRoute,
-                private location: Location,
-                private synchroFilesService : SynchroFilesService) {
-                    this.pageNumber = 1;
+    constructor() {
         this.fileInfoAction = [];
         this.fileInfoAction.push({label:'Create', value:'CREATE'});
         this.fileInfoAction.push({label:'Delete', value:'DELETE'});
@@ -69,6 +45,36 @@ export class SynchroRunningList implements OnInit {
             this.selectedSynchroStateAction.push(item.value);
             this.syncStateActionMap[item.value] = item.label;
         }
+    }    
+}
+
+@Component({
+  selector: 'synchro-running-list',
+  viewProviders: [Title],
+    providers: [SynchroFilesService],
+    templateUrl : 'synchro_running_list.html',
+    styleUrls: ['synchro_running_list.css']
+})
+export class SynchroRunningList extends SynchroRunningGenInfos implements OnInit {
+
+    pageNumber : number;
+    numberRowPerPages = 50;
+
+    infosList : any;
+    id : string;
+    originFile : string;
+
+    filterName : string;
+    startDate : Date;
+    endDate : Date;
+
+    constructor(private title : Title,
+                private synchroRunningService : SynchroRunningService,
+                private route: ActivatedRoute,
+                private location: Location,
+                private synchroFilesService : SynchroFilesService) {
+                    super();
+                    this.pageNumber = 1;
     }
 
 

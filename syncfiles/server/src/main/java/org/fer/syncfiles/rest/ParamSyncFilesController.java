@@ -117,7 +117,17 @@ public class ParamSyncFilesController {
                 filterName, startDate, endDate, fileInfoActionList, syncStateList);
     }
 
-    private List<FileInfoAction> getFileInfoActions(String fileInfoActionsStr) {
+    @RequestMapping(value = "/view/tree/{id}/{originFile}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<FileInfo> loadTreeInfo(
+            @PathVariable String id
+            , @PathVariable OriginFile originFile
+            , @RequestParam(required = false) String parentPath) {
+        return infosFilesService.loadTreeInfo(id, originFile, parentPath);
+    }
+
+        private List<FileInfoAction> getFileInfoActions(String fileInfoActionsStr) {
         if (fileInfoActionsStr==null) {
             return null;
         }

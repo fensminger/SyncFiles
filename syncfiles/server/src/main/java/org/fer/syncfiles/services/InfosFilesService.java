@@ -10,12 +10,10 @@ import org.fer.syncfiles.repository.ParamSyncFilesRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -84,4 +82,18 @@ public class InfosFilesService {
 //        Page<FileInfo> fileInfoPage = fileInfoRepository.findByParamSyncFilesIdAndOriginFile(paramSyncFilesId, originFile, pageable);
 //        return new FileInfoPage(pageNumber, pageSize, fileInfoPage.getTotalPages(), fileInfoPage.getTotalElements(), fileInfoPage.getContent());
     }
+
+    public List<FileInfo> loadTreeInfo(String paramSyncFilesId, OriginFile originFile, String parentPath) {
+        Sort sort = new Sort(Sort.Direction.DESC, "isDirectory");
+        Sort sort2 = new Sort(Sort.Direction.ASC, "relativePathString");
+        Query query = query(where("paramSyncFilesId").is(paramSyncFilesId)
+                .and("originFile").is(originFile)
+                .and("parentPath").is(parentPath));
+
+        query.with(sort).with(sort2);
+        List<FileInfo> contentList = mongoTemplate.find(query, FileInfo.class);
+        return contentList;
+
+    }
+
 }

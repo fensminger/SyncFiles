@@ -24,3 +24,8 @@
         text-align: center;
     }
 }
+
+body .layout-wrapper.layout-compact .ui-treetable tbody .ui-treetable-row td {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}

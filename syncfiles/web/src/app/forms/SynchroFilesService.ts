@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import {URLSearchParams} from '@angular/http';
-
+import {TreeNode} from 'primeng/primeng';
 
 @Injectable()
 export class SynchroFilesService {
@@ -69,4 +69,25 @@ export class SynchroFilesService {
             .catch(this.handleError);
     }
 
+    public viewTree(id :string, originFile : string, params : URLSearchParams) : Observable<any> {
+        return this.http.get("/api/sync-files/view/tree/"+id+"/"+originFile
+                , {
+                    headers:this.headers,
+                    search: params
+                }
+                )
+            .map(this.extractData)
+            .map(fileInfoList => {
+                let res : TreeNode[] = [];
+                for(let fileInfo of fileInfoList) {
+                    let treeNode : TreeNode = {};
+                    treeNode.data = fileInfo;
+                    treeNode.leaf = !fileInfo.directory; 
+                    res.push(treeNode);
+                }
+                return res;
+            })
+            .catch(this.handleError);
+
+    }
 }
