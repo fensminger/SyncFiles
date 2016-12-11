@@ -5,6 +5,7 @@ import {SfcInput} from './sfc_input';
 import {SynchroFilesService} from './SynchroFilesService';
 import {Response} from "@angular/http";
 import {ActivatedRoute} from "@angular/router";
+import {Location} from '@angular/common';
 import {Message, SelectItem} from 'primeng/primeng';
 
 @Component({
@@ -20,10 +21,13 @@ export class SynchroDetailEdit implements OnInit {
     id : String;
     version : number;
     model = {
+        id : null,
+        name : null,
         includeDir:false,
         includeExcludePatterns : []
     };
     modelModified = {
+        id : null,
         name : null,
         cronExp : null,
         masterDir : null,
@@ -37,7 +41,8 @@ export class SynchroDetailEdit implements OnInit {
 
     constructor(private _synchroFilesService : SynchroFilesService,
                 private _fb: FormBuilder, title : Title,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private location: Location,) {
         title.setTitle("SyncFiles - Detail d'une synchronisation");
 
         console.log("Paramètre" + this.id);
@@ -48,7 +53,7 @@ export class SynchroDetailEdit implements OnInit {
 
 
         // console.log('lodash version:', _.VERSION);
-        
+
         this.synchroForm = _fb.group({
             'name': ['', Validators.required],
             'cronExp' : [''],
@@ -70,7 +75,7 @@ export class SynchroDetailEdit implements OnInit {
                         this.includeExcludePatterns.length = this.model.includeExcludePatterns.length;
                     }
                     this.modelModified = JSON.parse(JSON.stringify(this.model));
-                    console.log("Chargement de : " + JSON.stringify(this.model));
+                    console.log("Loading : " + JSON.stringify(this.model));
                 },
                 (e : any) => {
                     this.isHttpRequest = false;
@@ -81,7 +86,7 @@ export class SynchroDetailEdit implements OnInit {
     }
 
     createSynchro(value : any) {
-        console.log('Synchro à sauvegarder : ' + JSON.stringify(this.model));
+        console.log('Synchro to save : ' + JSON.stringify(this.model));
         this.isHttpRequest = true;
         value.version = this.version;
         this.modelModified.name = this.synchroForm.get('name').value;
@@ -127,5 +132,14 @@ export class SynchroDetailEdit implements OnInit {
     public chgPattern(i : number, event : any) {
         this.modelModified.includeExcludePatterns[i] = event.target.value;
         console.log("Model : " + JSON.stringify(this.modelModified));
+    }
+
+    public duplicate() {
+      this.model.name = "Copy of " + this.model.name;
+      this.modelModified.name = this.model.name;
+      this.id = null;
+      this.model.id = null;
+      this.modelModified.id = null;
+      this.location.replaceState("detail");
     }
 }

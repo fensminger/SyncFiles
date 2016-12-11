@@ -5,8 +5,13 @@
         <div class="ui-g-12">
             <!-- Left Side -->
             <div class="card card-w-title">
-                <h1>Synchronization detail</h1>
                 <div class="ui-g form-group">
+                    <div class="ui-g-11">
+                      <h1>Synchronization detail</h1>
+                    </div>
+                    <div class="ui-g-1">
+                      <button (click)="duplicate()" pButton type="button" icon="ui-icon-content-copy" ></button>
+                    </div>
                     <div class="ui-g-12 ui-md-8 ui-lg-9 ui-xl-10 sf-line-space">
                         <span class="md-inputfield">
                             <input type="text" pInputText [formControl]="synchroForm.get('name')"  [(ngModel)]="model.name" id="nameId" name="name">
@@ -72,7 +77,7 @@
                     <button pButton type="submit" [disabled]="!synchroForm.valid" label="Save synchronization detail"></button>
 
         </div>
-    </div>    
+    </div>
 
 </form>
 

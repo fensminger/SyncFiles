@@ -12,7 +12,8 @@ import java.util.Date;
 
 @Document(collection = "fileInfo")
 @CompoundIndexes({
-    @CompoundIndex(name = "search_indexes", def = "{'paramSyncFilesId': 1, 'originFile': 1, 'relativePathString':1}")
+    @CompoundIndex(name = "base_indexes", def = "{'paramSyncFilesId': 1, 'originFile': 1}")
+        , @CompoundIndex(name = "parent_indexes", def = "{'paramSyncFilesId': 1, 'originFile': 1, 'parentPath':1}")
 })
 public class FileInfo implements Serializable {
 
@@ -23,6 +24,7 @@ public class FileInfo implements Serializable {
 
     private String paramSyncFilesId;
     private OriginFile originFile;
+    @Indexed
     private String relativePathString;
     private String parentPath;
 
@@ -33,6 +35,7 @@ public class FileInfo implements Serializable {
 
     private Date creationTime;
     private Date lastAccessTime;
+    @Indexed
     private Date lastModifiedTime;
     private long size;
     @Indexed
