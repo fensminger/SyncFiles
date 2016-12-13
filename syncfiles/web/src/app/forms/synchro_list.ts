@@ -52,7 +52,7 @@ export class SynchroList {
         });
     }
 
-  startSynchro(index : number, id : string) :void {
+  startSynchro(id : string) :void {
     this.isHttpRequest = true;
     this._synchroFilesService.synchronize(id).subscribe(
       (r:any) => {
@@ -64,9 +64,10 @@ export class SynchroList {
           console.log("Error startSynchro : " + JSON.stringify(e));
         }
     );
-  }    
+  }
 
-  showLastSynchro(index : number, id : string) :void {
+  showLastSynchro(id : string) :void {
+    console.log("Show last synchro");
     this.router.navigate(['/detail', id, 'execution']);
   }
 
@@ -75,7 +76,10 @@ export class SynchroList {
     this._synchroFilesService.removeDetail(id).subscribe(
         (r: any) => {
           this.isHttpRequest = false;
-          this.synchroFileList.splice(index, 1);
+          console.log("Suppression de l'index : " + index);
+          if (index!==undefined) {
+            this.synchroFileList.splice(index, 1);
+          }
         },
         (e : any) => {
           this.isHttpRequest = false;
