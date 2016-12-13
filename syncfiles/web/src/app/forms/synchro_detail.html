@@ -1,9 +1,9 @@
 <p-tabView (onChange)="onChange($event)" >
     <p-tabPanel header="General" leftIcon="ui-icon-settings" [selected]="tabName=='general'">
-       <synchro-detail-edit></synchro-detail-edit>
+       <synchro-detail-edit (syncFilesInfo)="changeSyncFileInfo($event)"></synchro-detail-edit>
     </p-tabPanel>
     <p-tabPanel header="Last Execution" leftIcon="ui-icon-import-export" [selected]="tabName=='execution'">
-       <div class="ui-g ui-fluid" *ngIf="syncFilesinfo==null || !syncFilesinfo.running">
+       <div class="ui-g ui-fluid" *ngIf="id!=null && (syncFilesinfo==null || !syncFilesinfo.running)">
             <div class="ui-g-6">
                 <button pButton type="button" (click)="startSynchro()" label="Start new simulation"></button>
             </div>

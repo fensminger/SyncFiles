@@ -37,7 +37,7 @@ export class SynchroDetail implements OnInit {
         this.location.replaceState(this.location.path(false).replace("general", "execution"));
     }
   }
-    
+
 
     public initSyncFilesInfo(s :any) {
         if (s==null || s===undefined) {
@@ -51,9 +51,9 @@ export class SynchroDetail implements OnInit {
     }
 
   public ngOnInit() {
-    this.route.params.subscribe(params => { 
+    this.route.params.subscribe(params => {
         this.tabName = params['tabName'];
-        this.id = params['id']; 
+        this.id = params['id'];
         this.synchroRunningService.loadOne(this.id).subscribe(
             (r : any) => {
                 console.log("Msg chargé : " + r);
@@ -84,6 +84,13 @@ export class SynchroDetail implements OnInit {
           console.log("Error startSynchro : " + JSON.stringify(e));
         }
     );
-  }    
+  }
 
+  changeSyncFileInfo(s : any) {
+      console.log("param changed.");
+      if (this.id != s.id) {
+        this.id = s.id;
+        this.syncFilesinfo = null;
+      }
+  }
 }

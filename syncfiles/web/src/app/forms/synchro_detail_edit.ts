@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, EventEmitter, Output} from '@angular/core';
 import {FormBuilder, Validators, FormGroup} from '@angular/forms';
 import {Title} from '@angular/platform-browser';
 import {SfcInput} from './sfc_input';
@@ -16,6 +16,10 @@ import {Message, SelectItem} from 'primeng/primeng';
     styleUrls: ['synchro_detail_edit.css']
 })
 export class SynchroDetailEdit implements OnInit {
+
+    @Output()
+    syncFilesInfo : EventEmitter<any> = new EventEmitter();
+
     synchroForm : FormGroup;
     isHttpRequest :boolean;
     id : String;
@@ -98,6 +102,7 @@ export class SynchroDetailEdit implements OnInit {
                 this.isHttpRequest = false;
                 this.model = r;
                 this.modelModified = JSON.parse(JSON.stringify(this.model));
+                this.syncFilesInfo.emit(this.modelModified);
                 console.log("OK" + JSON.stringify(r));
                 this.alerts.push({severity:'info', summary:'Info', detail:'Saved synchronization detail.'});
             },
@@ -141,5 +146,6 @@ export class SynchroDetailEdit implements OnInit {
       this.model.id = null;
       this.modelModified.id = null;
       this.location.replaceState("detail");
+      this.syncFilesInfo.emit(this.modelModified);
     }
 }
