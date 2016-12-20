@@ -1,6 +1,8 @@
 package org.fer.syncfiles.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -34,8 +36,9 @@ public class ParamSyncFiles implements Serializable {
 
     private SyncState syncState;
 
-	private List<String> includeExcludePatterns;
+	private List<IncludeExcludeInfo> includeExcludePatterns;
 
+	@Transient
 	private String regExpIncludeExcludePattern = null;
 
 	public ParamSyncFiles() {
@@ -55,7 +58,7 @@ public class ParamSyncFiles implements Serializable {
 			this.includeExcludePatterns = null;
 		} else {
 			this.includeExcludePatterns = new ArrayList<>();
-			for (String pattern : p.includeExcludePatterns) {
+			for (IncludeExcludeInfo pattern : p.includeExcludePatterns) {
 				this.includeExcludePatterns.add(pattern);
 			}
 		}
@@ -101,7 +104,7 @@ public class ParamSyncFiles implements Serializable {
 		this.includeDir = includeDir;
 	}
 
-	public List<String> getIncludeExcludePatterns() {
+	public List<IncludeExcludeInfo> getIncludeExcludePatterns() {
 		return includeExcludePatterns;
 	}
 
@@ -109,24 +112,7 @@ public class ParamSyncFiles implements Serializable {
         return id;
     }
 
-    public String getRegExpIncludeExcludePattern() {
-		if (regExpIncludeExcludePattern==null && includeExcludePatterns!=null) {
-			String regExp = null;
-			for(String str : includeExcludePatterns) {
-				if (regExp==null) {
-					regExp = "";
-				} else {
-					regExp += "|";
-				}
-				regExp += "(" + str + ")";
-			}
-//			log.info("regExp : " + regExp);
-			regExpIncludeExcludePattern = regExp;
-		}
-		return regExpIncludeExcludePattern;
-	}
-
-	public void setIncludeExcludePatterns(List<String> includeExcludePatterns) {
+	public void setIncludeExcludePatterns(List<IncludeExcludeInfo> includeExcludePatterns) {
 		this.includeExcludePatterns = includeExcludePatterns;
 		regExpIncludeExcludePattern = null;
 	}

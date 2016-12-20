@@ -1,11 +1,13 @@
 package org.fer.syncfiles.services;
 
 import org.fer.syncfiles.domain.FileValue;
+import org.fer.syncfiles.domain.IncludeExcludeInfo;
 import org.fer.syncfiles.domain.ParamSyncFiles;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,26 +16,44 @@ import java.util.Optional;
 @Service
 public class FileUtils {
 
-    public boolean match(ParamSyncFiles param, Path relaExp) {
-        String regExpIncludeExcludePattern = (param==null)?null:param.getRegExpIncludeExcludePattern();
-        if (regExpIncludeExcludePattern==null) {
-            return true;
+    public boolean match(ParamSyncFiles param, String strMatch) {
+        List<IncludeExcludeInfo> includeExcludeList = param.getIncludeExcludePatterns();
+        boolean matches = false;
+        if (includeExcludeList==null) {
+            matches = false;
+        } else {
+            for(IncludeExcludeInfo includeExcludeInfo : includeExcludeList) {
+                final String toCheck = includeExcludeInfo.getValue();
+                switch (includeExcludeInfo.getType()) {
+                    case START:
+                        matches = strMatch.startsWith(toCheck);
+                        break;
+                    case END:
+                        matches = strMatch.endsWith(toCheck);
+                        break;
+                    case CONTAIN:
+                        matches = strMatch.contains(toCheck);
+                        break;
+                    case REGEXP:
+                    default:
+                        matches = strMatch.matches(toCheck);
+                }
+                if (matches) {
+                    break;
+                }
+            }
         }
 
-        try {
-            String strMatch = ""+relaExp.toString();
-            if (strMatch.matches(regExpIncludeExcludePattern)) {
-                return param.isIncludeDir();
-            }
+        if (matches) {
+            return param.isIncludeDir();
+        } else {
             return !param.isIncludeDir();
-        } catch (Throwable e) {
-            throw e;
         }
     }
 
     public Optional<FileValue> createFile(ParamSyncFiles param, Path prefix, Path file, BasicFileAttributes attrs) {
         Path relaFile = prefix.relativize(file);
-        if (match(param, relaFile)) {
+        if (match(param, relaFile.toString())) {
             final FileValue fileValue = new FileValue(relaFile, attrs);
             return Optional.of(fileValue);
         } else {
@@ -46,7 +66,7 @@ public class FileUtils {
         if (relaDir.toString().equals("")) {
             return Optional.empty();
         }
-        if (match(param, relaDir)) {
+        if (match(param, relaDir.toString())) {
             final FileValue fileValue = new FileValue(relaDir, attrs);
             return Optional.of(fileValue);
         } else {
