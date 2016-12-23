@@ -64,9 +64,12 @@
                     </div>
 
                     <template ngFor let-pattern [ngForOf]="model.includeExcludePatterns" let-i="index">
-                        <div class="ui-g-11 ui-md-5 ui-lg-5 ui-xl-5">
-                            <input type="text" pInputText [value]="pattern" (input)="chgPattern(i, $event)" placeholder="Enter your pattern"/>
-                        </div>
+                      <div class="ui-g-4 ui-lg-2 ui-xl-1">
+                        <p-dropdown [style]="{'width':'auto'}" id="dropdown" (onChange)="chgType(i, $event)" [options]="types" [ngModel]="pattern.type" [autoWidth]="false" name="type" [ngModelOptions]="{standalone: true}"></p-dropdown>
+                      </div>
+                      <div class="ui-g-7 ui-lg-3 ui-xl-4">
+                        <input type="text" pInputText [value]="pattern.value" (input)="chgPattern(i, $event)" placeholder="Enter your pattern"/>
+                      </div>
                         <div class="ui-g-1" >
                             <button (click)="removePattern(i)" pButton type="button" icon="ui-icon-trash" class="red-btn"></button>
                         </div>

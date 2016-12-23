@@ -24,7 +24,6 @@ export class SynchroDetail implements OnInit {
                 private location: Location,
                 private synchroFilesService : SynchroFilesService) {
         title.setTitle("SyncFiles - Detail");
-
     }
 
   public onChange(e) {
@@ -54,15 +53,15 @@ export class SynchroDetail implements OnInit {
     this.route.params.subscribe(params => {
         this.tabName = params['tabName'];
         this.id = params['id'];
+        this.synchroRunningService.syncFilesinfoObservable.subscribe(
+          s => {
+            this.initSyncFilesInfo(s);
+          }
+        );
         this.synchroRunningService.loadOne(this.id).subscribe(
             (r : any) => {
                 console.log("Msg chargé : " + r);
                 this.syncFilesinfo = r;
-                this.synchroRunningService.syncFilesinfoObservable.subscribe(
-                    s => {
-                        this.initSyncFilesInfo(s);
-                    }
-                );
             },
             (e : any) => {
                 console.log("Error : " + e);
@@ -76,8 +75,10 @@ export class SynchroDetail implements OnInit {
   }
 
   startSynchro() :void {
-    this.syncFilesinfo.running = true;
-    this.synchroFilesService.synchronize(this.syncFilesinfo.paramSyncFilesId).subscribe(
+      if (this.syncFilesinfo!=null) {
+        this.syncFilesinfo.running = true;
+      }
+    this.synchroFilesService.synchronize(this.id).subscribe(
       (r:any) => {
       },
         (e : any) => {

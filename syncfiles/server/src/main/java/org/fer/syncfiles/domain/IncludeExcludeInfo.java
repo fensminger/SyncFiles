@@ -4,12 +4,10 @@ package org.fer.syncfiles.domain;
  * Created by fensm on 19/12/2016.
  */
 public class IncludeExcludeInfo {
-    public enum INCLUDE_EXCLUDE_INFO {START, END, CONTAIN, REGEXP};
-
-    private INCLUDE_EXCLUDE_INFO type;
+    private IncludeExcludeInfoType type;
     private String value;
 
-    public IncludeExcludeInfo(INCLUDE_EXCLUDE_INFO type, String value) {
+    public IncludeExcludeInfo(IncludeExcludeInfoType type, String value) {
         super();
         this.type = type;
         this.value = value;
@@ -19,11 +17,11 @@ public class IncludeExcludeInfo {
         super();
     }
 
-    public INCLUDE_EXCLUDE_INFO getType() {
+    public IncludeExcludeInfoType getType() {
         return type;
     }
 
-    public void setType(INCLUDE_EXCLUDE_INFO type) {
+    public void setType(IncludeExcludeInfoType type) {
         this.type = type;
     }
 

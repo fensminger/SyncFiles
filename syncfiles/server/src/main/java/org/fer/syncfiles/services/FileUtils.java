@@ -16,12 +16,13 @@ import java.util.Optional;
 @Service
 public class FileUtils {
 
-    public boolean match(ParamSyncFiles param, String strMatch) {
+    public boolean match(ParamSyncFiles param, String strMatchParam) {
         List<IncludeExcludeInfo> includeExcludeList = param.getIncludeExcludePatterns();
         boolean matches = false;
         if (includeExcludeList==null) {
             matches = false;
         } else {
+            final String strMatch = strMatchParam.replace('\\', '/');
             for(IncludeExcludeInfo includeExcludeInfo : includeExcludeList) {
                 final String toCheck = includeExcludeInfo.getValue();
                 switch (includeExcludeInfo.getType()) {

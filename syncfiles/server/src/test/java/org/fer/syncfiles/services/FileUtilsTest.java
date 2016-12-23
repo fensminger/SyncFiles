@@ -1,12 +1,11 @@
 package org.fer.syncfiles.services;
 
 import org.fer.syncfiles.domain.IncludeExcludeInfo;
+import org.fer.syncfiles.domain.IncludeExcludeInfoType;
 import org.fer.syncfiles.domain.ParamSyncFiles;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +20,10 @@ public class FileUtilsTest {
         ParamSyncFiles param = new ParamSyncFiles();
         param.setIncludeDir(true);
         List<IncludeExcludeInfo> excludePatterns = new ArrayList<>();
-        excludePatterns.add(new IncludeExcludeInfo(IncludeExcludeInfo.INCLUDE_EXCLUDE_INFO.START, ".DS_Store"));
-        excludePatterns.add(new IncludeExcludeInfo(IncludeExcludeInfo.INCLUDE_EXCLUDE_INFO.END, "End"));
-        excludePatterns.add(new IncludeExcludeInfo(IncludeExcludeInfo.INCLUDE_EXCLUDE_INFO.CONTAIN, "orren"));
-        excludePatterns.add(new IncludeExcludeInfo(IncludeExcludeInfo.INCLUDE_EXCLUDE_INFO.REGEXP, "^http://yahoo.com$"));
+        excludePatterns.add(new IncludeExcludeInfo(IncludeExcludeInfoType.START, ".DS_Store"));
+        excludePatterns.add(new IncludeExcludeInfo(IncludeExcludeInfoType.END, "End"));
+        excludePatterns.add(new IncludeExcludeInfo(IncludeExcludeInfoType.CONTAIN, "orren"));
+        excludePatterns.add(new IncludeExcludeInfo(IncludeExcludeInfoType.REGEXP, "^http://yahoo.com$"));
         param.setIncludeExcludePatterns(excludePatterns);
 
         Assert.assertEquals(true, fileUtils.match(param, ".DS_Store"));

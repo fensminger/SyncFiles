@@ -40,7 +40,8 @@ export class SynchroDetailEdit implements OnInit {
     };
     includeExcludePatterns = [];
 
-    patternTypes: SelectItem[];
+  patternTypes: SelectItem[];
+  types: SelectItem[];
 
 
     constructor(private _synchroFilesService : SynchroFilesService,
@@ -55,8 +56,14 @@ export class SynchroDetailEdit implements OnInit {
         this.patternTypes.push({label:'Exclude pattern regular expression files', value:false});
         this.patternTypes.push({label:'Include pattern regular expression files', value:true});
 
+      this.types = [];
+      this.types.push({value:'START', label:'Start with'});
+      this.types.push({value:'END', label:'End width'});
+      this.types.push({value:'CONTAIN', label:'Contains'});
+      this.types.push({value:'REGEXP', label:'Reg. Exp. JAVA'});
 
-        // console.log('lodash version:', _.VERSION);
+
+      // console.log('lodash version:', _.VERSION);
 
         this.synchroForm = _fb.group({
             'name': ['', Validators.required],
@@ -123,9 +130,9 @@ export class SynchroDetailEdit implements OnInit {
             this.modelModified.includeExcludePatterns = [];
             this.includeExcludePatterns = [];
         }
-        this.model.includeExcludePatterns.push("");
-        this.modelModified.includeExcludePatterns.push("");
-        this.includeExcludePatterns.push("");
+        this.model.includeExcludePatterns.push({type:null, value:null});
+        this.modelModified.includeExcludePatterns.push({type:null, value:null});
+        this.includeExcludePatterns.push({type:null, value:null});
         console.log("Model : " + JSON.stringify(this.modelModified));
     }
 
@@ -135,8 +142,13 @@ export class SynchroDetailEdit implements OnInit {
     }
 
     public chgPattern(i : number, event : any) {
-        this.modelModified.includeExcludePatterns[i] = event.target.value;
-        console.log("Model : " + JSON.stringify(this.modelModified));
+        this.modelModified.includeExcludePatterns[i].value = event.target.value;
+        console.log("Model Value : " + JSON.stringify(this.modelModified));
+    }
+
+    public chgType(i : number, event : any) {
+      this.modelModified.includeExcludePatterns[i].type = event.value;
+      console.log("Model type : " + JSON.stringify(this.modelModified));
     }
 
     public duplicate() {
