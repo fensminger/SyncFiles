@@ -3,8 +3,8 @@ import { Component, OnInit, OnDestroy, Input, ElementRef, ViewChild
 import {Response} from "@angular/http";
 
 @Component({
-  selector: 'synchro-simple-msg',
-  templateUrl: 'synchro_simple_msg.html'
+  selector: './synchro-simple-msg',
+  templateUrl: './synchro_simple_msg.html'
 })
 export class SynchroSimpleMsg implements AfterViewChecked, OnChanges {
     @Input('msgList') msgList :any;

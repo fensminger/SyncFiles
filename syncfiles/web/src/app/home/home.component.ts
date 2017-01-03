@@ -3,8 +3,8 @@ import {BreadCrumbService} from '../bread-crumb.service'
 
 @Component({
   selector: 'app-login',
-  templateUrl: 'home.component.html',
-  styleUrls: ['home.component.css']
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
 

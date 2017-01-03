@@ -6,7 +6,7 @@ import {Car} from '../domain/car';
 import {TreeNode} from 'primeng/primeng';
 
 @Component({
-    templateUrl: 'datademo.html',
+    templateUrl: './datademo.html',
     styles: [`                
         .cars-datalist ul {
             margin: 0;
@@ -24,29 +24,29 @@ import {TreeNode} from 'primeng/primeng';
 export class DataDemo implements OnInit {
 
     cars: Car[];
-    
+
     selectedCar: Car;
-    
+
     sourceCars: Car[];
-    
+
     targetCars: Car[];
-    
+
     orderListCars: Car[];
-    
+
     carouselCars: Car[];
-    
+
     files1: TreeNode[];
-    
+
     files2: TreeNode[];
-    
+
     events: any[];
-    
+
     selectedNode: TreeNode;
-    
+
     scheduleHeader: any;
 
     constructor(private carService: CarService, private eventService: EventService, private nodeService: NodeService) { }
-    
+
     ngOnInit() {
         this.carService.getCarsMedium().then(cars => this.cars = cars);
         this.carService.getCarsMedium().then(cars => this.sourceCars = cars);
@@ -55,7 +55,7 @@ export class DataDemo implements OnInit {
         this.nodeService.getFilesystem().then(files => this.files1 = files);
         this.nodeService.getFiles().then(files => this.files2 = files);
         this.eventService.getEvents().then(events => {this.events = events;});
-        
+
         this.carouselCars = [
             {vin: 'r3278r2', year: 2010, brand: 'Audi', color: 'Black'},
             {vin: 'jhto2g2', year: 2015, brand: 'BMW', color: 'White'},
@@ -67,7 +67,7 @@ export class DataDemo implements OnInit {
             {vin: '45665e5', year: 2011, brand: 'Mercedes', color: 'Brown'},
             {vin: 'he6sb5v', year: 2015, brand: 'Ford', color: 'Black'}
         ];
-        
+
         this.scheduleHeader = {
 			left: 'prev,next today',
 			center: 'title',

@@ -2,20 +2,20 @@ import {Component,OnInit} from '@angular/core';
 import {MenuItem} from 'primeng/primeng';
 
 @Component({
-    templateUrl: 'menusdemo.html'
+    templateUrl: './menusdemo.html'
 })
 export class MenusDemo implements OnInit {
 
     private breadcrumbItems: MenuItem[];
-    
+
     private tieredItems: MenuItem[];
-    
+
     private items: MenuItem[];
-    
+
     private tabMenuItems: MenuItem[];
-    
+
     private megaMenuItems: MenuItem[];
-    
+
     private panelMenuItems: MenuItem[];
 
     ngOnInit() {
@@ -28,7 +28,7 @@ export class MenusDemo implements OnInit {
         this.breadcrumbItems.push({label:'F.C. Barcelona'});
         this.breadcrumbItems.push({label:'Squad'});
         this.breadcrumbItems.push({label:'Lionel Messi', url: 'https://en.wikipedia.org/wiki/Lionel_Messi'});
-        
+
         this.tabMenuItems = [
             {label: 'Stats', icon: 'ui-icon-insert-chart'},
             {label: 'Calendar', icon: 'ui-icon-date-range'},
@@ -36,13 +36,13 @@ export class MenusDemo implements OnInit {
             {label: 'Support', icon: 'ui-icon-help-outline'},
             {label: 'Social', icon: 'ui-icon-public'}
         ];
-        
+
         this.tieredItems = [
             {
                 label: 'File',
                 icon: 'ui-icon-folder',
                 items: [{
-                        label: 'New', 
+                        label: 'New',
                         icon: 'ui-icon-plus',
                         items: [
                             {label: 'Project'},
@@ -69,11 +69,11 @@ export class MenusDemo implements OnInit {
                         label: 'Contents'
                     },
                     {
-                        label: 'Search', 
-                        icon: 'ui-icon-search', 
+                        label: 'Search',
+                        icon: 'ui-icon-search',
                         items: [
                             {
-                                label: 'Text', 
+                                label: 'Text',
                                 items: [
                                     {
                                         label: 'Workspace'
@@ -111,7 +111,7 @@ export class MenusDemo implements OnInit {
                 label: 'Quit', icon: 'ui-icon-power-settings-new'
             }
         ];
-        
+
         this.items = [{
             label: 'File',
             items: [
@@ -126,7 +126,7 @@ export class MenusDemo implements OnInit {
                 {label: 'Redo', icon: 'ui-icon-redo'}
             ]
         }];
-        
+
         this.megaMenuItems = [
             {
                 label: 'TV', icon: 'ui-icon-tv',
@@ -149,7 +149,7 @@ export class MenusDemo implements OnInit {
                         {
                             label: 'TV 4',
                             items: [{label: 'TV 4.1'},{label: 'TV 4.2'}]
-                        }    
+                        }
                     ]
                 ]
             },
@@ -210,7 +210,7 @@ export class MenusDemo implements OnInit {
                         {
                             label: 'Entertainment 4',
                             items: [{label: 'Entertainment 4.1'},{label: 'Entertainment 4.2'}]
-                        }    
+                        }
                     ]
                 ]
             },
@@ -231,18 +231,18 @@ export class MenusDemo implements OnInit {
                         {
                             label: 'Technology 4',
                             items: [{label: 'Technology 3.1'},{label: 'Technology 3.2'}]
-                        }  
+                        }
                     ]
                 ]
             }
         ];
-        
+
         this.panelMenuItems = [
             {
                 label: 'File',
                 icon: 'ui-icon-insert-drive-file',
                 items: [{
-                        label: 'New', 
+                        label: 'New',
                         icon: 'ui-icon-add',
                         items: [
                             {label: 'Project'},
@@ -269,11 +269,11 @@ export class MenusDemo implements OnInit {
                         label: 'Contents'
                     },
                     {
-                        label: 'Search', 
-                        icon: 'ui-icon-search', 
+                        label: 'Search',
+                        icon: 'ui-icon-search',
                         items: [
                             {
-                                label: 'Text', 
+                                label: 'Text',
                                 items: [
                                     {
                                         label: 'Workspace'

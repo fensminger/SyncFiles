@@ -1,20 +1,20 @@
 import {Component,OnInit} from '@angular/core';
 
 @Component({
-    templateUrl: 'chartsdemo.html'
+    templateUrl: './chartsdemo.html'
 })
 export class ChartsDemo implements OnInit {
-    
+
     lineData: any;
-    
+
     barData: any;
-    
+
     pieData: any;
-    
+
     polarData: any;
-    
+
     radarData: any;
-    
+
     ngOnInit() {
         this.lineData = {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -33,7 +33,7 @@ export class ChartsDemo implements OnInit {
                 }
             ]
         };
-        
+
         this.barData = {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             datasets: [
@@ -51,7 +51,7 @@ export class ChartsDemo implements OnInit {
                 }
             ]
         }
-        
+
         this.pieData = {
             labels: ['A','B','C'],
             datasets: [
@@ -67,9 +67,9 @@ export class ChartsDemo implements OnInit {
                         "#81D4FA",
                         "#A5D6A7"
                     ]
-                }]    
+                }]
             };
-            
+
         this.polarData = {
             datasets: [{
                 data: [
@@ -96,7 +96,7 @@ export class ChartsDemo implements OnInit {
                 "Blue"
             ]
         };
-        
+
         this.radarData = {
             labels: ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'],
             datasets: [

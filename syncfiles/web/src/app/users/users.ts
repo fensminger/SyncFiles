@@ -5,7 +5,7 @@ import {Account} from '../account/account';
 
 @Component({
     selector: 'users',
-    templateUrl: 'users.html',
+    templateUrl: './users.html',
     providers:[UsersService]
 })
 export class Users {

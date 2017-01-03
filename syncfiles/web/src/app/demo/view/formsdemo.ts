@@ -5,7 +5,7 @@ import {Car} from '../domain/car';
 import {SelectItem,MenuItem} from 'primeng/primeng';
 
 @Component({
-    templateUrl: 'formsdemo.html'
+    templateUrl: './formsdemo.html'
 })
 export class FormsDemo implements OnInit {
     
@@ -17,7 +17,7 @@ export class FormsDemo implements OnInit {
     
     filteredBrands: any[];
     
-    brand: string;
+    selectedBrands: string[];
     
     carOptions: SelectItem[];
     

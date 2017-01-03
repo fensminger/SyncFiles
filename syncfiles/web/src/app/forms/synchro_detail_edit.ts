@@ -12,8 +12,8 @@ import {Message, SelectItem} from 'primeng/primeng';
   selector: 'synchro-detail-edit',
   viewProviders: [Title],
     providers: [SynchroFilesService],
-    templateUrl : 'synchro_detail_edit.html',
-    styleUrls: ['synchro_detail_edit.css']
+    templateUrl : './synchro_detail_edit.html',
+    styleUrls: ['./synchro_detail_edit.css']
 })
 export class SynchroDetailEdit implements OnInit {
 
@@ -159,5 +159,9 @@ export class SynchroDetailEdit implements OnInit {
       this.modelModified.id = null;
       this.location.replaceState("detail");
       this.syncFilesInfo.emit(this.modelModified);
+    }
+
+    public patternTrackBy(index,item) : any {
+      return item;
     }
 }

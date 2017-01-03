@@ -13,8 +13,8 @@ import {SynchroRunningGenInfos} from './synchro_running_list';
   selector: 'synchro-running-tree',
   viewProviders: [Title],
     providers: [SynchroFilesService],
-    templateUrl : 'synchro_running_tree.html',
-    styleUrls: ['synchro_running_tree.css']
+    templateUrl : './synchro_running_tree.html',
+    styleUrls: ['./synchro_running_tree.css']
 })
 export class SynchroRunningTree extends SynchroRunningGenInfos implements OnInit {
 
@@ -52,9 +52,9 @@ export class SynchroRunningTree extends SynchroRunningGenInfos implements OnInit
     }
 
   public ngOnInit() {
-    this.route.params.subscribe(params => { 
+    this.route.params.subscribe(params => {
         this.originFile = params['originFile'];
-        this.id = params['id']; 
+        this.id = params['id'];
         this.loadInfos(null, "/");
     });
   }

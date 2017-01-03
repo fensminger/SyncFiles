@@ -1,4 +1,4 @@
-<form ngForm="searchForm">  
+<form ngForm="searchForm">
     <div class="ui-g ui-fluid">
         <div class="ui-g-12">
             <!-- Left Side -->
@@ -43,35 +43,36 @@
             </div>
         </div>
     </div>
-</form>  
-<p-dataTable [value]="infosList?.fileInfoList" [lazy]="true" [rows]="numberRowPerPages" [paginator]="true" 
-            [totalRecords]="infosList?.totalElements" (onLazyLoad)="loadLazyInfos($event)" 
+</form>
+<p-dataTable [hidden]="!showResult" [value]="infosList.fileInfoList" [lazy]="true" [rows]="numberRowPerPages" [paginator]="true"
+            [totalRecords]="infosList.totalElements" (onLazyLoad)="loadLazyInfos($event)"
             [responsive]="true" [stacked]="stacked" >
     <header>Files</header>
     <p-column styleClass="name-list" field="relativePathString" header="Name">
-        <template let-col let-fileInfo="rowData" pTemplate type="body">
+        <template let-col let-fileInfo="rowData" pTemplate="body">
             <div style="font-size : 80%">{{getPath(fileInfo.relativePathString)}}</div>
             <div><span [pTooltip]="fileInfo.relativePathString" tooltipPosition="right">{{getName(fileInfo.relativePathString)}}</span></div>
         </template>
     </p-column>
     <p-column styleClass="size-action" field="fileInfoAction" header="To Do">
-        <template let-col let-fileInfo="rowData" pTemplate type="body">
+        <template let-col let-fileInfo="rowData" pTemplate="body">
             {{fileInfoActionMap[fileInfo.fileInfoAction]}}
         </template>
     </p-column>
     <p-column *ngIf="originFile=='SYNCHRO'" styleClass="size-action" field="syncState" header="Synchro. state">
-        <template let-col let-fileInfo="rowData" pTemplate type="body">
+        <template let-col let-fileInfo="rowData" pTemplate="body">
             {{syncStateActionMap[fileInfo.syncState]}}
         </template>
     </p-column>
     <p-column styleClass="size-list" field="size" header="Size">
-        <template let-col let-fileInfo="rowData" pTemplate type="body">
+        <template let-col let-fileInfo="rowData" pTemplate="body">
             {{fileInfo.size | number:'1.0'}}
         </template>
     </p-column>
     <p-column styleClass="date-list" field="lastModifiedTime" header="Last Modified Time">
-        <template let-col let-fileInfo="rowData" pTemplate type="body">
+        <template let-col let-fileInfo="rowData" pTemplate="body">
             {{fileInfo.lastModifiedTime | date:"dd/MM/yyyy HH:mm:ss"}}
         </template>
     </p-column>
 </p-dataTable>
+<!--<p-paginator [rows]="numberRowPerPages" [totalRecords]="infosList.totalElements" (onPageChange)="loadLazyInfos($event)"></p-paginator>-->

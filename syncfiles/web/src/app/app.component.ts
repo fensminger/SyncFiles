@@ -9,7 +9,7 @@ declare var Ultima: any;
 
 @Component({
   selector: 'my-app',
-  templateUrl: 'application.html',
+  templateUrl: './application.html',
   providers: [BreadCrumbService, SynchroRunningService]
 })
 export class AppComponent implements AfterViewInit, OnInit {

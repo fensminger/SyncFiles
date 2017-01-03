@@ -7,8 +7,8 @@ import {$WebSocket} from 'angular2-websocket/angular2-websocket';
 @Component({
   selector: 'synchro-detail-run',
   viewProviders: [Title],
-  templateUrl: 'synchro_detail_running.html',
-  styleUrls: ['synchro_detail_running.css']
+  templateUrl: './synchro_detail_running.html',
+  styleUrls: ['./synchro_detail_running.css']
 })
 export class SynchroDetailRun {
   ongletIndex : number;
@@ -32,7 +32,7 @@ export class SynchroDetailRun {
     let originFile : string;
     if (index==0) {
       originFile = "SOURCE";
-    } else if (index==1) { 
+    } else if (index==1) {
       originFile = "TARGET";
     } else {
       originFile = "SYNCHRO";

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 
 @Component({
-    templateUrl: 'documentation.html',
+    templateUrl: './documentation.html',
     styles: [`
         .docs h1 {
             margin-top: 30px;

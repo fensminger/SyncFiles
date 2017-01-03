@@ -35,6 +35,7 @@ import {CalendarModule} from 'primeng/primeng';
 import {CarouselModule} from 'primeng/primeng';
 import {ChartModule} from 'primeng/primeng';
 import {CheckboxModule} from 'primeng/primeng';
+import {ChipsModule} from 'primeng/primeng';
 import {CodeHighlighterModule} from 'primeng/primeng';
 import {ConfirmDialogModule} from 'primeng/primeng';
 import {SharedModule} from 'primeng/primeng';
@@ -79,6 +80,7 @@ import {SlideMenuModule} from 'primeng/primeng';
 import {SliderModule} from 'primeng/primeng';
 import {SpinnerModule} from 'primeng/primeng';
 import {SplitButtonModule} from 'primeng/primeng';
+import {StepsModule} from 'primeng/primeng';
 import {TabMenuModule} from 'primeng/primeng';
 import {TabViewModule} from 'primeng/primeng';
 import {TerminalModule} from 'primeng/primeng';
@@ -178,6 +180,7 @@ import {NodeService} from './demo/service/nodeservice';
         TooltipModule,
         TreeModule,
         TreeTableModule,
+        ChipsModule,
     
     
     routing, MenuModule, ContextMenuModule, BreadcrumbModule, MenubarModule, MultiSelectModule,

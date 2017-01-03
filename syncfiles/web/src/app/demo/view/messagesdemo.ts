@@ -2,12 +2,12 @@ import {Component} from '@angular/core';
 import {Message} from 'primeng/primeng';
 
 @Component({
-    templateUrl: 'messagesdemo.html'
+    templateUrl: './messagesdemo.html'
 })
 export class MessagesDemo {
 
     msgs: Message[] = [];
-    
+
     showInfo() {
         this.msgs = [];
         this.msgs.push({severity:'info', summary:'Info Message', detail:'PrimeNG rocks'});

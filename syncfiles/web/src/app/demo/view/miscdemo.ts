@@ -6,16 +6,16 @@ import {Car} from '../domain/car';
 import {TreeNode} from 'primeng/primeng';
 
 @Component({
-    templateUrl: 'miscdemo.html'
+    templateUrl: './miscdemo.html'
 })
 export class MiscDemo implements OnInit,OnDestroy {
-    
+
     images: any[];
-    
+
     value: number = 0;
-    
+
     interval: any;
-    
+
     ngOnInit() {
         this.interval = setInterval(() => {
             this.value = this.value + Math.floor(Math.random() * 10) + 1;
@@ -25,7 +25,7 @@ export class MiscDemo implements OnInit,OnDestroy {
                 this.interval = null;
             }
         }, 2000);
-        
+
         this.images = [];
         this.images.push({source:'/assets/ultimang/demo/images/nature/nature1.jpg', alt:'Description for Image 1', title:'Title 1'});
         this.images.push({source:'/assets/ultimang/demo/images/nature/nature2.jpg', alt:'Description for Image 2', title:'Title 2'});
@@ -40,7 +40,7 @@ export class MiscDemo implements OnInit,OnDestroy {
         this.images.push({source:'/assets/ultimang/demo/images/nature/nature11.jpg', alt:'Description for Image 11', title:'Title 11'});
         this.images.push({source:'/assets/ultimang/demo/images/nature/nature12.jpg', alt:'Description for Image 12', title:'Title 12'});
     }
-    
+
     ngOnDestroy() {
         if(this.interval) {
             clearInterval(this.interval);

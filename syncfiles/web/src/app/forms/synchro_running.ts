@@ -8,8 +8,8 @@ import {SynchroRunningService} from "./synchro_running.service";
 @Component({
   selector: 'synchro-run',
   viewProviders: [Title],
-  templateUrl: 'synchro_running.html',
-  styleUrls: ['synchro_running.css']
+  templateUrl: './synchro_running.html',
+  styleUrls: ['./synchro_running.css']
 })
 export class SynchroRun implements OnInit, OnDestroy {
 
@@ -28,7 +28,7 @@ export class SynchroRun implements OnInit, OnDestroy {
           this.initSyncFilesInfo(s);
         }
     );
-    
+
   }
 
   public initSyncFilesInfo(s : any) {

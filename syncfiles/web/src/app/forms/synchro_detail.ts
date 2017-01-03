@@ -9,8 +9,8 @@ import {SynchroFilesService} from './SynchroFilesService';
   selector: 'synchro-detail',
   viewProviders: [Title],
     providers: [SynchroFilesService],
-    templateUrl : 'synchro_detail.html',
-    styleUrls: ['synchro_detail.css']
+    templateUrl : './synchro_detail.html',
+    styleUrls: ['./synchro_detail.css']
 })
 export class SynchroDetail implements OnInit {
 

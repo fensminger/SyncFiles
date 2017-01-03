@@ -9,8 +9,8 @@ import {SynchroFilesService} from './SynchroFilesService';
   selector: 'synchro-running-infos',
   viewProviders: [Title],
     providers: [SynchroFilesService],
-    templateUrl : 'synchro_running_infos.html',
-    styleUrls: ['synchro_running_infos.css']
+    templateUrl : './synchro_running_infos.html',
+    styleUrls: ['./synchro_running_infos.css']
 })
 export class SynchroRunningInfos implements OnInit {
 
@@ -31,12 +31,12 @@ export class SynchroRunningInfos implements OnInit {
     this.index = e.index;
     this.location.replaceState("/running-infos/"+this.id+"/"+this.index);
   }
-    
+
 
   public ngOnInit() {
-    this.route.params.subscribe(params => { 
+    this.route.params.subscribe(params => {
         this.index = params['index'];
-        this.id = params['id']; 
+        this.id = params['id'];
         console.log("index : " + this.index);
         console.log("id : " + this.id);
     });

@@ -10,8 +10,8 @@ import { Router } from '@angular/router';
   selector: 'synchro-list',
   viewProviders: [Title],
   providers: [SynchroFilesService, ConfirmationService],
-  templateUrl: 'synchro_list.html',
-  styleUrls: ['synchro_list.css']
+  templateUrl: './synchro_list.html',
+  styleUrls: ['./synchro_list.css']
 })
 export class SynchroList {
   synchroFileList : any;

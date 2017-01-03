@@ -4,7 +4,7 @@ declare var Ultima: any;
 
 @Component({
     selector: 'my-app',
-    templateUrl: 'application.html'
+    templateUrl: './application.html'
 })
 export class Application implements AfterViewInit {
 

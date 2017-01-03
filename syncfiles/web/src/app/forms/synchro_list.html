@@ -9,14 +9,14 @@
             <p-dataTable [value]="synchroFileList" [responsive]="true">
                 <header>Synchronization List</header>
                 <p-column field="name" header="Name">
-                    <template let-synchro="rowData" pTemplate type="body">
+                    <template let-synchro="rowData" pTemplate="body">
                         <a [routerLink]="['/detail', synchro.id, 'general']">{{synchro.name}}</a>
                     </template>
                 </p-column>
                 <p-column field="masterDir" header="Local directory"></p-column>
                 <p-column field="slaveDir" header="Remote directory"></p-column>
-                <p-column header="Actions" [style]="{'width':'135px'}">
-                    <template let-synchro="rowData"  let-i="rowIndex" pTemplate type="body">
+                <p-column header="Actions" [style]="{'width':'145px'}">
+                    <template let-synchro="rowData"  let-i="rowIndex" pTemplate="body">
                         <button (click)="startSynchro(synchro.id)" pButton type="button" icon="ui-icon-arrow-1-e" pTooltip="Start synchronisation" tooltipPosition="top"></button>
                         <button (click)="showLastSynchro(synchro.id)" pButton type="button" icon="ui-icon-autorenew" pTooltip="Show last synchronisation" tooltipPosition="top"></button>
                         <button (click)="dialogConfirmRemove(i, synchro.id)" pButton type="button" icon="ui-icon-trash" pTooltip="Remove synchronisation" tooltipPosition="left" class="red-btn"></button>

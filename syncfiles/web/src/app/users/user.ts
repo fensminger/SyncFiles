@@ -6,7 +6,7 @@ import {Response} from '@angular/http';
 
 @Component({
     selector: 'user',
-    templateUrl: 'user.html',
+    templateUrl: './user.html',
     providers:[UsersService]
 })
 export class User {

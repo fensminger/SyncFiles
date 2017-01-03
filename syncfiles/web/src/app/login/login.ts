@@ -10,7 +10,7 @@ import {BreadCrumbService} from '../shared';
 @Component({
     selector: 'login',
     providers: [LoginService],
-    templateUrl: 'login.html'
+    templateUrl: './login.html'
 })
 export class Login {
     username:string;
@@ -20,7 +20,7 @@ export class Login {
     loginService:LoginService;
     account:Account;
     msgs: Message[] = [];
-    
+
     constructor(router: Router,loginService:LoginService,accountEventService:AccountEventsService, private breadCrumbService :BreadCrumbService) {
         this.router = router;
         this.wrongCredentials = false;

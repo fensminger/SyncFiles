@@ -45,28 +45,33 @@ export class SynchroRunningGenInfos {
             this.selectedSynchroStateAction.push(item.value);
             this.syncStateActionMap[item.value] = item.label;
         }
-    }    
+    }
 }
 
 @Component({
   selector: 'synchro-running-list',
   viewProviders: [Title],
     providers: [SynchroFilesService],
-    templateUrl : 'synchro_running_list.html',
-    styleUrls: ['synchro_running_list.css']
+    templateUrl : './synchro_running_list.html',
+    styleUrls: ['./synchro_running_list.css']
 })
 export class SynchroRunningList extends SynchroRunningGenInfos implements OnInit {
 
     pageNumber : number;
     numberRowPerPages = 50;
 
-    infosList : any;
+    infosList : any = {
+      fileInfoList : [],
+      totalElements : 0
+    };
+
     id : string;
     originFile : string;
 
     filterName : string;
     startDate : Date;
     endDate : Date;
+    showResult : boolean = true;
 
     constructor(private title : Title,
                 private synchroRunningService : SynchroRunningService,
@@ -79,9 +84,9 @@ export class SynchroRunningList extends SynchroRunningGenInfos implements OnInit
 
 
   public ngOnInit() {
-    this.route.params.subscribe(params => { 
+    this.route.params.subscribe(params => {
         this.originFile = params['originFile'];
-        this.id = params['id']; 
+        this.id = params['id'];
     });
   }
 
@@ -126,9 +131,18 @@ export class SynchroRunningList extends SynchroRunningGenInfos implements OnInit
     if (this.endDate!=null) {
         params.set('endDate', this.endDate.toISOString());
     }
+    this.infosList.fileInfoList = [];
+    this.showResult = false;
     this.synchroFilesService.viewList(this.id, this.originFile, this.pageNumber, this.numberRowPerPages, params).subscribe(
         (r : any) => {
-            this.infosList = r;
+          // if (this.infosList.fileInfoList.length==r.fileInfoList.length) {
+          //   r.fileInfoList.push({relativePathString: 'debug'});
+          //   r.pageSize = r.fileInfoList.length;
+          // }
+          this.infosList = r;
+          this.showResult = true;
+          // this.infosList.fileInfoList = r.fileInfoList;
+          // this.infosList.totalElements = r.totalElements;
             console.log("Data loaded");
             //console.log("Msg chargé : " + JSON.stringify(r));
         },
@@ -145,10 +159,10 @@ export class SynchroRunningList extends SynchroRunningGenInfos implements OnInit
         //event.sortField = Field name to sort with
         //event.sortOrder = Sort order as number, 1 for asc and -1 for dec
         //filters: FilterMetadata object having field as key and filter value, filter matchMode as value
-        
+
         //imitate db connection over a network
         console.log("Event : " + JSON.stringify(event ));
-        this.pageNumber = Math.floor(event.first/this.numberRowPerPages); 
+        this.pageNumber = Math.floor(event.first/this.numberRowPerPages);
         this.loadInfos();
     }
 
@@ -181,16 +195,16 @@ export class SynchroRunningList extends SynchroRunningGenInfos implements OnInit
         console.log("changeFileInfoAction : " + this.selectedInfoAction);
         this.loadInfos();
     }
-    
+
     public changeSyncStateAction(value) {
         console.log("changeSyncStateAction : " + this.selectedSynchroStateAction);
         this.loadInfos();
     }
-    
+
     public dateChange(value) {
         console.log(value + " : " + this.startDate + " -> " + this.endDate);
         this.loadInfos();
-        
+
     }
 
     public removeStartDate() {
