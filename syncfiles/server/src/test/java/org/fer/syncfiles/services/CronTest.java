@@ -31,23 +31,8 @@ public class CronTest {
 
     @Test
     public void cronTest() {
-        CronDefinition cronDefinition =
-                CronDefinitionBuilder.defineCron()
-                        .withSeconds().and()
-                        .withMinutes().and()
-                        .withHours().and()
-                        .withDayOfMonth()
-                        .supportsHash().supportsL().supportsW().and()
-                        .withMonth().and()
-                        .withDayOfWeek()
-                        .withIntMapping(7, 0) //we support non-standard non-zero-based numbers!
-                        .supportsHash().supportsL().supportsW().and()
-                        .withYear().and()
-                        .lastFieldOptional()
-                        .instance();
-
 // or get a predefined instance
-        cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(QUARTZ);
+        CronDefinition cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(QUARTZ);
 
         Cron cron = CronBuilder.cron(CronDefinitionBuilder.instanceDefinitionFor(QUARTZ))
                 .withYear(always())

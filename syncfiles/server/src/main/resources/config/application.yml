@@ -3,7 +3,18 @@ management.port: 9901
 management.address: 127.0.0.1
 
 spring:
-    data:
-        mongodb:
-            uri: mongodb://127.0.0.1:27017
-            database: syncfiles
+  data:
+  mongodb:
+    uri: mongodb://127.0.0.1:27017
+    database: syncfiles
+  datasource:
+    url: jdbc:hsqldb:file:./db/syncfiles
+    username: sa
+    password:
+    driver-class-name: org.hsqldb.jdbc.JDBCDriver
+
+liquibase.change-log: classpath:db/changelog/db.changelog-master.xml
+
+quartz.enabled: true
+
+samplejob.frequency: 2000
