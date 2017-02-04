@@ -26,6 +26,7 @@ import {SynchroRunningInfos} from './forms/synchro_running_infos';
 import {SynchroRunningList} from './forms/synchro_running_list';
 import {SynchroRunningTree} from './forms/synchro_running_tree';
 import {InputDebounceComponent} from './components/input_debouce.component';
+import {SyncFilesCronComponent} from './components/cron.component';
 
 import {AccordionModule} from 'primeng/primeng';
 import {AutoCompleteModule} from 'primeng/primeng';
@@ -115,7 +116,7 @@ import {NodeService} from './demo/service/nodeservice';
 
 
 @NgModule({
-  imports: [ 
+  imports: [
         BrowserModule,
         FormsModule,
         HttpModule,
@@ -181,18 +182,18 @@ import {NodeService} from './demo/service/nodeservice';
         TreeModule,
         TreeTableModule,
         ChipsModule,
-    
-    
+
+
     routing, MenuModule, ContextMenuModule, BreadcrumbModule, MenubarModule, MultiSelectModule,
       DataTableModule, SharedModule, DialogModule, MessagesModule, SelectButtonModule, DropdownModule, ButtonModule, TreeTableModule, TabViewModule,
       InputTextModule, ToolbarModule, TooltipModule, CheckboxModule, FileUploadModule, ProgressBarModule, ConfirmDialogModule,
       ListboxModule, InputTextareaModule, PaginatorModule,ReactiveFormsModule],        // module dependencies
   declarations: [ AppComponent, HomeComponent, Login, Users, User,
-      FsqLabelComponent,  
+      FsqLabelComponent,
       SynchroSimpleMsg,
-      IsAuthorized,  
+      IsAuthorized,
       SynchroList, SynchroDetail, SynchroDetailEdit, SynchroRun, SynchroDetailRun, SynchroRunningInfos,
-      SynchroRunningList, SynchroRunningTree, InputDebounceComponent,
+      SynchroRunningList, SynchroRunningTree, InputDebounceComponent, SyncFilesCronComponent,
 
       // Demo Ultima
         Application,
@@ -221,7 +222,7 @@ import {NodeService} from './demo/service/nodeservice';
 //        deps: [XHRBackend, RequestOptions, AccountEventsService],
 //        multi:false}
   , CarService,CountryService,EventService,NodeService,
-  { provide: LOCALE_ID, useValue: "fr" }, //replace "en-US" with your locale
+  { provide: LOCALE_ID, useValue: "en-US" }, //replace "en-US" with your locale
   ]                    // services
 })
 export class AppModule { }

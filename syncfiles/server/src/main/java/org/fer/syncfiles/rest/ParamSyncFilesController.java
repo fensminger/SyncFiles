@@ -2,6 +2,8 @@ package org.fer.syncfiles.rest;
 
 import org.fer.syncfiles.domain.*;
 import org.fer.syncfiles.dto.FileInfoPage;
+import org.fer.syncfiles.dto.ScheduleCalc;
+import org.fer.syncfiles.repository.SyncfilesSynchroMsgRepository;
 import org.fer.syncfiles.security.AuthoritiesConstants;
 import org.fer.syncfiles.services.InfosFilesService;
 import org.fer.syncfiles.services.ParamSyncFilesService;
@@ -34,6 +36,9 @@ public class ParamSyncFilesController {
 
     @Autowired
     private InfosFilesService infosFilesService;
+
+    @Autowired
+    private SyncfilesSynchroMsgRepository syncfilesSynchroMsgRepository;
 
     @RequestMapping(value = "/param/save",
         method = RequestMethod.POST,
@@ -151,6 +156,21 @@ public class ParamSyncFilesController {
             syncStateList.add(SyncState.valueOf(syncState));
         }
         return syncStateList;
+    }
+
+    @RequestMapping(value = "/param/schedule/calc",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ScheduleCalc calcSchedule(@RequestBody Schedule schedule) {
+        schedule.setLastExecution(new Date());
+        if (schedule.getParamSyncFilesId()!=null) {
+            SyncfilesSynchroMsg syncfilesSynchroMsg = syncfilesSynchroMsgRepository.findOneByParamSyncFilesId(schedule.getParamSyncFilesId());
+            if (syncfilesSynchroMsg!=null) {
+                schedule.setLastExecution(syncfilesSynchroMsg.getStartDate());
+            }
+        }
+        ScheduleCalc scheduleCalc = paramSyncFilesService.calcSchedule(schedule);
+        return scheduleCalc;
     }
 
 }

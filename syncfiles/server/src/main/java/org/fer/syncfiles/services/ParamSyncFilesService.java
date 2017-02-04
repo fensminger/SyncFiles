@@ -1,6 +1,7 @@
 package org.fer.syncfiles.services;
 
 import org.fer.syncfiles.domain.*;
+import org.fer.syncfiles.dto.ScheduleCalc;
 import org.fer.syncfiles.repository.FileInfoRepository;
 import org.fer.syncfiles.repository.ObjectInfoRepository;
 import org.fer.syncfiles.repository.ParamSyncFilesRepository;
@@ -397,5 +398,11 @@ public class ParamSyncFilesService {
         fileInfo.setErrorMessage(null);
         fileInfo.setSyncState(syncState);
         fileInfoRepository.save(fileInfo);
+    }
+
+    public ScheduleCalc calcSchedule(final Schedule schedule) {
+        final ScheduleCalc  scheduleCalc = schedule.calcCron();
+
+        return scheduleCalc;
     }
 }

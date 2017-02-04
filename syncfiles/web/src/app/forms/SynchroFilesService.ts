@@ -57,7 +57,7 @@ export class SynchroFilesService {
             .catch(this.handleError);
     }
 
-    
+
     public viewList(id :string, originFile : string, pageNumber : number, pageSize : number, params : URLSearchParams) : Observable<any> {
         return this.http.get("/api/sync-files/view/list/"+id+"/"+originFile+"/"+pageNumber+"/"+pageSize
                 , {
@@ -82,12 +82,18 @@ export class SynchroFilesService {
                 for(let fileInfo of fileInfoList) {
                     let treeNode : TreeNode = {};
                     treeNode.data = fileInfo;
-                    treeNode.leaf = !fileInfo.directory; 
+                    treeNode.leaf = !fileInfo.directory;
                     res.push(treeNode);
                 }
                 return res;
             })
             .catch(this.handleError);
 
+    }
+
+    public calcSchedule(schedule : any) : Observable<any> {
+      return this.http.post("/api/sync-files/param/schedule/calc", schedule, {headers:this.headers})
+        .map(this.extractData)
+        .catch(this.handleError);
     }
 }

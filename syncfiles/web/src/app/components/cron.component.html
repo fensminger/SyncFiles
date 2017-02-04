@@ -1,0 +1,146 @@
+<div class="ui-g">
+  <div class="ui-g-12 sf-line-space">
+    <p-dropdown [options]="scheduleTypes" [(ngModel)]="schedule.type" (onChange)="calcSchedule($event)" name="schedule_type" [style]="{'width':'200px'}"></p-dropdown>
+  </div>
+</div>
+  <div header="Minutes" *ngIf="schedule.type=='MINUTES'">
+    <div class="ui-g">
+      <div class="ui-g-12 sf-line-space">
+        Every <input (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="x" [(ngModel)]="schedule.minutes.minute" pInputText name="schedule_minutes_minute" style="width: 50px;"> minute(s)
+        and start at <input (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="y" [(ngModel)]="schedule.minutes.start" pInputText name="schedule_minutes_start" style="width: 50px;"> minute(s)
+      </div>
+    </div>
+  </div>
+  <div header="Hourly" *ngIf="schedule.type=='HOURLY'">
+    <div class="ui-g">
+      <div class="ui-g-12 sf-line-space">
+        Every <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.hourly.hour" name="schedule_hourly_hour" style="width: 50px;"> hour(s)
+        and start at <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="y" [(ngModel)]="schedule.hourly.minute" pInputText name="schedule_hourly_minute" style="width: 50px;"> minute(s)
+      </div>
+    </div>
+  </div>
+  <div header="Daily" *ngIf="schedule.type=='DAILY'">
+    <div class="ui-g">
+      <div class="ui-g-12 sf-line-space">
+        <p-radioButton (ngModelChange)="calcScheduleDay($event)" name="dailyRadioButton" value="DAY" [(ngModel)]="schedule.daily.type"></p-radioButton>
+        <span style="vertical-align: middle; display: inline-block;">Every <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" [(ngModel)]="schedule.daily.day" placeholder="x" pInputText name="schedule_daily_day" style="width: 100px"> day(s)</span>
+      </div>
+      <div class="ui-g-12 sf-line-space">
+        <p-radioButton (ngModelChange)="calcScheduleDay($event)" name="dailyRadioButton" value="WEEK_DAY" label="Every week-day" [(ngModel)]="schedule.daily.type"></p-radioButton>
+      </div>
+      <div class="ui-g-12 sf-line-space">
+        <p-radioButton (ngModelChange)="calcScheduleDay($event)" name="dailyRadioButton" value="WEEK_END" label="Every week-end" [(ngModel)]="schedule.daily.type"></p-radioButton>
+      </div>
+      <div class="ui-g-12 sf-line-space">
+        Start time <p-calendar [(ngModel)]="schedule.daily.time" [timeOnly]="true" [style]="{'width': '150px'}"></p-calendar>
+      </div>
+    </div>
+  </div>
+  <div header="Weekly" *ngIf="schedule.type=='WEEKLY'">
+    <div class="ui-g">
+      <div class="ui-g-3 sf-line-space">
+        <p-checkbox (onChange)="calcSchedule($event)" name="weeklyDay" value="MON" label="Monday" [(ngModel)]="schedule.weekly.days"></p-checkbox>
+      </div>
+      <div class="ui-g-3 sf-line-space">
+        <p-checkbox (onChange)="calcSchedule($event)" name="weeklyDay" value="TUE" label="Tuesday" [(ngModel)]="schedule.weekly.days"></p-checkbox>
+      </div>
+      <div class="ui-g-3 sf-line-space">
+        <p-checkbox (onChange)="calcSchedule($event)" name="weeklyDay" value="WED" label="Wednesday" [(ngModel)]="schedule.weekly.days"></p-checkbox>
+      </div>
+      <div class="ui-g-3 sf-line-space">
+        <p-checkbox (onChange)="calcSchedule($event)" name="weeklyDay" value="THU" label="Thursday" [(ngModel)]="schedule.weekly.days"></p-checkbox>
+      </div>
+      <div class="ui-g-3 sf-line-space">
+        <p-checkbox (onChange)="calcSchedule($event)" name="weeklyDay" value="FRI" label="Friday" [(ngModel)]="schedule.weekly.days"></p-checkbox>
+      </div>
+      <div class="ui-g-3 sf-line-space">
+        <p-checkbox (onChange)="calcSchedule($event)" name="weeklyDay" value="SAT" label="Saturday" [(ngModel)]="schedule.weekly.days"></p-checkbox>
+      </div>
+      <div class="ui-g-6 sf-line-space">
+        <p-checkbox (onChange)="calcSchedule($event)" name="weeklyDay" value="SUN" label="Sunday" [(ngModel)]="schedule.weekly.days"></p-checkbox>
+      </div>
+      <div class="ui-g-12 sf-line-space">
+        Start time <p-calendar (onSelect)="calcSchedule($event)" (onBlur)="calcSchedule($event)" [(ngModel)]="schedule.weekly.time" [timeOnly]="true" [style]="{'width': '150px'}"></p-calendar>
+      </div>
+    </div>
+  </div>
+  <div header="Monthly" *ngIf="schedule.type=='MONTHLY'">
+    <div class="ui-g">
+      <div class="ui-g-12 sf-line-space">
+        <p-radioButton (ngModelChange)="calcScheduleMonthly($event)" name="monthlyRadioButton" value="NUMBER_DAY" [(ngModel)]="schedule.monthly.type"></p-radioButton>
+        <span style="vertical-align: middle; display: inline-block;">
+          Day <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.monthly.dayNumber" name="schedule_monthly_dayNumber" style="width: 100px"> of every
+          <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.monthly.month" name="schedule_monthly_month" style="width: 100px"> month(s)
+        </span>
+      </div>
+      <div class="ui-g-12 sf-line-space">
+        <p-radioButton (ngModelChange)="calcScheduleMonthly($event)" name="monthlyRadioButton" value="WEEK_DAY" [(ngModel)]="schedule.monthly.type"></p-radioButton>
+        <span style="vertical-align: middle; display: inline-block;">
+          The <p-dropdown (onChange)="calcSchedule($event)" [options]="weekNumberInMonth" [(ngModel)]="schedule.monthly.numberOfWeek" [style]="{'width':'75px'}"></p-dropdown>
+          <p-dropdown (onChange)="calcSchedule($event)" [options]="days" [(ngModel)]="schedule.monthly.dayOfWeek" [style]="{'width':'100px'}"></p-dropdown> of every
+          <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.monthly.month2" name="schedule_monthly_month2" style="width: 100px"> month(s)
+        </span>
+      </div>
+      <div class="ui-g-12 sf-line-space">
+        Start time <p-calendar [(ngModel)]="schedule.monthly.time" [timeOnly]="true" [style]="{'width': '150px'}"></p-calendar>
+      </div>
+    </div>
+  </div>
+  <div header="Yearly" *ngIf="schedule.type=='YEARLY'">
+    <div class="ui-g">
+      <div class="ui-g-12 sf-line-space">
+        <p-radioButton (ngModelChange)="calcScheduleYearly($event)" name="yearlyRadioButton" value="EVERY" [(ngModel)]="schedule.yearly.type"></p-radioButton>
+        <span style="vertical-align: middle; display: inline-block;">
+          Every <p-dropdown (onChange)="calcSchedule($event)" [options]="months" [(ngModel)]="schedule.yearly.month" [style]="{'width':'75px'}"></p-dropdown>
+          <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.yearly.dayNumber" name="cronHourTime" style="width: 100px; vertical-align: top">
+        </span>
+      </div>
+      <div class="ui-g-12 sf-line-space">
+        <p-radioButton (ngModelChange)="calcScheduleYearly($event)" name="yearlyRadioButton" value="NUMBER" [(ngModel)]="schedule.yearly.type"></p-radioButton>
+        <span style="vertical-align: middle; display: inline-block;">
+          The <p-dropdown (onChange)="calcSchedule($event)" [options]="weekNumberInMonth" [(ngModel)]="schedule.yearly.numberInMonth" [style]="{'width':'75px'}"></p-dropdown>
+          <p-dropdown (onChange)="calcSchedule($event)" [options]="days" [(ngModel)]="schedule.yearly.dayOfWeek" [style]="{'width':'100px'}"></p-dropdown> of
+          <p-dropdown (onChange)="calcSchedule($event)" [options]="months" [(ngModel)]="schedule.yearly.numberOfMonth" [style]="{'width':'75px'}"></p-dropdown>
+        </span>
+      </div>
+      <div class="ui-g-12 sf-line-space">
+        Start time <p-calendar [(ngModel)]="schedule.yearly.time" [timeOnly]="true" [style]="{'width': '150px'}"></p-calendar>
+      </div>
+    </div>
+  </div>
+  <div header="Custom cron expression" *ngIf="schedule.type=='CUSTOM_CRON_EXPRESSION'">
+    <div class="ui-g ui-fluid form-group">
+
+      <div class="ui-g-12">
+        <div class="ui-g-12 ui-md-8 ui-lg-9 ui-xl-10 sf-line-space">
+                            <span class="md-inputfield">
+                                <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="text" pInputText [(ngModel)]="schedule.cronExp" name="schedule_cronExpression" >
+                                <label>Cron Expression</label>
+                            </span>
+        </div>
+        <div class="ui-g-12 ui-md-4 ui-lg-3 ui-xl-2 sf-line-space">
+        </div>
+      </div>
+    </div>
+  </div>
+<!--<button (click)="calcSchedule()" pButton type="button" icon="ui-icon-add" ></button>-->
+
+<div class="ui-g">
+  <div class="ui-g-12">
+    <p-messages [closable]="false" [value]="msgs"></p-messages>
+  </div>
+
+  <div class="ui-g-12 ui-xl-4 ui-lg-6 ui-md-8 ui-sm-12" *ngIf="cronCalc.nextCron!=null && cronCalc.nextCron.length>0">
+    <p-dataTable  [value]="cronCalc.nextCron" scrollable="true" scrollHeight="300px">
+      <header>
+        Next job executions
+      </header>
+      <p-column header="Next job executions">
+        <template let-nextDate ="rowData" pTemplate="body">
+          {{nextDate | date:"EEEE dd/MM/yyyy HH:mm:ss"}}
+        </template>
+      </p-column>
+    </p-dataTable >
+
+  </div>
+</div>
