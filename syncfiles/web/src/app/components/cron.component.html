@@ -6,16 +6,16 @@
   <div header="Minutes" *ngIf="schedule.type=='MINUTES'">
     <div class="ui-g">
       <div class="ui-g-12 sf-line-space">
-        Every <input (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="x" [(ngModel)]="schedule.minutes.minute" pInputText name="schedule_minutes_minute" style="width: 50px;"> minute(s)
-        and start at <input (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="y" [(ngModel)]="schedule.minutes.start" pInputText name="schedule_minutes_start" style="width: 50px;"> minute(s)
+        Every <input (keyup)="eventKey($event)" (change)="calcSchedule($event)" type="number" placeholder="x" [(ngModel)]="schedule.minutes.minute" pInputText name="schedule_minutes_minute" style="width: 50px;"> minute(s)
+        and start at <input (keyup)="eventKey($event)" (change)="calcSchedule($event)" type="number" placeholder="y" [(ngModel)]="schedule.minutes.start" pInputText name="schedule_minutes_start" style="width: 50px;"> minute(s)
       </div>
     </div>
   </div>
   <div header="Hourly" *ngIf="schedule.type=='HOURLY'">
     <div class="ui-g">
       <div class="ui-g-12 sf-line-space">
-        Every <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.hourly.hour" name="schedule_hourly_hour" style="width: 50px;"> hour(s)
-        and start at <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="y" [(ngModel)]="schedule.hourly.minute" pInputText name="schedule_hourly_minute" style="width: 50px;"> minute(s)
+        Every <input  (keyup)="eventKey($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.hourly.hour" name="schedule_hourly_hour" style="width: 50px;"> hour(s)
+        and start at <input  (keyup)="eventKey($event)" (change)="calcSchedule($event)" type="number" placeholder="y" [(ngModel)]="schedule.hourly.minute" pInputText name="schedule_hourly_minute" style="width: 50px;"> minute(s)
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@
     <div class="ui-g">
       <div class="ui-g-12 sf-line-space">
         <p-radioButton (ngModelChange)="calcScheduleDay($event)" name="dailyRadioButton" value="DAY" [(ngModel)]="schedule.daily.type"></p-radioButton>
-        <span style="vertical-align: middle; display: inline-block;">Every <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" [(ngModel)]="schedule.daily.day" placeholder="x" pInputText name="schedule_daily_day" style="width: 100px"> day(s)</span>
+        <span style="vertical-align: middle; display: inline-block;">Every <input  (keyup)="eventKey($event)" (change)="calcSchedule($event)" type="number" [(ngModel)]="schedule.daily.day" placeholder="x" pInputText name="schedule_daily_day" style="width: 100px"> day(s)</span>
       </div>
       <div class="ui-g-12 sf-line-space">
         <p-radioButton (ngModelChange)="calcScheduleDay($event)" name="dailyRadioButton" value="WEEK_DAY" label="Every week-day" [(ngModel)]="schedule.daily.type"></p-radioButton>
@@ -60,7 +60,7 @@
         <p-checkbox (onChange)="calcSchedule($event)" name="weeklyDay" value="SUN" label="Sunday" [(ngModel)]="schedule.weekly.days"></p-checkbox>
       </div>
       <div class="ui-g-12 sf-line-space">
-        Start time <p-calendar (onSelect)="calcSchedule($event)" (onBlur)="calcSchedule($event)" [(ngModel)]="schedule.weekly.time" [timeOnly]="true" [style]="{'width': '150px'}"></p-calendar>
+        Start time <p-calendar (onSelect)="calcSchedule($event)" (onBlur)="calcSchedule($event)" [(ngModel)]="schedule.weekly.time" [timeOnly]="true" showTime="showTime" hourFormat="24" [style]="{'width': '150px'}"></p-calendar>
       </div>
     </div>
   </div>
@@ -69,8 +69,8 @@
       <div class="ui-g-12 sf-line-space">
         <p-radioButton (ngModelChange)="calcScheduleMonthly($event)" name="monthlyRadioButton" value="NUMBER_DAY" [(ngModel)]="schedule.monthly.type"></p-radioButton>
         <span style="vertical-align: middle; display: inline-block;">
-          Day <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.monthly.dayNumber" name="schedule_monthly_dayNumber" style="width: 100px"> of every
-          <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.monthly.month" name="schedule_monthly_month" style="width: 100px"> month(s)
+          Day <input  (keyup)="eventKey($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.monthly.dayNumber" name="schedule_monthly_dayNumber" style="width: 100px"> of every
+          <input  (keyup)="eventKey($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.monthly.month" name="schedule_monthly_month" style="width: 100px"> month(s)
         </span>
       </div>
       <div class="ui-g-12 sf-line-space">
@@ -78,11 +78,11 @@
         <span style="vertical-align: middle; display: inline-block;">
           The <p-dropdown (onChange)="calcSchedule($event)" [options]="weekNumberInMonth" [(ngModel)]="schedule.monthly.numberOfWeek" [style]="{'width':'75px'}"></p-dropdown>
           <p-dropdown (onChange)="calcSchedule($event)" [options]="days" [(ngModel)]="schedule.monthly.dayOfWeek" [style]="{'width':'100px'}"></p-dropdown> of every
-          <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.monthly.month2" name="schedule_monthly_month2" style="width: 100px"> month(s)
+          <input  (keyup)="eventKey($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.monthly.month2" name="schedule_monthly_month2" style="width: 100px"> month(s)
         </span>
       </div>
       <div class="ui-g-12 sf-line-space">
-        Start time <p-calendar [(ngModel)]="schedule.monthly.time" [timeOnly]="true" [style]="{'width': '150px'}"></p-calendar>
+        Start time <p-calendar (onSelect)="calcSchedule($event)" (onBlur)="calcSchedule($event)" [(ngModel)]="schedule.monthly.time" [timeOnly]="true" showTime="showTime" hourFormat="24" [style]="{'width': '150px'}"></p-calendar>
       </div>
     </div>
   </div>
@@ -92,7 +92,7 @@
         <p-radioButton (ngModelChange)="calcScheduleYearly($event)" name="yearlyRadioButton" value="EVERY" [(ngModel)]="schedule.yearly.type"></p-radioButton>
         <span style="vertical-align: middle; display: inline-block;">
           Every <p-dropdown (onChange)="calcSchedule($event)" [options]="months" [(ngModel)]="schedule.yearly.month" [style]="{'width':'75px'}"></p-dropdown>
-          <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.yearly.dayNumber" name="cronHourTime" style="width: 100px; vertical-align: top">
+          <input  (keyup)="eventKey($event)" (change)="calcSchedule($event)" type="number" placeholder="x" pInputText [(ngModel)]="schedule.yearly.dayNumber" name="cronHourTime" style="width: 100px; vertical-align: top">
         </span>
       </div>
       <div class="ui-g-12 sf-line-space">
@@ -104,7 +104,7 @@
         </span>
       </div>
       <div class="ui-g-12 sf-line-space">
-        Start time <p-calendar [(ngModel)]="schedule.yearly.time" [timeOnly]="true" [style]="{'width': '150px'}"></p-calendar>
+        Start time <p-calendar (onSelect)="calcSchedule($event)" (onBlur)="calcSchedule($event)" [(ngModel)]="schedule.yearly.time" [timeOnly]="true" showTime="showTime" hourFormat="24" [style]="{'width': '150px'}"></p-calendar>
       </div>
     </div>
   </div>
@@ -114,7 +114,7 @@
       <div class="ui-g-12">
         <div class="ui-g-12 ui-md-8 ui-lg-9 ui-xl-10 sf-line-space">
                             <span class="md-inputfield">
-                                <input  (keyup)="calcSchedule($event)" (change)="calcSchedule($event)" type="text" pInputText [(ngModel)]="schedule.cronExp" name="schedule_cronExpression" >
+                                <input  (keyup)="eventKey($event)" (change)="calcSchedule($event)" type="text" pInputText [(ngModel)]="schedule.cronExp" name="schedule_cronExpression" >
                                 <label>Cron Expression</label>
                             </span>
         </div>
@@ -124,7 +124,6 @@
     </div>
   </div>
 <!--<button (click)="calcSchedule()" pButton type="button" icon="ui-icon-add" ></button>-->
-
 <div class="ui-g">
   <div class="ui-g-12">
     <p-messages [closable]="false" [value]="msgs"></p-messages>

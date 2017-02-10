@@ -20,7 +20,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
  * Created by fensm on 12/01/2017.
  */
 public class Schedule {
-    public enum SCHEDULE_TYPE {MINUTES, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY, CUSTOM_CRON_EXPRESSION};
+    public enum SCHEDULE_TYPE {MANUAL, MINUTES, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY, CUSTOM_CRON_EXPRESSION};
 
     private SCHEDULE_TYPE type;
 
@@ -63,6 +63,7 @@ public class Schedule {
                 case YEARLY:
                     yearly.calcCron(cronCalc);
                     break;
+                case MANUAL:
                 case CUSTOM_CRON_EXPRESSION:
                 default:
                     break;
@@ -72,8 +73,14 @@ public class Schedule {
             return cronCalc;
         }
 
-        if (cronCalc.getMsgError()==null) {
-            calcNextExecution(cronCalc);
+        if (type.equals(SCHEDULE_TYPE.MANUAL)) {
+            this.cronExp = "";
+            cronCalc.setDescription("Manual execution.");
+            cronCalc.setNextCron(new ArrayList<>());
+        } else {
+            if (cronCalc.getMsgError() == null) {
+                calcNextExecution(cronCalc);
+            }
         }
         return cronCalc;
     }

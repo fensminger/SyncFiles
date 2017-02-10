@@ -44,8 +44,7 @@ public class ParamSyncFilesController {
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured(AuthoritiesConstants.ANONYMOUS)
-    public @ResponseBody
-    ParamSyncFiles saveParamSyncFiles(@RequestBody ParamSyncFiles paramSyncFiles) throws IOException {
+    public @ResponseBody ParamSyncFiles saveParamSyncFiles(@RequestBody ParamSyncFiles paramSyncFiles) throws IOException {
         return paramSyncFilesService.save(paramSyncFiles);
     }
 

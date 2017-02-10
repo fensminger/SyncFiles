@@ -1,4 +1,5 @@
-import {Component, Input, Output, ElementRef, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
+///<reference path="../../../node_modules/@angular/core/src/metadata/lifecycle_hooks.d.ts"/>
+import {Component, Input, Output, ElementRef, EventEmitter, OnChanges, SimpleChanges, ChangeDetectorRef, OnInit, DoCheck} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {SelectItem, Message} from 'primeng/primeng';
 import {SynchroFilesService} from '../forms/SynchroFilesService';
@@ -7,9 +8,11 @@ import {SynchroFilesService} from '../forms/SynchroFilesService';
     selector: 'syncfiles-cron',
     templateUrl : './cron.component.html'
 })
-export class SyncFilesCronComponent extends OnChanges {
-    @Input() placeholder: string;
-    @Output() value = new EventEmitter();
+export class SyncFilesCronComponent extends OnChanges implements OnInit, DoCheck {
+    @Input("sched") _value : any;
+    @Output("onChange") changeEvent = new EventEmitter();
+
+    private keyDownEventEmitter = new EventEmitter();
 
   weekNumberInMonth: SelectItem[];
   days: SelectItem[];
@@ -43,8 +46,9 @@ export class SyncFilesCronComponent extends OnChanges {
 
   private cronCalc : any = {};
   private msgs: Message[] = [];
+  private isFirstLoad: boolean =true;
 
-  constructor(private elementRef: ElementRef, private synchroFilesService : SynchroFilesService) {
+  constructor(private elementRef: ElementRef, private synchroFilesService : SynchroFilesService, private changeDetectorRef : ChangeDetectorRef) {
     super();
     this.weekNumberInMonth = [];
     this.weekNumberInMonth.push({label:'First', value:1});
@@ -76,6 +80,7 @@ export class SyncFilesCronComponent extends OnChanges {
     this.months.push({label:'December', value:12});
 
     this.scheduleTypes = [];
+    this.scheduleTypes.push({label:'Manual execution', value:'MANUAL'});
     this.scheduleTypes.push({label:'Minutes', value:'MINUTES'});
     this.scheduleTypes.push({label:'Hourly', value:'HOURLY'});
     this.scheduleTypes.push({label:'Daily', value:'DAILY'});
@@ -84,6 +89,55 @@ export class SyncFilesCronComponent extends OnChanges {
     this.scheduleTypes.push({label:'Yearly', value:'YEARLY'});
     this.scheduleTypes.push({label:'Custom cron expression', value:'CUSTOM_CRON_EXPRESSION'});
 
+    // const eventStream = Observable.fromEvent(elementRef.nativeElement, 'keyup')
+    //   .map(() => "ok")
+    //   .debounceTime(300)
+    //   .distinctUntilChanged();
+    //
+    // eventStream.subscribe(input => {
+    //   console.log("keyUp global....");
+    // });
+
+    this.keyDownEventEmitter
+      .debounceTime(400)
+      .subscribe(v => {
+        this.calcSchedule();
+      });
+
+  }
+
+  ngDoCheck(): void {
+    if (this.value !=null && this.isFirstLoad) {
+      console.log("DoCheck : " + this.value);
+      this.isFirstLoad = false;
+      this.schedule = this.value;
+      if (this.schedule.daily.time!=null) {
+        this.schedule.daily.time = new Date(this.schedule.daily.time);
+      }
+      if (this.schedule.weekly.time!=null) {
+        this.schedule.weekly.time = new Date(this.schedule.weekly.time);
+      }
+      if (this.schedule.monthly.time!=null) {
+        this.schedule.monthly.time = new Date(this.schedule.monthly.time);
+      }
+      if (this.schedule.yearly.time!=null) {
+        this.schedule.yearly.time = new Date(this.schedule.yearly.time);
+      }
+      this.calcSchedule();
+    }
+  }
+
+
+  ngOnInit(): void {
+  }
+
+  get value() : any {
+    return this._value;
+  }
+
+  set value(val :any) {
+    this._value = val;
+    this.schedule = val;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -92,11 +146,15 @@ export class SyncFilesCronComponent extends OnChanges {
 
 
   public calcSchedule() {
+    this.changeEvent.emit(this.schedule);
     this.cronCalc.nextCron = [];
     this.cronCalc.description=null;
     this.cronCalc.msgError=null;
+    // this.changeDetectorRef.detach();
     this.synchroFilesService.calcSchedule(this.schedule).subscribe(
       (r : any) => {
+        // this.changeDetectorRef.reattach();
+        // this.changeDetectorRef.detectChanges();
         this.cronCalc = r;
         this.schedule = this.cronCalc.schedule;
         this.msgs = [];
@@ -106,11 +164,15 @@ export class SyncFilesCronComponent extends OnChanges {
         if (this.cronCalc.description!=null) {
           this.msgs.push({severity:'info', summary:'Cron expression description '+ this.cronCalc.schedule.cronExp + ' : ', detail:this.cronCalc.description});
         }
-
       },
       (e : any) => {
+        this.changeDetectorRef.reattach();
         console.log("Error : " + JSON.stringify(e));
       });
+  }
+
+  public eventKey(event:any) :any {
+    this.keyDownEventEmitter.emit("keyUp");
   }
 
   public calcScheduleDay(event:any) :any {

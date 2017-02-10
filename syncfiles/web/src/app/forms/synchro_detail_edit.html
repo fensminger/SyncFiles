@@ -46,7 +46,7 @@
 
           <div class="card card-w-title">
             <h1>Scheduling job</h1>
-            <syncfiles-cron></syncfiles-cron>
+            <syncfiles-cron [sched]="model.schedule" (onChange)="changeSchedule($event)"></syncfiles-cron>
           </div>
 
           <div class="card card-w-title">

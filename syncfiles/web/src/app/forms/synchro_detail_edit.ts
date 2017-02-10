@@ -27,6 +27,7 @@ export class SynchroDetailEdit implements OnInit {
     model = {
         id : null,
         name : null,
+        schedule : null,
         includeDir:false,
         includeExcludePatterns : []
     };
@@ -36,6 +37,7 @@ export class SynchroDetailEdit implements OnInit {
         cronExp : null,
         masterDir : null,
         slaveDir : null,
+        schedule : null,
         includeExcludePatterns : []
     };
     includeExcludePatterns = [];
@@ -163,5 +165,9 @@ export class SynchroDetailEdit implements OnInit {
 
     public patternTrackBy(index,item) : any {
       return item;
+    }
+
+    public changeSchedule(schedule : any) {
+      this.modelModified.schedule = schedule;
     }
 }

@@ -28,7 +28,7 @@ public class ParamSyncFiles implements Serializable {
 	private ZonedDateTime creationDate;
 
 	private String name;
-	private String cronExp;
+	private Schedule schedule;
 
 	private String masterDir;
 	private String slaveDir;
@@ -50,7 +50,7 @@ public class ParamSyncFiles implements Serializable {
 		this.version = p.version;
 		this.creationDate = ZonedDateTime.of(p.creationDate.toLocalDate(), p.creationDate.toLocalTime(), p.creationDate.getZone());
 		this.name = p.name;
-		this.cronExp = p.cronExp;
+		this.schedule = p.schedule;
 		this.masterDir = p.masterDir;
 		this.slaveDir = p.slaveDir;
 		this.includeDir = p.includeDir;
@@ -72,12 +72,12 @@ public class ParamSyncFiles implements Serializable {
 		this.name = name;
 	}
 
-	public String getCronExp() {
-		return cronExp;
+	public Schedule getSchedule() {
+		return schedule;
 	}
 
-	public void setCronExp(String cronExp) {
-		this.cronExp = cronExp;
+	public void setSchedule(Schedule schedule) {
+		this.schedule = schedule;
 	}
 
 	public String getMasterDir() {
@@ -119,63 +119,59 @@ public class ParamSyncFiles implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ParamSyncFiles [name=" + name + ", cronExp=" + cronExp + ", masterDir=" + masterDir + ", slaveDir=" + slaveDir + ", includeDir=" + includeDir
-				+ ", includeExcludePatterns=" + includeExcludePatterns + "]";
+		return "ParamSyncFiles{" +
+				"id='" + id + '\'' +
+				", version=" + version +
+				", creationDate=" + creationDate +
+				", name='" + name + '\'' +
+				", schedule=" + schedule +
+				", masterDir='" + masterDir + '\'' +
+				", slaveDir='" + slaveDir + '\'' +
+				", includeDir=" + includeDir +
+				", syncState=" + syncState +
+				", includeExcludePatterns=" + includeExcludePatterns +
+				", regExpIncludeExcludePattern='" + regExpIncludeExcludePattern + '\'' +
+				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		ParamSyncFiles that = (ParamSyncFiles) o;
+
+		if (version != that.version) return false;
+		if (includeDir != that.includeDir) return false;
+		if (id != null ? !id.equals(that.id) : that.id != null) return false;
+		if (creationDate != null ? !creationDate.equals(that.creationDate) : that.creationDate != null) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (schedule != null ? !schedule.equals(that.schedule) : that.schedule != null) return false;
+		if (masterDir != null ? !masterDir.equals(that.masterDir) : that.masterDir != null) return false;
+		if (slaveDir != null ? !slaveDir.equals(that.slaveDir) : that.slaveDir != null) return false;
+		if (syncState != that.syncState) return false;
+		if (includeExcludePatterns != null ? !includeExcludePatterns.equals(that.includeExcludePatterns) : that.includeExcludePatterns != null)
+			return false;
+		return regExpIncludeExcludePattern != null ? regExpIncludeExcludePattern.equals(that.regExpIncludeExcludePattern) : that.regExpIncludeExcludePattern == null;
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((cronExp == null) ? 0 : cronExp.hashCode());
-		result = prime * result + (includeDir ? 1231 : 1237);
-		result = prime * result + ((includeExcludePatterns == null) ? 0 : includeExcludePatterns.hashCode());
-		result = prime * result + ((masterDir == null) ? 0 : masterDir.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((slaveDir == null) ? 0 : slaveDir.hashCode());
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (int) (version ^ (version >>> 32));
+		result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (schedule != null ? schedule.hashCode() : 0);
+		result = 31 * result + (masterDir != null ? masterDir.hashCode() : 0);
+		result = 31 * result + (slaveDir != null ? slaveDir.hashCode() : 0);
+		result = 31 * result + (includeDir ? 1 : 0);
+		result = 31 * result + (syncState != null ? syncState.hashCode() : 0);
+		result = 31 * result + (includeExcludePatterns != null ? includeExcludePatterns.hashCode() : 0);
+		result = 31 * result + (regExpIncludeExcludePattern != null ? regExpIncludeExcludePattern.hashCode() : 0);
 		return result;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ParamSyncFiles other = (ParamSyncFiles) obj;
-		if (cronExp == null) {
-			if (other.cronExp != null)
-				return false;
-		} else if (!cronExp.equals(other.cronExp))
-			return false;
-		if (includeDir != other.includeDir)
-			return false;
-		if (includeExcludePatterns == null) {
-			if (other.includeExcludePatterns != null)
-				return false;
-		} else if (!includeExcludePatterns.equals(other.includeExcludePatterns))
-			return false;
-		if (masterDir == null) {
-			if (other.masterDir != null)
-				return false;
-		} else if (!masterDir.equals(other.masterDir))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (slaveDir == null) {
-			if (other.slaveDir != null)
-				return false;
-		} else if (!slaveDir.equals(other.slaveDir))
-			return false;
-		return true;
-	}
-
-    public ZonedDateTime getCreationDate() {
+	public ZonedDateTime getCreationDate() {
         return creationDate;
     }
 
