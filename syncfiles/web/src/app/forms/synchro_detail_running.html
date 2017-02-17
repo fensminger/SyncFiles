@@ -1,6 +1,6 @@
 <h1 *ngIf="syncFilesinfo==null || syncFilesinfo===undefined">Synchronization is not running</h1>
 <div *ngIf="syncFilesinfo!=null" >
-    <h2>{{syncFilesinfo.type}} - {{syncFilesinfo.paramSyncFiles.name}} 
+    <h2>{{syncFilesinfo.type}} - {{syncFilesinfo.paramSyncFiles.name}}
         (
             <span *ngIf="syncFilesinfo.running">Running</span>
             <span *ngIf="!syncFilesinfo.running">Stopped</span>
@@ -8,7 +8,7 @@
     <div>Start execution job at {{syncFilesinfo.startDate | date:"dd/MM/yyyy HH:mm:ss"}}</div>
     <div>Last updated execution job at {{syncFilesinfo.lastStateDate | date:"dd/MM/yyyy HH:mm:ss"}}</div>
     <br/>
-    
+
     <p-panel *ngIf="syncFilesinfo.msgError!=null" [header]="'Error : '+syncFilesinfo.msgError" [toggleable]="true" [collapsed]="true" styleClass="header-error">
         <code>
             {{syncFilesinfo.msgErrorStackTrace}}
@@ -20,7 +20,7 @@
         <header>Analyse files</header>
         <p-column field="title" header=""></p-column>
         <p-column field="numberOfFiles" header="Total of files">
-            <template let-sync="rowData" pTemplate type="body">
+            <template let-sync="rowData" pTemplate="body">
                 <a (click)="showRunningInfos(syncFilesinfo.id, sync.index)" class="menu-button" href="">
                     <span *ngIf="sync.index<2">{{sync.numberOfFiles-sync.numberOfDeletedFiles}}</span>
                     <span *ngIf="sync.index>=2">{{sync.numberOfFiles}}</span>

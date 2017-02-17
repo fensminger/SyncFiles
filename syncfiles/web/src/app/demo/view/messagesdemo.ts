@@ -7,7 +7,7 @@ import {Message} from 'primeng/primeng';
 export class MessagesDemo {
 
     msgs: Message[] = [];
-
+    
     showInfo() {
         this.msgs = [];
         this.msgs.push({severity:'info', summary:'Info Message', detail:'PrimeNG rocks'});
@@ -21,6 +21,11 @@ export class MessagesDemo {
     showError() {
         this.msgs = [];
         this.msgs.push({severity:'error', summary:'Error Message', detail:'Validation failed'});
+    }
+    
+    showSuccess() {
+        this.msgs = [];
+        this.msgs.push({severity:'success', summary:'Success Message', detail:'Message sent'});
     }
 
     showMultiple() {

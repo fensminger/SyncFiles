@@ -5,13 +5,13 @@ import {MenuItem} from 'primeng/primeng';
     templateUrl: './panelsdemo.html'
 })
 export class PanelsDemo implements OnInit {
-
+    
     items: MenuItem[];
-
+    
     ngOnInit() {
         this.items = [
-            {label: 'Angular.io', icon: 'fa-link', url: 'http://angular.io'},
-            {label: 'Theming', icon: 'fa-paint-brush', routerLink: ['/theming']}
+            {label: 'Angular.io', icon: 'ui-icon-link', url: 'http://angular.io'},
+            {label: 'Theming', icon: 'ui-icon-brush', routerLink: ['/theming']}
         ];
     }
 }

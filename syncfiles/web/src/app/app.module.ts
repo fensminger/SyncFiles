@@ -1,13 +1,33 @@
-import { NgModule, LOCALE_ID }      from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule, Http,RequestOptions, XHRBackend } from '@angular/http';
+import {NgModule, LOCALE_ID }      from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {HttpModule, Http,RequestOptions, XHRBackend }    from '@angular/http';
+import {BrowserModule} from '@angular/platform-browser';
+import {LocationStrategy,HashLocationStrategy} from '@angular/common';
+import {AppRoutes} from './app.routes';
+import 'rxjs/add/operator/toPromise';
 
-import { AppComponent }  from './app.component';
-import {MenubarSub} from 'primeng/primeng';
+import {AppComponent}  from './app.component';
+import {AppMenuComponent,AppSubMenu}  from './app.menu.component';
+import {AppTopBar}  from './app.topbar.component';
+import {AppFooter}  from './app.footer.component';
+import {InlineProfileComponent}  from './app.profile.component';
+import {DashboardDemo} from './demo/view/dashboarddemo';
+import {SampleDemo} from './demo/view/sampledemo';
+import {FormsDemo} from './demo/view/formsdemo';
+import {DataDemo} from './demo/view/datademo';
+import {PanelsDemo} from './demo/view/panelsdemo';
+import {OverlaysDemo} from './demo/view/overlaysdemo';
+import {MenusDemo} from './demo/view/menusdemo';
+import {MessagesDemo} from './demo/view/messagesdemo';
+import {MiscDemo} from './demo/view/miscdemo';
+import {EmptyDemo} from './demo/view/emptydemo';
+import {ChartsDemo} from './demo/view/chartsdemo';
+import {FileDemo} from './demo/view/filedemo';
+import {UtilsDemo} from './demo/view/utilsdemo';
+import {Documentation} from './demo/view/documentation';
+
 import {IsAuthorized} from './utils/is-authorized.directive';
 import {FsqLabelComponent} from './fsq-label';
-import { routing } from './app.routes';
 import {HomeComponent} from './home/home.component';
 import {Login} from './login/login';
 import {Users} from './users/users';
@@ -92,23 +112,6 @@ import {TooltipModule} from 'primeng/primeng';
 import {TreeModule} from 'primeng/primeng';
 import {TreeTableModule} from 'primeng/primeng';
 
-
-import {Application}  from './application';
-import {DashboardDemo} from './demo/view/dashboarddemo';
-import {SampleDemo} from './demo/view/sampledemo';
-import {FormsDemo} from './demo/view/formsdemo';
-import {DataDemo} from './demo/view/datademo';
-import {PanelsDemo} from './demo/view/panelsdemo';
-import {OverlaysDemo} from './demo/view/overlaysdemo';
-import {MenusDemo} from './demo/view/menusdemo';
-import {MessagesDemo} from './demo/view/messagesdemo';
-import {MiscDemo} from './demo/view/miscdemo';
-import {EmptyDemo} from './demo/view/emptydemo';
-import {ChartsDemo} from './demo/view/chartsdemo';
-import {FileDemo} from './demo/view/filedemo';
-import {UtilsDemo} from './demo/view/utilsdemo';
-import {Documentation} from './demo/view/documentation';
-
 import {CarService} from './demo/service/carservice';
 import {CountryService} from './demo/service/countryservice';
 import {EventService} from './demo/service/eventservice';
@@ -119,6 +122,7 @@ import {NodeService} from './demo/service/nodeservice';
   imports: [
         BrowserModule,
         FormsModule,
+        AppRoutes,
         HttpModule,
         AccordionModule,
         AutoCompleteModule,
@@ -128,6 +132,7 @@ import {NodeService} from './demo/service/nodeservice';
         CarouselModule,
         ChartModule,
         CheckboxModule,
+        ChipsModule,
         CodeHighlighterModule,
         ConfirmDialogModule,
         SharedModule,
@@ -172,6 +177,7 @@ import {NodeService} from './demo/service/nodeservice';
         SliderModule,
         SpinnerModule,
         SplitButtonModule,
+        StepsModule,
         TabMenuModule,
         TabViewModule,
         TerminalModule,
@@ -181,14 +187,13 @@ import {NodeService} from './demo/service/nodeservice';
         TooltipModule,
         TreeModule,
         TreeTableModule,
-        ChipsModule,
 
 
-    routing, MenuModule, ContextMenuModule, BreadcrumbModule, MenubarModule, MultiSelectModule,
+    BreadcrumbModule, MenubarModule, MultiSelectModule,
       DataTableModule, SharedModule, DialogModule, MessagesModule, SelectButtonModule, DropdownModule, ButtonModule, TreeTableModule, TabViewModule,
       InputTextModule, ToolbarModule, TooltipModule, CheckboxModule, FileUploadModule, ProgressBarModule, ConfirmDialogModule,
       ListboxModule, InputTextareaModule, PaginatorModule,ReactiveFormsModule],        // module dependencies
-  declarations: [ AppComponent, HomeComponent, Login, Users, User,
+  declarations: [ HomeComponent, Login, Users, User,
       FsqLabelComponent,
       SynchroSimpleMsg,
       IsAuthorized,
@@ -196,7 +201,12 @@ import {NodeService} from './demo/service/nodeservice';
       SynchroRunningList, SynchroRunningTree, InputDebounceComponent, SyncFilesCronComponent,
 
       // Demo Ultima
-        Application,
+        AppComponent,
+        AppMenuComponent,
+        AppSubMenu,
+        AppTopBar,
+        AppFooter,
+        InlineProfileComponent,
         DashboardDemo,
         SampleDemo,
         FormsDemo,
@@ -215,7 +225,7 @@ import {NodeService} from './demo/service/nodeservice';
 
   ],   // components and directives
   bootstrap: [ AppComponent ],     // root component
-  providers: [AccountEventsService
+  providers: [AccountEventsService, SynchroRunningService
 //  ,{provide : Http, useFactory :(xhrBackend: XHRBackend, requestOptions: RequestOptions,accountEventService:AccountEventsService) => {
 //            return new HmacHttpClient(xhrBackend, requestOptions,accountEventService);
 //        },

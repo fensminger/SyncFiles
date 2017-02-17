@@ -7,13 +7,13 @@
 
             <p-accordion *ngIf="syncFilesinfo!=null && syncFilesinfo.length>0" mul>
                 <p-accordionTab [selected]="ongletIndex==i" (onOpen)="onTabActivate($event)" *ngFor="let sync of syncFilesinfo; let i = index">
-                    <header>
-                        {{sync.type}} - {{sync.paramSyncFiles.name}} 
+                    <p-header>
+                        {{sync.type}} - {{sync.paramSyncFiles.name}}
                         (
                             <span *ngIf="sync.running">Running</span>
                             <span *ngIf="!sync.running">Stopped</span>
                         )
-                    </header>
+                    </p-header>
                     <synchro-detail-run [syncFilesinfo]="sync"></synchro-detail-run>
                 </p-accordionTab>
             </p-accordion>

@@ -1,10 +1,4 @@
-import { Routes, RouterModule } from '@angular/router';
-import {Login} from './login/login';
-import {Users} from './users/users';
-import {User} from './users/user';
-import { SynchroList } from './forms/synchro_list';
-import { SynchroDetail } from './forms/synchro_detail';
-import { SynchroRun } from './forms/synchro_running';
+import {Routes,RouterModule} from '@angular/router';
 import {ModuleWithProviders} from '@angular/core';
 import {DashboardDemo} from './demo/view/dashboarddemo';
 import {SampleDemo} from './demo/view/sampledemo';
@@ -20,10 +14,17 @@ import {ChartsDemo} from './demo/view/chartsdemo';
 import {FileDemo} from './demo/view/filedemo';
 import {UtilsDemo} from './demo/view/utilsdemo';
 import {Documentation} from './demo/view/documentation';
+
+import {Login} from './login/login';
+import {Users} from './users/users';
+import {User} from './users/user';
+import { SynchroList } from './forms/synchro_list';
+import { SynchroDetail } from './forms/synchro_detail';
+import { SynchroRun } from './forms/synchro_running';
 import {SynchroRunningInfos} from './forms/synchro_running_infos';
 
 
-const routes: Routes = [
+export const routes: Routes = [
     { path: 'home', component: SynchroList },
     { path: 'running', component: SynchroRun },
     { path: 'running-infos/:id/:originFile/:index', component: SynchroRunningInfos },
@@ -53,4 +54,4 @@ const routes: Routes = [
     
 ];
 
-export const routing = RouterModule.forRoot(routes);
+export const AppRoutes: ModuleWithProviders = RouterModule.forRoot(routes);

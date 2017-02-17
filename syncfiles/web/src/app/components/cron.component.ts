@@ -147,9 +147,9 @@ export class SyncFilesCronComponent extends OnChanges implements OnInit, DoCheck
 
   public calcSchedule() {
     this.changeEvent.emit(this.schedule);
-    this.cronCalc.nextCron = [];
-    this.cronCalc.description=null;
-    this.cronCalc.msgError=null;
+//    this.cronCalc.nextCron = [];
+//     this.cronCalc.description=null;
+//     this.cronCalc.msgError=null;
     // this.changeDetectorRef.detach();
     this.synchroFilesService.calcSchedule(this.schedule).subscribe(
       (r : any) => {

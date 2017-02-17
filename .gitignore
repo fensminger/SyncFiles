@@ -36,3 +36,14 @@ jmserver/src/main/resources/config/hubicAuthenticate.properties
 client-angular2/.DS_Store
 client-angular2/node_modules/
 jmserver/src/main/java/org/fer/syncfiles/HubicTestPassword.java
+syncfiles/web/src/assets/ultimang/
+syncfiles/web/src/app/page-test/
+syncfiles/web/src/app/page-test2/
+syncfiles/web/src/app/trifacta/
+syncfiles/web/src/app/trifacta.service.ts
+syncfiles/web/src/app/hive-ref/
+syncfiles/web/src/app/hdfs-ref/
+syncfiles/web/src/app/fileupload/fileupload.ts
+syncfiles/server/src/main/resources/hubic.properties
+syncfiles/web2/
+syncfiles/web/src/app/http-hive-import.service.ts

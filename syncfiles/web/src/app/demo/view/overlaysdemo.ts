@@ -19,10 +19,10 @@ export class OverlaysDemo implements OnInit {
         this.carService.getCarsSmall().then(cars => this.cars = cars.splice(0,5));
 
         this.images = [];
-        this.images.push({source:'/assets/ultimang/demo/images/sopranos/sopranos1.jpg', thumbnail: '/assets/ultimang/demo/images/sopranos/sopranos1_small.jpg', title:'Nature 1'});
-        this.images.push({source:'/assets/ultimang/demo/images/sopranos/sopranos2.jpg', thumbnail: '/assets/ultimang/demo/images/sopranos/sopranos2_small.jpg', title:'Nature 2'});
-        this.images.push({source:'/assets/ultimang/demo/images/sopranos/sopranos3.jpg', thumbnail: '/assets/ultimang/demo/images/sopranos/sopranos3_small.jpg', title:'Nature 3'});
-        this.images.push({source:'/assets/ultimang/demo/images/sopranos/sopranos4.jpg', thumbnail: '/assets/ultimang/demo/images/sopranos/sopranos4_small.jpg', title:'Nature 4'});
+        this.images.push({source:'assets/ultimang/demo/images/sopranos/sopranos1.jpg', thumbnail: 'assets/ultimang/demo/images/sopranos/sopranos1_small.jpg', title:'Nature 1'});
+        this.images.push({source:'assets/ultimang/demo/images/sopranos/sopranos2.jpg', thumbnail: 'assets/ultimang/demo/images/sopranos/sopranos2_small.jpg', title:'Nature 2'});
+        this.images.push({source:'assets/ultimang/demo/images/sopranos/sopranos3.jpg', thumbnail: 'assets/ultimang/demo/images/sopranos/sopranos3_small.jpg', title:'Nature 3'});
+        this.images.push({source:'assets/ultimang/demo/images/sopranos/sopranos4.jpg', thumbnail: 'assets/ultimang/demo/images/sopranos/sopranos4_small.jpg', title:'Nature 4'});
     }
 
     confirm() {

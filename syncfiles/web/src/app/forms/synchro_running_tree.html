@@ -1,27 +1,27 @@
 <p-treeTable styleClass="force-no-padding" [value]="treeNodeList" selectionMode="single" [(selection)]="selectedNode" (onNodeExpand)="nodeExpand($event)">
     <header>Tree Files</header>
     <p-column styleClass="name-list" header="Name">
-        <template let-node="rowData" pTemplate type="body">
+        <template let-node="rowData" pTemplate="body">
             <span [pTooltip]="node.data.relativePathString" tooltipPosition="right">{{getName(node.data.relativePathString)}}</span>
         </template>
     </p-column>
     <p-column styleClass="size-action" header="To Do">
-        <template let-node="rowData" pTemplate type="body">
+        <template let-node="rowData" pTemplate="body">
             {{fileInfoActionMap[node.data.fileInfoAction]}}
         </template>
     </p-column>
     <p-column *ngIf="originFile=='SYNCHRO'" styleClass="size-action" header="Synchro. state">
-        <template let-node="rowData" pTemplate type="body">
+        <template let-node="rowData" pTemplate="body">
             {{syncStateActionMap[node.data.syncState]}}
         </template>
     </p-column>
     <p-column styleClass="size-list" header="Size">
-        <template let-node="rowData" pTemplate type="body">
+        <template let-node="rowData" pTemplate="body">
             {{node.data.size | number:'1.0'}}
         </template>
     </p-column>
     <p-column styleClass="date-list" header="Last Modified Time">
-        <template let-node="rowData" pTemplate type="body">
+        <template let-node="rowData" pTemplate="body">
             {{node.data.lastModifiedTime | date:"dd/MM/yyyy HH:mm:ss"}}
         </template>
     </p-column>

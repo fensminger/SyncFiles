@@ -1,56 +1,180 @@
-import {Component, AfterViewInit, ElementRef, OnInit} from '@angular/core';
+import {Component,AfterViewInit,ElementRef,Renderer,ViewChild, OnInit} from '@angular/core';
 import {BreadCrumbService} from './shared';
 import {Subscription} from 'rxjs/Subscription'
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import {SynchroRunningService} from './forms/synchro_running.service';
 
-declare var Ultima: any;
+enum MenuOrientation {
+    STATIC,
+    OVERLAY,
+    HORIZONTAL
+};
+
+declare var jQuery: any;
 
 @Component({
-  selector: 'my-app',
-  templateUrl: './application.html',
-  providers: [BreadCrumbService, SynchroRunningService]
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements AfterViewInit, OnInit {
+export class AppComponent implements AfterViewInit {
 
-  layoutCompact: boolean = true;
+    layoutCompact: boolean = true;
 
-  layoutMode: string = 'static';
+    layoutMode: MenuOrientation = MenuOrientation.STATIC;
 
-  darkMenu: boolean = false;
+    darkMenu: boolean = false;
 
-  profileMode: string = 'inline';
+    profileMode: string = 'inline';
+
+    rotateMenuButton: boolean;
+
+    topbarMenuActive: boolean;
+
+    overlayMenuActive: boolean;
+
+    staticMenuDesktopInactive: boolean;
+
+    staticMenuMobileActive: boolean;
+
+    layoutContainer: HTMLDivElement;
+
+    layoutMenuScroller: HTMLDivElement;
+
+    menuClick: boolean;
+
+    topbarItemClick: boolean;
+
+    activeTopbarItem: any;
+
+    documentClickListener: Function;
+
+    resetMenu: boolean;
+
+    @ViewChild('layoutContainer') layourContainerViewChild: ElementRef;
+
+    @ViewChild('layoutMenuScroller') layoutMenuScrollerViewChild: ElementRef;
+
+    constructor(public renderer: Renderer) {}
+
+    ngAfterViewInit() {
+        this.layoutContainer = <HTMLDivElement> this.layourContainerViewChild.nativeElement;
+        this.layoutMenuScroller = <HTMLDivElement> this.layoutMenuScrollerViewChild.nativeElement;
+
+        //hides the horizontal submenus or top menu if outside is clicked
+        this.documentClickListener = this.renderer.listenGlobal('body', 'click', (event) => {
+            if(!this.topbarItemClick) {
+                this.activeTopbarItem = null;
+                this.topbarMenuActive = false;
+            }
+
+            if(!this.menuClick && this.isHorizontal()) {
+                this.resetMenu = true;
+            }
+
+            this.topbarItemClick = false;
+            this.menuClick = false;
+        });
+
+        setTimeout(() => {
+            jQuery(this.layoutMenuScroller).nanoScroller({flash:true});
+        }, 10);
+    }
+
+    onMenuButtonClick(event) {
+        this.rotateMenuButton = !this.rotateMenuButton;
+        this.topbarMenuActive = false;
+
+        if(this.layoutMode === MenuOrientation.OVERLAY) {
+            this.overlayMenuActive = !this.overlayMenuActive;
+        }
+        else {
+            if(this.isDesktop())
+                this.staticMenuDesktopInactive = !this.staticMenuDesktopInactive;
+            else
+                this.staticMenuMobileActive = !this.staticMenuMobileActive;
+        }
+
+        event.preventDefault();
+    }
+
+    onMenuClick($event) {
+        this.menuClick = true;
+        this.resetMenu = false;
+
+        if(!this.isHorizontal()) {
+            setTimeout(() => {
+                jQuery(this.layoutMenuScroller).nanoScroller();
+            }, 500);
+        }
+    }
+
+    onTopbarMenuButtonClick(event) {
+        this.topbarItemClick = true;
+        this.topbarMenuActive = !this.topbarMenuActive;
+
+        if(this.overlayMenuActive || this.staticMenuMobileActive) {
+            this.rotateMenuButton = false;
+            this.overlayMenuActive = false;
+            this.staticMenuMobileActive = false;
+        }
+
+        event.preventDefault();
+    }
+
+    onTopbarItemClick(event, item) {
+        this.topbarItemClick = true;
+
+        if(this.activeTopbarItem === item)
+            this.activeTopbarItem = null;
+        else
+            this.activeTopbarItem = item;
+
+        event.preventDefault();
+    }
+
+    isTablet() {
+        let width = window.innerWidth;
+        return width <= 1024 && width > 640;
+    }
+
+    isDesktop() {
+        return window.innerWidth > 1024;
+    }
+
+    isMobile() {
+        return window.innerWidth <= 640;
+    }
+
+    isOverlay() {
+        return this.layoutMode === MenuOrientation.OVERLAY;
+    }
+
+    isHorizontal() {
+        return this.layoutMode === MenuOrientation.HORIZONTAL;
+    }
+
+    changeToStaticMenu() {
+        this.layoutMode = MenuOrientation.STATIC;
+    }
+
+    changeToOverlayMenu() {
+        this.layoutMode = MenuOrientation.OVERLAY;
+    }
+
+    changeToHorizontalMenu() {
+        this.layoutMode = MenuOrientation.HORIZONTAL;
+    }
+
+    ngOnDestroy() {
+        if(this.documentClickListener) {
+            this.documentClickListener();
+        }
+
+        jQuery(this.layoutMenuScroller).nanoScroller({flash:true});
+    }
 
   syncFilesInfo : any[] = [];
-
-  constructor(private el: ElementRef, private synchroRunningService : SynchroRunningService) {
-  }
-
-  ngAfterViewInit() {
-    Ultima.init(this.el.nativeElement);
-  }
-
-  changeTheme(event, theme) {
-    let themeLink: HTMLLinkElement = <HTMLLinkElement> document.getElementById('theme-css');
-    let layoutLink: HTMLLinkElement = <HTMLLinkElement> document.getElementById('layout-css');
-
-    themeLink.href = '/assets/ultimang/theme/theme-' + theme + '.css';
-    layoutLink.href = '/assets/ultimang/layout/css/layout-' + theme + '.css';
-    event.preventDefault();
-  }
-
-  ngOnInit() {
-    this.synchroRunningService.syncFilesinfoObservable.subscribe(
-      s => {
-        this.syncFilesInfo = s;
-      }
-    );
-  }
-
-  public getTitleSynchroMenu(sync : any): any {
-    let running = (sync.running)?"Running":"Stopped";
-    return sync.type + " - " + sync.paramSyncFiles.name + " (" + running + ")";
-  }
 
 }

@@ -131,8 +131,8 @@ export class SynchroRunningList extends SynchroRunningGenInfos implements OnInit
     if (this.endDate!=null) {
         params.set('endDate', this.endDate.toISOString());
     }
-    this.infosList.fileInfoList = [];
-    this.showResult = false;
+    // this.infosList.fileInfoList = [];
+    // this.showResult = false;
     this.synchroFilesService.viewList(this.id, this.originFile, this.pageNumber, this.numberRowPerPages, params).subscribe(
         (r : any) => {
           // if (this.infosList.fileInfoList.length==r.fileInfoList.length) {

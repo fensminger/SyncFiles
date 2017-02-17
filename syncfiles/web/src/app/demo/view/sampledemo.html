@@ -17,9 +17,9 @@
                         <label for="textarea">Textarea</label>
                     </div>
                     <div class="ui-g-12 ui-md-4">
-                        <textarea cols="30" pInputTextarea></textarea>
+                        <textarea [rows]="3" [cols]="30" pInputTextarea autoResize="autoResize"></textarea>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-2">
                         <label for="calendar">Calendar</label>
                     </div>
@@ -31,9 +31,9 @@
                     </div>
                     <div class="ui-g-12 ui-md-4">
                         <p-autoComplete [(ngModel)]="country" [suggestions]="filteredCountries" (completeMethod)="filterCountry($event)" field="name"
-                            placeholder="Countries"></p-autoComplete>
+                            placeholder="Countries" [minLength]="1"></p-autoComplete>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-2">
                         <label for="dropdown">Dropdown</label>
                     </div>
@@ -46,7 +46,7 @@
                     <div class="ui-g-12 ui-md-4">
                         <input id="password" pPassword type="password"/>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-2">
                         <label for="mask">Mask</label>
                     </div>
@@ -59,7 +59,7 @@
                     <div class="ui-g-12 ui-md-4">
                         <p-spinner></p-spinner>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-2">
                         Checkbox
                     </div>
@@ -80,7 +80,7 @@
                             <div class="ui-g-12"><p-radioButton name="rg" value="Omega" label="Omega" [(ngModel)]="radioValue"></p-radioButton></div>
                         </div>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-2">
                         <label for="slider">Slider</label>
                     </div>
@@ -93,7 +93,7 @@
                     <div class="ui-g-12 ui-md-4">
                         <button pButton type="button" label="Edit" icon="ui-icon-edit"></button>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-2">
                         SplitButton
                     </div>
@@ -106,7 +106,7 @@
                     <div class="ui-g-12 ui-md-4">
                         <p-multiSelect id="multiselect" [options]="carOptions" [(ngModel)]="selectedMultiSelectCars"></p-multiSelect>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-2">
                         ToggleButton
                     </div>
@@ -119,7 +119,7 @@
                     <div class="ui-g-12 ui-md-4">
                         <p-selectButton [options]="types" [(ngModel)]="selectedType"></p-selectButton>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-2">
                         <label for="listbox">Listbox</label>
                     </div>
@@ -149,7 +149,7 @@
                             </span>
                         </div>
                     </div>
-                    
+
                     <footer>
                         <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                             <button type="button" label="Login" icon="ui-icon-person" (click)="dialogVisible=false" pButton></button>
@@ -157,11 +157,11 @@
                     </footer>
                 </p-dialog>
             </div>
-            
+
             <div class="card card-w-title">
                 <h1>DataTable</h1>
                 <p-dataTable [value]="cars" selectionMode="single" [(selection)]="selectedCar3">
-                    <header>DataTable</header>
+                    <p-header>DataTable</p-header>
                     <p-column field="vin" header="Vin"></p-column>
                     <p-column field="year" header="Year"></p-column>
                     <p-column field="brand" header="Brand"></p-column>
@@ -169,16 +169,16 @@
                 </p-dataTable>
             </div>
         </div>
-        
+
         <div class="ui-g-12 ui-lg-6">
             <!-- Left Side -->
             <div class="card card-w-title">
                 <h1>DataGrid</h1>
                 <p-dataGrid [value]="carsLarge" [paginator]="true" [rows]="20">
-                    <header>
+                    <p-header>
                         List of Cars
-                    </header>
-                    <template let-car>
+                    </p-header>
+                    <template let-car pTemplate="item">
                         <div style="padding:3px" class="ui-g-12 ui-md-3">
                             <p-panel [header]="car.vin" [style]="{'text-align':'center'}">
                                 <img src="assets/ultimang/demo/images/car/{{car.brand}}.gif">
@@ -188,29 +188,29 @@
                     </template>
                 </p-dataGrid>
             </div>
-            
+
             <div class="card card-w-title">
                 <h1>Tree</h1>
                 <p-tree [value]="filesTree"></p-tree>
             </div>
-            
+
             <div class="card card-w-title">
                 <h1>Menu</h1>
                 <p-menu [model]="menuItems"></p-menu>
             </div>
-            
+
             <div class="card card-w-title">
                 <h1>PanelMenu</h1>
                 <p-panelMenu [model]="panelMenuItems"></p-panelMenu>
             </div>
-            
+
             <div class="card card-w-title">
                 <h1>Heading 1</h1>
-                
+
                 <h2>Heading 2</h2>
-                
+
                 <h3>Heading 3</h3>
-                
+
                 <h4>Heading 4</h4>
             </div>
         </div>
@@ -219,16 +219,16 @@
             <div class="card card-w-title">
                 <h1>PickList</h1>
                 <p-pickList [source]="sourceCars" [target]="targetCars" sourceHeader="Available" targetHeader="Selected" [responsive]="true">
-                    <template let-car>
+                    <template let-car pTemplate="item">
                         <span>{{car.brand}}</span>
                     </template>
                 </p-pickList>
             </div>
-            
+
             <div class="card card-w-title">
                 <h1>OrderList</h1>
                 <p-orderList [value]="orderListCars" [listStyle]="{'height':'250px'}" [responsive]="true" header="OrderList">
-                    <template let-car>
+                    <template let-car pTemplate="item">
                         <div class="ui-helper-clearfix">
                             <img src="assets/ultimang/demo/images/car/{{car.brand}}.gif" style="display:inline-block;margin:2px 0 2px 2px" />
                             <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{car.brand}} - {{car.year}} - {{car.color}}</div>
@@ -236,7 +236,7 @@
                     </template>
                 </p-orderList>
             </div>
-            
+
             <div class="card card-w-title">
                 <h1>Accordion Panel</h1>
                 <p-accordion>
@@ -251,41 +251,41 @@
                     </p-accordionTab>
                 </p-accordion>
             </div>
-            
+
             <div class="card card-w-title">
                 <h1>Panel</h1>
                 <p-panel header="Godfather I" [toggleable]="true">
-                    The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding. 
-                    His beloved son Michael has just come home from the war, but does not intend to become part of his father's business. 
-                    Through Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, 
+                    The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.
+                    His beloved son Michael has just come home from the war, but does not intend to become part of his father's business.
+                    Through Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family,
                     kind and benevolent to those who give respect, but given to ruthless violence whenever anything stands against the good of the family.
                 </p-panel>
             </div>
-            
+
             <div class="card card-w-title">
                 <h1>ProgressBar - Static Display</h1>
                 <p-progressBar [value]="50"></p-progressBar>
             </div>
         </div>
-        
+
         <div class="ui-g-12">
             <div class="card card-w-title">
                 <h1>Carousel</h1>
                 <p-carousel headerText="Cars" [value]="carouselCars">
-                    <template let-car>
+                    <template let-car pTemplate="item">
                         <div class="ui-g" style="text-align:center">
                             <div class="ui-g-12" style="text-align:Center">
                                 <img src="assets/ultimang/demo/images/car/{{car.brand}}.gif" />
                             </div>
                             <div class="ui-g-6">Vin: </div>
                             <div class="ui-g-6" style="font-weight:bold">{{car.vin}}</div>
-                            
+
                             <div class="ui-g-6">Year: </div>
                             <div class="ui-g-6" style="font-weight:bold">{{car.year}}</div>
-                            
+
                             <div class="ui-g-6">Brand: </div>
                             <div class="ui-g-6" style="font-weight:bold">{{car.brand}}</div>
-                            
+
                             <div class="ui-g-6">Color: </div>
                             <div class="ui-g-6" style="font-weight:bold">{{car.color}}</div>
                         </div>

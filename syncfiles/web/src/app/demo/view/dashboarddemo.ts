@@ -8,32 +8,32 @@ import {SelectItem} from 'primeng/primeng';
     templateUrl: './dashboard.html'
 })
 export class DashboardDemo implements OnInit {
-
+    
     cities: SelectItem[];
-
+    
     cars: Car[];
-
+    
     chartData: any;
-
+    
     events: any[];
-
+    
     selectedCity: any;
 
     constructor(private carService: CarService, private eventService: EventService) { }
-
+    
     ngOnInit() {
         this.carService.getCarsSmall().then(cars => this.cars = cars);
-
+        
         this.eventService.getEvents().then(events => {this.events = events;});
-
+        
         this.cities = [];
         this.cities.push({label:'Select City', value:null});
         this.cities.push({label:'New York', value:{id:1, name: 'New York', code: 'NY'}});
         this.cities.push({label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}});
         this.cities.push({label:'London', value:{id:3, name: 'London', code: 'LDN'}});
         this.cities.push({label:'Istanbul', value:{id:4, name: 'Istanbul', code: 'IST'}});
-        this.cities.push({label:'Paris', value:{id:5, name: 'Paris', code: 'PRS'}});
-
+        this.cities.push({label:'Paris', value:{id:5, name: 'Paris', code: 'PRS'}});    
+        
         this.chartData = {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             datasets: [

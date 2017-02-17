@@ -35,7 +35,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="ui-g-12 ui-md-6 ui-lg-3">
         <div class="ui-g card colorbox colorbox-1">
             <div class="ui-g-4">
@@ -80,7 +80,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="ui-g-12 ui-md-6 ui-lg-4 task-list">
         <p-panel header="Tasks">
             <ul>
@@ -179,7 +179,7 @@
             </ul>
         </p-panel>
     </div>
-    
+
     <div class="ui-g-12 ui-md-4">
         <div class="card timeline ui-fluid">
             <div class="ui-g">
@@ -194,7 +194,7 @@
                         <img src="assets/ultimang/layout/images/dashboard/md.png">
                     </div>
                 </div>
-                
+
                 <div class="ui-g-3">
                     <span class="event-time">12h ago</span>
                     <i class="material-icons" style="color:#E91E63">&#xE885;</i>
@@ -203,7 +203,7 @@
                     <span class="event-owner" style="color:#E91E63">Brandon Santos</span>
                     <span class="event-text">Ab nobis, magnam sunt eum. Laudantium, repudiandae, similique!.</span>
                 </div>
-                
+
                 <div class="ui-g-3">
                     <span class="event-time">15h ago</span>
                     <i class="material-icons" style="color:#9c27b0">&#xE0C9;</i>
@@ -212,7 +212,7 @@
                     <span class="event-owner" style="color:#9c27b0">Stephan Ward</span>
                     <span class="event-text">Omnis veniam quibusdam ratione est repellat qui nam quisquam ab mollitia dolores ullam voluptates, similique, dignissimos.</span>
                 </div>
-                
+
                 <div class="ui-g-3">
                     <span class="event-time">2d ago</span>
                     <i class="material-icons" style="color:#ff9800">&#xE0C8;</i>
@@ -224,7 +224,7 @@
                         <img src="assets/ultimang/layout/images/dashboard/map.png">
                     </div>
                 </div>
-                
+
                 <div class="ui-g-3">
                     <span class="event-time">1w ago</span>
                     <i class="material-icons" style="color:#607d8b">&#xE91B;</i>
@@ -233,7 +233,7 @@
                     <span class="event-owner">Kevin Cox</span>
                     <span class="event-text">Quibusdam ratione est repellat qui nam quisquam veniam quibusdam ratione.</span>
                 </div>
-                
+
                 <div class="ui-g-3">
                     <span class="event-time">2w ago</span>
                     <i class="material-icons" style="color:#FFC107">&#xE23A;</i>
@@ -242,30 +242,30 @@
                     <span class="event-owner" style="color:#FFC107">Walter White</span>
                     <span class="event-text">I am the one who knocks!</span>
                 </div>
-                
+
                 <div class="ui-g-12">
                     <button type="button" label="Refresh" icon="ui-icon-refresh" pButton></button>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div class="ui-g-12 ui-md-8">
         <div class="card">
             <p-dataTable [value]="cars" [style]="{'margin-bottom':'20px'}">
-                <header>Recent Sales</header>
+                <p-header>Recent Sales</p-header>
                 <p-column field="vin" header="Vin"></p-column>
                 <p-column field="year" header="Year"></p-column>
                 <p-column field="brand" header="Brand"></p-column>
                 <p-column field="color" header="Color"></p-column>
             </p-dataTable>
-            
+
             <p-panel header="Sales Graph">
                 <p-chart type="line" [data]="chartData" responsive="true"></p-chart>
             </p-panel>
         </div>
     </div>
-    
+
     <div class="ui-g-12 ui-md-8">
         <p-panel header="Calendar" [style]="{'height':'100%'}">
             <p-schedule [events]="events" defaultDate="2016-01-12"></p-schedule>
