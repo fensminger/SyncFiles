@@ -60,10 +60,10 @@
                     </div>
 
                     <template ngFor let-pattern [ngForOf]="model.includeExcludePatterns" let-i="index">
-                      <div class="ui-g-3 ui-lg-2 ui-xl-1">
+                      <div class="ui-g-4 ui-lg-3 ui-xl-2">
                         <p-dropdown id="dropdown" (onChange)="chgType(i, $event)" [options]="types" [ngModel]="pattern.type" [autoWidth]="false" name="type" [ngModelOptions]="{standalone: true}"></p-dropdown>
                       </div>
-                      <div class="ui-g-8 ui-lg-3 ui-xl-4">
+                      <div class="ui-g-7 ui-lg-2 ui-xl-3">
                         <input type="text" pInputText [value]="pattern.value" (input)="chgPattern(i, $event)" placeholder="Enter your pattern"/>
                       </div>
                         <div class="ui-g-1" >

@@ -129,12 +129,12 @@
     <p-messages [closable]="false" [value]="msgs"></p-messages>
   </div>
 
-  <div class="ui-g-12 ui-xl-4 ui-lg-6 ui-md-8 ui-sm-12" *ngIf="cronCalc.nextCron!=null && cronCalc.nextCron.length>0">
+  <div class="no-header ui-g-12 ui-xl-4 ui-lg-6 ui-md-8 ui-sm-12" *ngIf="cronCalc.nextCron!=null && cronCalc.nextCron.length>0">
     <p-dataTable  [value]="cronCalc.nextCron" scrollable="true" scrollHeight="300px">
-      <header>
+      <p-header>
         Next job executions
-      </header>
-      <p-column header="Next job executions">
+      </p-header>
+      <p-column>
         <template let-nextDate ="rowData" pTemplate="body">
           {{nextDate | date:"EEEE dd/MM/yyyy HH:mm:ss"}}
         </template>
