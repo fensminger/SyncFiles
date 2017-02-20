@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
@@ -65,8 +66,15 @@ public class SchedulerConfig {
     }
 
     @Bean
+    @Scope("prototype")
     public JobDetailFactoryBean sampleJobDetail() {
         return createJobDetail(SampleJob.class);
+    }
+
+    @Bean
+    @Scope("prototype")
+    public JobDetailFactoryBean syncFilesJobDetail(@Value("${samplejob.defaultJobName}") String jobName) {
+        return createJobDetail(jobName, SampleJob.class);
     }
 
     @Bean(name = "sampleJobTrigger")
@@ -75,9 +83,24 @@ public class SchedulerConfig {
         return createTrigger(jobDetail, frequency);
     }
 
+    @Bean(name = "cronJobTrigger")
+    @Scope("prototype")
+    public CronTriggerFactoryBean cronJobTrigger(@Qualifier("syncFilesJobDetail") JobDetail jobDetail, @Value("${samplejob.cronExp}") String cronExpression) {
+        return createCronTrigger(jobDetail, cronExpression);
+    }
+
     private static JobDetailFactoryBean createJobDetail(Class jobClass) {
         JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
         factoryBean.setJobClass(jobClass);
+        // job has to be durable to be stored in DB:
+        factoryBean.setDurability(true);
+        return factoryBean;
+    }
+
+    private static JobDetailFactoryBean createJobDetail(String jobName, Class jobClass) {
+        JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
+        factoryBean.setJobClass(jobClass);
+        factoryBean.setName(jobName);
         // job has to be durable to be stored in DB:
         factoryBean.setDurability(true);
         return factoryBean;
@@ -99,7 +122,7 @@ public class SchedulerConfig {
         CronTriggerFactoryBean factoryBean = new CronTriggerFactoryBean();
         factoryBean.setJobDetail(jobDetail);
         factoryBean.setCronExpression(cronExpression);
-        factoryBean.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+        factoryBean.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY);
         return factoryBean;
     }
 

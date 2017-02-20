@@ -18,3 +18,5 @@ liquibase.change-log: classpath:db/changelog/db.changelog-master.xml
 quartz.enabled: true
 
 samplejob.frequency: 2000
+samplejob.cronExp: 0 1 * 1/1 * ? *
+samplejob.defaultJobName: syncFilesJobName

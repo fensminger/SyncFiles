@@ -1,20 +1,29 @@
 package org.fer.syncfiles.services;
 
+import org.fer.syncfiles.Application;
+import org.fer.syncfiles.config.SchedulerConfig;
 import org.fer.syncfiles.domain.*;
 import org.fer.syncfiles.dto.ScheduleCalc;
+import org.fer.syncfiles.quartz.SampleJob;
 import org.fer.syncfiles.repository.FileInfoRepository;
 import org.fer.syncfiles.repository.ObjectInfoRepository;
 import org.fer.syncfiles.repository.ParamSyncFilesRepository;
 import org.fer.syncfiles.services.hubic.HubicService;
+import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
+import org.springframework.scheduling.quartz.JobDetailFactoryBean;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -58,6 +67,15 @@ public class ParamSyncFilesService {
     @Qualifier("syncfilesSocketHandler")
     private SyncfilesSocketHandler syncfilesSocketHandler;
 
+    @Autowired
+    private SchedulerFactoryBean schedulerFactoryBean;
+
+    @Autowired
+    private SchedulerConfig schedulerConfig;
+
+    @Autowired
+    private ApplicationContext appContext;
+
     private boolean isHubicConnected = false;
 
     @PostConstruct
@@ -66,7 +84,31 @@ public class ParamSyncFilesService {
     }
 
     public ParamSyncFiles save(ParamSyncFiles paramSyncFiles) {
-        return paramSyncFilesRepository.save(paramSyncFiles);
+        final ParamSyncFiles paramSyncFilesSaved = paramSyncFilesRepository.save(paramSyncFiles);
+        String jobId = paramSyncFilesSaved.getId();
+        log.info("Info saved : " + jobId);
+        JobKey jobKey = new JobKey(jobId);
+        try {
+            for(Trigger trigger : schedulerFactoryBean.getScheduler().getTriggersOfJob(jobKey)) {
+//            for(TriggerKey trigger : schedulerFactoryBean.getScheduler().getTriggerKeys(null)) {
+                boolean triggerDeleted = schedulerFactoryBean.getScheduler().unscheduleJob(trigger.getKey());
+                log.info("Trigger deleted " + jobId + " : " + triggerDeleted);
+            }
+            boolean jobDeleted = schedulerFactoryBean.getScheduler().deleteJob(jobKey);
+            log.info("Job deleted " + jobId + " : " + jobDeleted);
+
+            Schedule schedule = paramSyncFilesSaved.getSchedule();
+            if (schedule !=null && schedule.getCronExp()!=null && !Schedule.SCHEDULE_TYPE.MANUAL.equals(schedule.getType())) {
+                JobDetail jobDetail = (JobDetail) appContext.getBean("syncFilesJobDetail", jobId);
+                jobDetail.getJobDataMap().put("paramSyncFilesId", jobId);
+                CronTrigger cronTrigger = (CronTrigger) appContext.getBean("cronJobTrigger", jobDetail, schedule.getCronExp());
+                schedulerFactoryBean.getScheduler().scheduleJob(jobDetail, cronTrigger);
+            }
+        } catch (SchedulerException e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        return paramSyncFilesSaved;
     }
 
     public void deleteParamSyncFiles(ParamSyncFiles paramSyncFiles) {
