@@ -31,8 +31,8 @@
       <div class="ui-g-12 sf-line-space">
         <p-radioButton (ngModelChange)="calcScheduleDay($event)" name="dailyRadioButton" value="WEEK_END" label="Every week-end" [(ngModel)]="schedule.daily.type"></p-radioButton>
       </div>
-      <div class="ui-g-12 sf-line-space">
-        Start time <p-calendar [(ngModel)]="schedule.daily.time" [timeOnly]="true" [style]="{'width': '150px'}"></p-calendar>
+      <div class="ui-g-12 sf-line-space">Test
+        Start time <p-calendar (onSelect)="calcSchedule($event)" (onBlur)="calcSchedule($event)" [(ngModel)]="schedule.daily.time" [timeOnly]="true" [style]="{'width': '150px'}"></p-calendar>
       </div>
     </div>
   </div>

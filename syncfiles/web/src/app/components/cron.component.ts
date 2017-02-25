@@ -44,6 +44,8 @@ export class SyncFilesCronComponent extends OnChanges implements OnInit, DoCheck
     cronExp : ''
   };
 
+  private testTime : any;
+
   private cronCalc : any = {};
   private msgs: Message[] = [];
   private isFirstLoad: boolean =true;
@@ -111,18 +113,18 @@ export class SyncFilesCronComponent extends OnChanges implements OnInit, DoCheck
       console.log("DoCheck : " + this.value);
       this.isFirstLoad = false;
       this.schedule = this.value;
-      if (this.schedule.daily.time!=null) {
-        this.schedule.daily.time = new Date(this.schedule.daily.time);
-      }
-      if (this.schedule.weekly.time!=null) {
-        this.schedule.weekly.time = new Date(this.schedule.weekly.time);
-      }
-      if (this.schedule.monthly.time!=null) {
-        this.schedule.monthly.time = new Date(this.schedule.monthly.time);
-      }
-      if (this.schedule.yearly.time!=null) {
-        this.schedule.yearly.time = new Date(this.schedule.yearly.time);
-      }
+      // if (this.schedule.daily.time!=null) {
+      //   this.schedule.daily.time = new Date(this.schedule.daily.time);
+      // }
+      // if (this.schedule.weekly.time!=null) {
+      //   this.schedule.weekly.time = new Date(this.schedule.weekly.time);
+      // }
+      // if (this.schedule.monthly.time!=null) {
+      //   this.schedule.monthly.time = new Date(this.schedule.monthly.time);
+      // }
+      // if (this.schedule.yearly.time!=null) {
+      //   this.schedule.yearly.time = new Date(this.schedule.yearly.time);
+      // }
       this.calcSchedule();
     }
   }
@@ -166,7 +168,7 @@ export class SyncFilesCronComponent extends OnChanges implements OnInit, DoCheck
         }
       },
       (e : any) => {
-        this.changeDetectorRef.reattach();
+        // this.changeDetectorRef.reattach();
         console.log("Error : " + JSON.stringify(e));
       });
   }

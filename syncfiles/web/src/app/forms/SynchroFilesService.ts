@@ -21,6 +21,12 @@ export class SynchroFilesService {
     public loadOne(id :String) : Observable<any> {
         return this.http.get('/api/sync-files/param/load-one/'+id)
             .map(this.extractData)
+          .map(data => {
+            if (data.schedule) {
+              this.convertScheduleDate(data.schedule);
+            }
+            return data;
+          })
             .catch(this.handleError);
     }
 
@@ -94,6 +100,30 @@ export class SynchroFilesService {
     public calcSchedule(schedule : any) : Observable<any> {
       return this.http.post("/api/sync-files/param/schedule/calc", schedule, {headers:this.headers})
         .map(this.extractData)
+        .map(data => {
+          if (data.schedule) {
+            this.convertScheduleDate(data.schedule);
+          }
+          return data;
+        })
         .catch(this.handleError);
     }
+
+  private convertScheduleDate(schedule: any) {
+    if (schedule.lastExecution != null) {
+      schedule.lastExecution = new Date(schedule.lastExecution);
+    }
+    if (schedule.daily.time != null) {
+      schedule.daily.time = new Date(schedule.daily.time);
+    }
+    if (schedule.weekly.time != null) {
+      schedule.weekly.time = new Date(schedule.weekly.time);
+    }
+    if (schedule.monthly.time != null) {
+      schedule.monthly.time = new Date(schedule.monthly.time);
+    }
+    if (schedule.yearly.time != null) {
+      schedule.yearly.time = new Date(schedule.yearly.time);
+    }
+  }
 }
