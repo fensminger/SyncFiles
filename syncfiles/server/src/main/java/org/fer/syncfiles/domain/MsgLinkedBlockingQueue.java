@@ -10,4 +10,18 @@ public class MsgLinkedBlockingQueue<E> extends LinkedBlockingQueue<E> {
     public MsgLinkedBlockingQueue() {
         super(100);
     }
+
+    @Override
+    public boolean add(E e) {
+        if (offer(e))
+            return true;
+        else {
+            poll();
+            if (!offer(e)) {
+                throw new IllegalStateException("Queue full !!!");
+            }
+            return true;
+        }
+    }
+
 }

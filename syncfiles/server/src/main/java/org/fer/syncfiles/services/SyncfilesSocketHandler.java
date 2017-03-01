@@ -131,13 +131,15 @@ public class SyncfilesSocketHandler extends TextWebSocketHandler {
             String msgErrStackTrace = stringWriter.getBuffer().toString();
 //            msgErrStackTrace.replaceAll("\n","<br/>").replaceAll("\r","");
             SyncfilesSynchroMsg syncfilesSynchroMsg = syncfilesSynchroMsgMap.get(id);
-            syncfilesSynchroMsg.setChanged(true);
-            syncfilesSynchroMsg.setLastStateDate(new Date());
-            syncfilesSynchroMsg.setMsgError(msgErr);
-            syncfilesSynchroMsg.setMsgErrorStackTrace(msgErrStackTrace);
-            syncfilesSynchroMsg.setRunning(false);
-            syncfilesSynchroMsg.setLastStateDate(new Date());
-            nbOfMessageToSend.incrementAndGet();
+            if (syncfilesSynchroMsg!=null) {
+                syncfilesSynchroMsg.setChanged(true);
+                syncfilesSynchroMsg.setLastStateDate(new Date());
+                syncfilesSynchroMsg.setMsgError(msgErr);
+                syncfilesSynchroMsg.setMsgErrorStackTrace(msgErrStackTrace);
+                syncfilesSynchroMsg.setRunning(false);
+                syncfilesSynchroMsg.setLastStateDate(new Date());
+                nbOfMessageToSend.incrementAndGet();
+            }
             // sendMessage();
         }
     }
@@ -194,6 +196,7 @@ public class SyncfilesSocketHandler extends TextWebSocketHandler {
             return;
         }
 
+        final Date startDate = syncfilesSynchroMsg.getStartDate();
         new Thread(() -> {
             try {
                 Thread.sleep(1000*60*10);
@@ -201,8 +204,11 @@ public class SyncfilesSocketHandler extends TextWebSocketHandler {
                 e.printStackTrace();
             }
 
-            syncfilesSynchroMsgMap.remove(syncfilesInfoId);
-            nbOfMessageToSend.incrementAndGet();
+            SyncfilesSynchroMsg syncfilesSynchroMsgToRemove = syncfilesSynchroMsgMap.get(syncfilesInfoId);
+            if (syncfilesSynchroMsgToRemove!=null && startDate.equals(syncfilesSynchroMsgToRemove.getStartDate())) {
+                syncfilesSynchroMsgMap.remove(syncfilesInfoId);
+                nbOfMessageToSend.incrementAndGet();
+            }
 //            sendMessage();
         }).start();
 

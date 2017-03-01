@@ -1,10 +1,8 @@
 package org.fer.syncfiles.services;
 
-import org.fer.syncfiles.Application;
 import org.fer.syncfiles.config.SchedulerConfig;
 import org.fer.syncfiles.domain.*;
 import org.fer.syncfiles.dto.ScheduleCalc;
-import org.fer.syncfiles.quartz.SampleJob;
 import org.fer.syncfiles.repository.FileInfoRepository;
 import org.fer.syncfiles.repository.ObjectInfoRepository;
 import org.fer.syncfiles.repository.ParamSyncFilesRepository;
@@ -15,14 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
-import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
@@ -84,6 +79,9 @@ public class ParamSyncFilesService {
     }
 
     public ParamSyncFiles save(ParamSyncFiles paramSyncFiles) {
+        // Calc cronExp if necessary...
+        paramSyncFiles.setSchedule(calcSchedule(paramSyncFiles.getSchedule()).getSchedule());
+
         final ParamSyncFiles paramSyncFilesSaved = paramSyncFilesRepository.save(paramSyncFiles);
         String jobId = paramSyncFilesSaved.getId();
         log.info("Info saved : " + jobId);

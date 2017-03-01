@@ -34,7 +34,6 @@ export class SynchroDetailEdit implements OnInit {
     modelModified = {
         id : null,
         name : null,
-        cronExp : null,
         masterDir : null,
         slaveDir : null,
         schedule : null,
@@ -69,7 +68,6 @@ export class SynchroDetailEdit implements OnInit {
 
         this.synchroForm = _fb.group({
             'name': ['', Validators.required],
-            'cronExp' : [''],
             'masterDir': ['', Validators.required],
             'slaveDir': ['', Validators.required],
             'includeDir': ['']
@@ -103,7 +101,6 @@ export class SynchroDetailEdit implements OnInit {
         this.isHttpRequest = true;
         value.version = this.version;
         this.modelModified.name = this.synchroForm.get('name').value;
-        this.modelModified.cronExp = this.synchroForm.get('cronExp').value;
         this.modelModified.masterDir = this.synchroForm.get('masterDir').value;
         this.modelModified.slaveDir = this.synchroForm.get('slaveDir').value;
         this._synchroFilesService.saveDetail(this.modelModified).subscribe(
