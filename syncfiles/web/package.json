@@ -26,7 +26,7 @@
     "jquery": "^3.1.1",
     "moment": "^2.17.1",
     "nanoscroller": "0.8.7",
-    "primeng": "2.0.0",
+    "primeng": "2.0.2",
     "quill": "^1.1.8",
     "rxjs": "^5.0.1",
     "ts-helpers": "^1.1.1",
@@ -39,7 +39,7 @@
     "angular2-websocket": "^0.9.0"
   },
   "devDependencies": {
-    "@angular/cli": "1.0.0-beta.30",
+    "@angular/cli": "1.0.0-rc.1",
     "@angular/compiler-cli": "^2.3.1",
     "@types/jasmine": "2.5.38",
     "@types/node": "^6.0.42",
