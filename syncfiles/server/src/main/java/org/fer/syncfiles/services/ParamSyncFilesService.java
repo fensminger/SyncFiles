@@ -80,7 +80,9 @@ public class ParamSyncFilesService {
 
     public ParamSyncFiles save(ParamSyncFiles paramSyncFiles) {
         // Calc cronExp if necessary...
-        paramSyncFiles.setSchedule(calcSchedule(paramSyncFiles.getSchedule()).getSchedule());
+        if (paramSyncFiles.getSchedule()!=null) {
+            paramSyncFiles.setSchedule(calcSchedule(paramSyncFiles.getSchedule()).getSchedule());
+        }
 
         final ParamSyncFiles paramSyncFilesSaved = paramSyncFilesRepository.save(paramSyncFiles);
         String jobId = paramSyncFilesSaved.getId();

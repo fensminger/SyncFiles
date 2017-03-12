@@ -5,6 +5,7 @@ import org.fer.syncfiles.domain.FileInfoAction;
 import org.fer.syncfiles.domain.OriginFile;
 import org.fer.syncfiles.domain.SyncState;
 import org.fer.syncfiles.dto.FileInfoPage;
+import org.fer.syncfiles.dto.SummaryFileInfo;
 import org.fer.syncfiles.repository.FileInfoRepository;
 import org.fer.syncfiles.repository.ParamSyncFilesRepository;
 import org.slf4j.Logger;
@@ -19,8 +20,15 @@ import org.springframework.stereotype.Service;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by fensm on 04/02/2016.
@@ -94,6 +102,26 @@ public class InfosFilesService {
         List<FileInfo> contentList = mongoTemplate.find(query, FileInfo.class);
         return contentList;
 
+    }
+
+    public List<SummaryFileInfo> getDirectories(Path path) throws IOException {
+        if (path==null) {
+            return Arrays.stream(File.listRoots())
+                    .map(f -> getSummaryFileInfo(f))
+                    .collect(Collectors.toList());
+        } else {
+            return Files.list(path)
+                    .map(p -> p.toFile())
+                    .filter(f -> f.isDirectory())
+                    .map(f -> getSummaryFileInfo(f))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    private SummaryFileInfo getSummaryFileInfo(File f) {
+        SummaryFileInfo fileInfo = new SummaryFileInfo();
+        fileInfo.setName(f.getName());
+        return fileInfo;
     }
 
 }

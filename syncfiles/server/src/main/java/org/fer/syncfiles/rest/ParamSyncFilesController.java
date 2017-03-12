@@ -3,6 +3,7 @@ package org.fer.syncfiles.rest;
 import org.fer.syncfiles.domain.*;
 import org.fer.syncfiles.dto.FileInfoPage;
 import org.fer.syncfiles.dto.ScheduleCalc;
+import org.fer.syncfiles.dto.SummaryFileInfo;
 import org.fer.syncfiles.repository.SyncfilesSynchroMsgRepository;
 import org.fer.syncfiles.security.AuthoritiesConstants;
 import org.fer.syncfiles.services.InfosFilesService;
@@ -16,6 +17,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -172,4 +175,10 @@ public class ParamSyncFilesController {
         return scheduleCalc;
     }
 
+    @RequestMapping(value = "/files/local/dir",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<SummaryFileInfo> getDirectories(@RequestParam(required = false) String path) throws IOException {
+        return infosFilesService.getDirectories((path==null)?null:Paths.get(path));
+    }
 }

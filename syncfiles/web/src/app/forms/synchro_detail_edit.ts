@@ -129,8 +129,8 @@ export class SynchroDetailEdit implements OnInit {
             this.modelModified.includeExcludePatterns = [];
             this.includeExcludePatterns = [];
         }
-        this.model.includeExcludePatterns.push({type:null, value:null});
-        this.modelModified.includeExcludePatterns.push({type:null, value:null});
+        this.model.includeExcludePatterns.push({type:'START', value:null});
+        this.modelModified.includeExcludePatterns.push({type:'START', value:null});
         this.includeExcludePatterns.push({type:null, value:null});
         console.log("Model : " + JSON.stringify(this.modelModified));
     }

@@ -28,13 +28,15 @@ export class SynchroDetail implements OnInit {
 
   public onChange(e) {
     console.log('change tab');
+    let oldTabName = this.tabName;
     if (e.index==0) {
         this.tabName = "general";
-        this.location.replaceState(this.location.path(false).replace("execution", "general"));
-    } else {
+    } else if (e.index==1) {
         this.tabName = "execution";
-        this.location.replaceState(this.location.path(false).replace("general", "execution"));
+    }  else {
+      this.tabName = "restore";
     }
+    this.location.replaceState(this.location.path(false).replace(oldTabName, this.tabName));
   }
 
 
