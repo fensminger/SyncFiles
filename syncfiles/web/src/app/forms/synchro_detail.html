@@ -14,6 +14,6 @@
         <synchro-detail-run *ngIf="tabName=='execution'" [syncFilesinfo]="syncFilesinfo"></synchro-detail-run>
     </p-tabPanel>
     <p-tabPanel header="Restore" leftIcon="ui-icon-import-export" [selected]="tabName=='restore'">
-      OK
+      <syncfiles-dir *ngIf="tabName=='restore'" ></syncfiles-dir>
     </p-tabPanel>
 </p-tabView>

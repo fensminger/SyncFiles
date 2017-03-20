@@ -126,4 +126,16 @@ export class SynchroFilesService {
       schedule.yearly.time = new Date(schedule.yearly.time);
     }
   }
+
+  public loadDir(path : string) : Observable<any> {
+      let params : string = "";
+      if (path!=null) {
+        params = "?path=" + encodeURIComponent(path);
+      }
+    return this.http.get('/api/sync-files/files/local/dir'+params)
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+
 }

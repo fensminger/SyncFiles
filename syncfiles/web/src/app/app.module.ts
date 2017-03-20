@@ -116,6 +116,7 @@ import {CarService} from './demo/service/carservice';
 import {CountryService} from './demo/service/countryservice';
 import {EventService} from './demo/service/eventservice';
 import {NodeService} from './demo/service/nodeservice';
+import {SyncFilesDirComponent} from "app/components/directory.component";
 
 
 @NgModule({
@@ -198,7 +199,7 @@ import {NodeService} from './demo/service/nodeservice';
       SynchroSimpleMsg,
       IsAuthorized,
       SynchroList, SynchroDetail, SynchroDetailEdit, SynchroRun, SynchroDetailRun, SynchroRunningInfos,
-      SynchroRunningList, SynchroRunningTree, InputDebounceComponent, SyncFilesCronComponent,
+      SynchroRunningList, SynchroRunningTree, InputDebounceComponent, SyncFilesCronComponent, SyncFilesDirComponent,
 
       // Demo Ultima
         AppComponent,

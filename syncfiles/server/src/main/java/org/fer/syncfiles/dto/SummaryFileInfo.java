@@ -6,6 +6,14 @@ package org.fer.syncfiles.dto;
 public class SummaryFileInfo {
     private String name;
 
+    public SummaryFileInfo() {
+        super();
+    }
+
+    public SummaryFileInfo(String name) {
+        this.name = name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

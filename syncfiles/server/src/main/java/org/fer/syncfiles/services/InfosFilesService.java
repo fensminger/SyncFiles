@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by fensm on 04/02/2016.
@@ -113,15 +114,28 @@ public class InfosFilesService {
             return Files.list(path)
                     .map(p -> p.toFile())
                     .filter(f -> f.isDirectory())
-                    .map(f -> getSummaryFileInfo(f))
+                    .map(f -> getSummaryDirInfo(f))
                     .collect(Collectors.toList());
+//            return Stream.concat(
+//                    Stream.of(new SummaryFileInfo("..")),
+//
+//                    Files.list(path)
+//                            .map(p -> p.toFile())
+//                            .filter(f -> f.isDirectory())
+//                            .map(f -> getSummaryDirInfo(f))
+//            ).collect(Collectors.toList());
         }
     }
 
     private SummaryFileInfo getSummaryFileInfo(File f) {
         SummaryFileInfo fileInfo = new SummaryFileInfo();
-        fileInfo.setName(f.getName());
+        fileInfo.setName(f.toPath().toString());
         return fileInfo;
     }
 
+    private SummaryFileInfo getSummaryDirInfo(File f) {
+        SummaryFileInfo fileInfo = new SummaryFileInfo();
+        fileInfo.setName(f.toPath().getFileName().toString());
+        return fileInfo;
+    }
 }

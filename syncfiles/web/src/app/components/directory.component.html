@@ -1,0 +1,4 @@
+Directory component
+<p-breadcrumb [model]="pathMenuItems" [home]="pathHome"></p-breadcrumb>
+<p-listbox [options]="localDirs" filter="true" (onDblClick)="selectDir($event)" [(ngModel)]="selectedLocalDir"></p-listbox>
+
