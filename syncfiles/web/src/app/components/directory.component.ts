@@ -33,6 +33,7 @@ export class SyncFilesDirComponent implements OnInit {
   }
 
   private loadDirs(pLocalPath : string) {
+    this.changeEvent.emit(pLocalPath);
     this.synchroFilesService.loadDir(pLocalPath==""?null:pLocalPath).subscribe(
       (r: any) => {
         console.log("Load dir : " + JSON.stringify(r));

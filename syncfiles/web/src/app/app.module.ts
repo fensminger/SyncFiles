@@ -2,6 +2,7 @@ import {NgModule, LOCALE_ID }      from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpModule, Http,RequestOptions, XHRBackend }    from '@angular/http';
 import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {LocationStrategy,HashLocationStrategy} from '@angular/common';
 import {AppRoutes} from './app.routes';
 import 'rxjs/add/operator/toPromise';
@@ -117,11 +118,13 @@ import {CountryService} from './demo/service/countryservice';
 import {EventService} from './demo/service/eventservice';
 import {NodeService} from './demo/service/nodeservice';
 import {SyncFilesDirComponent} from "app/components/directory.component";
+import {SynchroDetailRestore} from "./forms/synchro_detail_restore";
 
 
 @NgModule({
   imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         FormsModule,
         AppRoutes,
         HttpModule,
@@ -199,7 +202,8 @@ import {SyncFilesDirComponent} from "app/components/directory.component";
       SynchroSimpleMsg,
       IsAuthorized,
       SynchroList, SynchroDetail, SynchroDetailEdit, SynchroRun, SynchroDetailRun, SynchroRunningInfos,
-      SynchroRunningList, SynchroRunningTree, InputDebounceComponent, SyncFilesCronComponent, SyncFilesDirComponent,
+      SynchroRunningList, SynchroRunningTree, InputDebounceComponent, SyncFilesCronComponent, SyncFilesDirComponent
+    , SynchroDetailRestore, 
 
       // Demo Ultima
         AppComponent,

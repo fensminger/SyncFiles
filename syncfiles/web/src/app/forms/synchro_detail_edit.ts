@@ -1,9 +1,7 @@
 import {Component, OnInit, EventEmitter, Output} from '@angular/core';
-import {FormBuilder, Validators, FormGroup} from '@angular/forms';
+import {FormBuilder, Validators, FormGroup, FormControl} from '@angular/forms';
 import {Title} from '@angular/platform-browser';
-import {SfcInput} from './sfc_input';
 import {SynchroFilesService} from './SynchroFilesService';
-import {Response} from "@angular/http";
 import {ActivatedRoute} from "@angular/router";
 import {Location} from '@angular/common';
 import {Message, SelectItem} from 'primeng/primeng';
@@ -27,19 +25,12 @@ export class SynchroDetailEdit implements OnInit {
     model = {
         id : null,
         name : null,
+        masterDir : null,
+        slaveDir : null,
         schedule : null,
         includeDir:false,
         includeExcludePatterns : []
     };
-    modelModified = {
-        id : null,
-        name : null,
-        masterDir : null,
-        slaveDir : null,
-        schedule : null,
-        includeExcludePatterns : []
-    };
-    includeExcludePatterns = [];
 
   patternTypes: SelectItem[];
   types: SelectItem[];
@@ -70,7 +61,7 @@ export class SynchroDetailEdit implements OnInit {
             'name': ['', Validators.required],
             'masterDir': ['', Validators.required],
             'slaveDir': ['', Validators.required],
-            'includeDir': ['']
+          'includeDir': ['']
         });
         route.params.subscribe(params => { this.id = params['id']; });
     }
@@ -82,10 +73,7 @@ export class SynchroDetailEdit implements OnInit {
                 (r : any) => {
                     this.isHttpRequest = false;
                     this.model = r;
-                    if (this.model.includeExcludePatterns) {
-                        this.includeExcludePatterns.length = this.model.includeExcludePatterns.length;
-                    }
-                    this.modelModified = JSON.parse(JSON.stringify(this.model));
+                    this.updatePatternControler();
                     console.log("Loading : " + JSON.stringify(this.model));
                 },
                 (e : any) => {
@@ -96,19 +84,29 @@ export class SynchroDetailEdit implements OnInit {
         }
     }
 
-    createSynchro(value : any) {
-        console.log('Synchro to save : ' + JSON.stringify(this.model));
-        this.isHttpRequest = true;
+  private updatePatternControler() {
+    let i = 0;
+    for (let pattern of this.model.includeExcludePatterns) {
+      this.synchroForm.addControl("val_" + i, new FormControl());
+      this.synchroForm.get("val_" + i).setValue(pattern.value);
+      this.synchroForm.addControl("type_" + i, new FormControl());
+      this.synchroForm.get("type_" + i).setValue(pattern.type);
+      i++;
+    }
+  }
+
+  createSynchro(value : any) {
+    console.log('Synchro to save : ' + JSON.stringify(this.model));
+    this.isHttpRequest = true;
         value.version = this.version;
-        this.modelModified.name = this.synchroForm.get('name').value;
-        this.modelModified.masterDir = this.synchroForm.get('masterDir').value;
-        this.modelModified.slaveDir = this.synchroForm.get('slaveDir').value;
-        this._synchroFilesService.saveDetail(this.modelModified).subscribe(
+        this.model.name = this.synchroForm.get('name').value;
+        this.model.masterDir = this.synchroForm.get('masterDir').value;
+        this.model.slaveDir = this.synchroForm.get('slaveDir').value;
+        this._synchroFilesService.saveDetail(this.model).subscribe(
             (r : any) => {
                 this.isHttpRequest = false;
                 this.model = r;
-                this.modelModified = JSON.parse(JSON.stringify(this.model));
-                this.syncFilesInfo.emit(this.modelModified);
+                this.syncFilesInfo.emit(this.model);
                 console.log("OK" + JSON.stringify(r));
                 this.alerts.push({severity:'info', summary:'Info', detail:'Saved synchronization detail.'});
             },
@@ -124,40 +122,35 @@ export class SynchroDetailEdit implements OnInit {
     ];
 
     public addPattern() : void {
-        if (!this.modelModified.includeExcludePatterns) {
+        if (!this.model.includeExcludePatterns) {
             this.model.includeExcludePatterns = [];
-            this.modelModified.includeExcludePatterns = [];
-            this.includeExcludePatterns = [];
         }
         this.model.includeExcludePatterns.push({type:'START', value:null});
-        this.modelModified.includeExcludePatterns.push({type:'START', value:null});
-        this.includeExcludePatterns.push({type:null, value:null});
-        console.log("Model : " + JSON.stringify(this.modelModified));
+        this.updatePatternControler();
+        console.log("Model : " + JSON.stringify(this.model));
     }
 
     public removePattern(index:number) : void {
-        this.modelModified.includeExcludePatterns.splice(index, 1);
         this.model.includeExcludePatterns.splice(index, 1);
+        this.updatePatternControler();
     }
 
     public chgPattern(i : number, event : any) {
-        this.modelModified.includeExcludePatterns[i].value = event.target.value;
-        console.log("Model Value : " + JSON.stringify(this.modelModified));
+        this.model.includeExcludePatterns[i].value = event.target.value;
+        console.log("Model Value : " + JSON.stringify(this.model));
     }
 
     public chgType(i : number, event : any) {
-      this.modelModified.includeExcludePatterns[i].type = event.value;
-      console.log("Model type : " + JSON.stringify(this.modelModified));
+      this.model.includeExcludePatterns[i].type = event.value;
+      console.log("Model type : " + JSON.stringify(this.model));
     }
 
     public duplicate() {
       this.model.name = "Copy of " + this.model.name;
-      this.modelModified.name = this.model.name;
       this.id = null;
       this.model.id = null;
-      this.modelModified.id = null;
       this.location.replaceState("detail");
-      this.syncFilesInfo.emit(this.modelModified);
+      this.syncFilesInfo.emit(this.model);
     }
 
     public patternTrackBy(index,item) : any {
@@ -165,6 +158,6 @@ export class SynchroDetailEdit implements OnInit {
     }
 
     public changeSchedule(schedule : any) {
-      this.modelModified.schedule = schedule;
+      this.model.schedule = schedule;
     }
 }

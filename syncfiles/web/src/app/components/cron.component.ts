@@ -8,7 +8,7 @@ import {SynchroFilesService} from '../forms/SynchroFilesService';
     selector: 'syncfiles-cron',
     templateUrl : './cron.component.html'
 })
-export class SyncFilesCronComponent extends OnChanges implements OnInit, DoCheck {
+export class SyncFilesCronComponent implements OnInit, DoCheck, OnChanges {
     @Input("sched") _value : any;
     @Output("onChange") changeEvent = new EventEmitter();
 
@@ -51,7 +51,6 @@ export class SyncFilesCronComponent extends OnChanges implements OnInit, DoCheck
   private isFirstLoad: boolean =true;
 
   constructor(private elementRef: ElementRef, private synchroFilesService : SynchroFilesService, private changeDetectorRef : ChangeDetectorRef) {
-    super();
     this.weekNumberInMonth = [];
     this.weekNumberInMonth.push({label:'First', value:1});
     this.weekNumberInMonth.push({label:'Second', value:2});

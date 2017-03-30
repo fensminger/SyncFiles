@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {ActivatedRoute} from "@angular/router";
 import {SynchroRunningService} from "./synchro_running.service";
@@ -18,12 +18,14 @@ import {SynchroRunningGenInfos} from './synchro_running_list';
 })
 export class SynchroRunningTree extends SynchroRunningGenInfos implements OnInit {
 
-    id : string;
-    originFile : string;
+  @Input()
+  id : string;
+  @Input()
+  originFile : string;
 
-    treeNodeList : TreeNode[] = [];
+  treeNodeList : TreeNode[] = [];
 
-    selectedNode : TreeNode;
+  selectedNode : TreeNode;
 
     constructor(private title : Title,
                 private synchroRunningService : SynchroRunningService,
@@ -52,11 +54,16 @@ export class SynchroRunningTree extends SynchroRunningGenInfos implements OnInit
     }
 
   public ngOnInit() {
-    this.route.params.subscribe(params => {
+    if (this.id==null) {
+      this.route.params.subscribe(params => {
         this.originFile = params['originFile'];
         this.id = params['id'];
         this.loadInfos(null, "/");
-    });
+      });
+    } else {
+      this.originFile = "TARGET";
+      this.loadInfos(null, "/");
+    }
   }
 
   public ngOnDestroy() {

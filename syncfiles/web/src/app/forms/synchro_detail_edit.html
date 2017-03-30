@@ -34,7 +34,7 @@
 
                     <div class="ui-g-12 ui-md-8 ui-lg-9 ui-xl-10 sf-line-space">
                         <span class="md-inputfield">
-                            <input pInputText type="text" id="slaveDir" name="slaveDir" [formControl]="synchroForm.get('slaveDir')"  [(ngModel)]="model.slaveDir">
+                            <input pInputText type="text" id="slaveDir" name="slaveDir" [formControl]="synchroForm.get('slaveDir')" [(ngModel)]="model.slaveDir">
                             <label>Remote synchronization directory</label>
                         </span>
                     </div>
@@ -59,17 +59,17 @@
                         <button (click)="addPattern()" pButton type="button" icon="ui-icon-add" ></button>
                     </div>
 
-                    <template ngFor let-pattern [ngForOf]="model.includeExcludePatterns" let-i="index">
+                    <ng-template ngFor let-pattern [ngForOf]="model.includeExcludePatterns" let-i="index">
                       <div class="ui-g-4 ui-lg-3 ui-xl-2">
-                        <p-dropdown id="dropdown" (onChange)="chgType(i, $event)" [options]="types" [ngModel]="pattern.type" [autoWidth]="false" name="type" [ngModelOptions]="{standalone: true}"></p-dropdown>
+                        <p-dropdown id="dropdown" [formControlName]="'type_'+i" (onChange)="chgType(i, $event)" [options]="types" [autoWidth]="false" name="type" ></p-dropdown>
                       </div>
                       <div class="ui-g-7 ui-lg-2 ui-xl-3">
-                        <input type="text" pInputText [value]="pattern.value" (input)="chgPattern(i, $event)" placeholder="Enter your pattern"/>
+                        <input type="text" pInputText [formControlName]="'val_'+i" (keyup)="chgPattern(i, $event)" placeholder="Enter your pattern"/>
                       </div>
-                        <div class="ui-g-1" >
-                            <button (click)="removePattern(i)" pButton type="button" icon="ui-icon-trash" class="red-btn"></button>
-                        </div>
-                    </template>
+                      <div class="ui-g-1" >
+                        <button (click)="removePattern(i)" pButton type="button" icon="ui-icon-trash" class="red-btn"></button>
+                      </div>
+                    </ng-template>
                 </div>
             </div>
 
@@ -79,4 +79,8 @@
     </div>
 
 </form>
-
+<!--Test1-->
+        <!--<span *ngFor="let pattern of model?.includeExcludePatterns">-->
+          <!--{{pattern | json}}-->
+          <!--<synchro-detail-pattern [type]="pattern.type" [pattern]="pattern.value"></synchro-detail-pattern>-->
+        <!--</span>-->

@@ -1,5 +1,6 @@
 <p-tabView (onChange)="onChange($event)" >
     <p-tabPanel header="General" leftIcon="ui-icon-settings" [selected]="tabName=='general'">
+      Oui
        <synchro-detail-edit (syncFilesInfo)="changeSyncFileInfo($event)"></synchro-detail-edit>
     </p-tabPanel>
     <p-tabPanel header="Last Execution" leftIcon="ui-icon-import-export" [selected]="tabName=='execution'">
@@ -14,6 +15,6 @@
         <synchro-detail-run *ngIf="tabName=='execution'" [syncFilesinfo]="syncFilesinfo"></synchro-detail-run>
     </p-tabPanel>
     <p-tabPanel header="Restore" leftIcon="ui-icon-import-export" [selected]="tabName=='restore'">
-      <syncfiles-dir *ngIf="tabName=='restore'" ></syncfiles-dir>
+      <synchro-detail-restore *ngIf="tabName=='restore'"></synchro-detail-restore>
     </p-tabPanel>
 </p-tabView>
