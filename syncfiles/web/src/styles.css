@@ -7,6 +7,15 @@
   display: none;
 }
 
+.localFile {
+  width: 100% !important;
+  margin-top: 10px !important;
+}
+
+.localFile .ui-listbox-filter-container {
+  width: 100% !important;
+}
+
 @media (min-width: 480px) {
     .name-list {
         width: 60%;

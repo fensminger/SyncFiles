@@ -1,4 +1,4 @@
-<p-treeTable styleClass="force-no-padding" [value]="treeNodeList" selectionMode="single" [(selection)]="selectedNode" (onNodeExpand)="nodeExpand($event)">
+<p-treeTable styleClass="force-no-padding" [value]="treeNodeList" selectionMode="single" [(selection)]="selectedNode" (onNodeSelect)="onNodeSelect($event);" (onNodeExpand)="nodeExpand($event)">
     <header>Tree Files</header>
     <p-column styleClass="name-list" header="Name">
         <template let-node="rowData" pTemplate="body">

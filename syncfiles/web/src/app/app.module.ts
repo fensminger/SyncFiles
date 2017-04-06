@@ -203,7 +203,7 @@ import {SynchroDetailRestore} from "./forms/synchro_detail_restore";
       IsAuthorized,
       SynchroList, SynchroDetail, SynchroDetailEdit, SynchroRun, SynchroDetailRun, SynchroRunningInfos,
       SynchroRunningList, SynchroRunningTree, InputDebounceComponent, SyncFilesCronComponent, SyncFilesDirComponent
-    , SynchroDetailRestore, 
+    , SynchroDetailRestore,
 
       // Demo Ultima
         AppComponent,

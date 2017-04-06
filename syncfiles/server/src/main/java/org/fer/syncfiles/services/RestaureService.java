@@ -50,7 +50,7 @@ public class RestaureService {
 
         while (running.get()) {
             try {
-                restaure(remotePath, localPath, clientId, clientSecret, port, user, pwd);
+                restaure(paramSyncFilesId, remotePath, localPath, clientId, clientSecret, port, user, pwd);
             } catch (Exception e) {
                 int randValueHour = rand.nextInt(3) + 1;
                 int randValues = rand.nextInt(1000) + 1;
@@ -68,11 +68,11 @@ public class RestaureService {
         }
     }
 
-    private void loadFileSended() throws IOException {
+    private void loadFileSended(String paramSyncFilesId) throws IOException {
         fileSended = new HashMap<>();
-        File newFile = getSendedNewFile();
+        File newFile = getSendedNewFile(paramSyncFilesId);
         if (newFile.exists()) {
-            File file = getSendedFile();
+            File file = getSendedFile(paramSyncFilesId);
             Files.copy(Paths.get(newFile.getAbsolutePath()), Paths.get(file.getAbsolutePath()), REPLACE_EXISTING);
             try (BufferedReader in = new BufferedReader(new FileReader(file))) {
                 String fileName = in.readLine();
@@ -84,23 +84,23 @@ public class RestaureService {
         }
     }
 
-    private File getSendedFile() {
-        return new File("./FileSended.txt");
+    private File getSendedFile(String paramSyncFilesId) {
+        return new File("./FileSended_"+paramSyncFilesId+".txt");
     }
 
-    private File getSendedNewFile() {
-        return new File("./FileSendedNew.txt");
+    private File getSendedNewFile(String paramSyncFilesId) {
+        return new File("./FileSendedNew_"+paramSyncFilesId+".txt");
     }
 
-    public void restaure(String remoteHubicPath, String localPath,
+    public void restaure(String paramSyncFilesId, String remoteHubicPath, String localPath,
                          String clientId, String clientSecret, int port, String user, String pwd) throws IOException, InterruptedException {
-        loadFileSended();
+        loadFileSended(paramSyncFilesId);
 
         SwiftAccess swiftAccess = hubicService.authenticate(clientId, clientSecret, port, user, pwd);
 
         List<InfoHubicObject> infoHubicObjectList = listAllObjects(hubicService, remoteHubicPath);
 
-        File file = getSendedNewFile();
+        File file = getSendedNewFile(paramSyncFilesId);
         try (BufferedWriter loadedFileWriter = new BufferedWriter(new FileWriter(file, true))) {
             for (InfoHubicObject infoHubicObject : infoHubicObjectList) {
                 log.info("Début écriture du fichier : " + infoHubicObject.getName());

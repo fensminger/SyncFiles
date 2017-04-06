@@ -17,15 +17,33 @@ import {Message, SelectItem} from 'primeng/primeng';
 })
 export class SynchroDetailRestore implements OnInit {
 
-    constructor(private _synchroFilesService : SynchroFilesService,
-                private _fb: FormBuilder, title : Title) {
-        title.setTitle("SyncFiles - Synchronisation restore");
-    }
+  id : String;
 
-    ngOnInit() {
-    }
+  localPath : string = null;
+  targetData : any = null;
 
-    public changeLocalDir(localPath : any) {
-      console.log("Local dir change : " + localPath);
-    }
+  constructor(private _synchroFilesService : SynchroFilesService,
+              private _fb: FormBuilder,
+              private route: ActivatedRoute,
+              title : Title) {
+      title.setTitle("SyncFiles - Synchronisation restore");
+    route.params.subscribe(params => { this.id = params['id']; });
+  }
+
+  ngOnInit() {
+  }
+
+  public changeLocalDir(localPath : any) {
+    console.log("Restore : Local dir change : " + localPath);
+    this.localPath = localPath;
+  }
+
+  public changeTargetDir(event : any) {
+    this.targetData = event;
+    console.log(this.targetData);
+  }
+
+  public startRestore() {
+    console.log("Start restore from " + this.targetData.relativePathString + " to " + this.localPath);
+  }
 }

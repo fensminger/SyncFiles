@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {ActivatedRoute} from "@angular/router";
 import {SynchroRunningService} from "./synchro_running.service";
@@ -22,6 +22,9 @@ export class SynchroRunningTree extends SynchroRunningGenInfos implements OnInit
   id : string;
   @Input()
   originFile : string;
+
+  @Output("onChange") changeEvent = new EventEmitter();
+
 
   treeNodeList : TreeNode[] = [];
 
@@ -91,6 +94,11 @@ export class SynchroRunningTree extends SynchroRunningGenInfos implements OnInit
 
   private nodeExpand(event) {
       this.loadInfos(event.node, "/" + event.node.data.relativePathString + "/");
+  }
+
+  public onNodeSelect(event) {
+      //console.log("SynchroRunningTree Node selected : " + event.node.data.relativePathString + " -> dir : " + event.node.data.directory);
+    this.changeEvent.emit(event.node.data);
   }
 
 }
