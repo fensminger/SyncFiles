@@ -30,7 +30,7 @@
     "jquery": "^3.1.1",
     "moment": "^2.17.1",
     "nanoscroller": "0.8.7",
-    "primeng": "2.0.2",
+    "primeng": "4.0.0-rc.2",
     "quill": "^1.1.8",
     "ts-helpers": "^1.1.1",
     "@types/lodash": "^4.14.30",

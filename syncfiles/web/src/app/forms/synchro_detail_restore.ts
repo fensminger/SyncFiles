@@ -2,9 +2,9 @@ import {Component, OnInit, EventEmitter, Output} from '@angular/core';
 import {FormBuilder, Validators, FormGroup} from '@angular/forms';
 import {Title} from '@angular/platform-browser';
 import {SfcInput} from './sfc_input';
-import {SynchroFilesService} from './SynchroFilesService';
+import {RestoreInfo, SynchroFilesService} from './SynchroFilesService';
 import {Response} from "@angular/http";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from '@angular/common';
 import {Message, SelectItem} from 'primeng/primeng';
 
@@ -25,6 +25,7 @@ export class SynchroDetailRestore implements OnInit {
   constructor(private _synchroFilesService : SynchroFilesService,
               private _fb: FormBuilder,
               private route: ActivatedRoute,
+              private router: Router,
               title : Title) {
       title.setTitle("SyncFiles - Synchronisation restore");
     route.params.subscribe(params => { this.id = params['id']; });
@@ -45,5 +46,18 @@ export class SynchroDetailRestore implements OnInit {
 
   public startRestore() {
     console.log("Start restore from " + this.targetData.relativePathString + " to " + this.localPath);
+    let restoreInfo : RestoreInfo = {
+      idParamSyncFiles : <string> this.id,
+      remoteHubicPath : this.targetData.relativePathString,
+      localPath : this.localPath
+    };
+    this._synchroFilesService.restore(restoreInfo).subscribe(
+      (r:any) => {
+        this.router.navigate(['/detail', this.id, 'execution']);
+      },
+      (e : any) => {
+        console.log("Error startSynchro : " + JSON.stringify(e));
+      }
+    );
   }
 }

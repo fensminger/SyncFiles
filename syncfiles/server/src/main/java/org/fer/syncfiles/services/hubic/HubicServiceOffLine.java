@@ -45,7 +45,7 @@ public class HubicServiceOffLine implements HubicService {
     @Override
     public void consumeObjects(final String container, final String prefix, final Consumer<ObjectInfo> objectConsumer) throws IOException {
         hubicInfoRepository.findByContainer(container).forEach(h -> {
-            if (h.getName().startsWith(prefix)) {
+            if (prefix==null || h.getName().startsWith(prefix)) {
                 objectConsumer.accept(new ObjectInfo(h, prefix));
             }
         });

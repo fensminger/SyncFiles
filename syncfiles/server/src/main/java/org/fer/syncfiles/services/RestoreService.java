@@ -2,13 +2,14 @@ package org.fer.syncfiles.services;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.fer.syncfiles.domain.InfoHubicObject;
+import org.fer.syncfiles.domain.ParamSyncFiles;
 import org.fer.syncfiles.services.hubic.HubicService;
-import org.fer.syncfiles.services.hubic.HubicServiceImpl;
 import org.fer.syncfiles.services.hubic.SwiftAccess;
-import org.fer.syncfiles.services.hubic.SwiftRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -23,20 +24,27 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  * Created by fensm on 15/02/2016.
  */
 @Service
-public class RestaureService {
-    private static final Logger log = LoggerFactory.getLogger(RestaureService.class);
+public class RestoreService {
+    private static final Logger log = LoggerFactory.getLogger(RestoreService.class);
 
     @Autowired
     private StatusSynchroService statusSynchroService;
 
     @Autowired
+    private ParamSyncFilesService paramSyncFilesService;
+
+    @Autowired
     private HubicService hubicService;
+
+    @Autowired
+    @Qualifier("syncfilesSocketHandler")
+    private SyncfilesSocketHandler syncfilesSocketHandler;
 
     int count = 0;
     Map<String, String> fileSended = null;
     private AtomicBoolean running = new AtomicBoolean(false);
 
-    public void restaureWithRetry(String paramSyncFilesId, String remotePath, String localPath, String clientId, String clientSecret, int port, String user, String pwd) {
+    public void restoreWithRetry(ParamSyncFiles paramSyncFiles, String remotePath, String localPath) {
 
         synchronized (running) {
             if (running.get()) {
@@ -50,7 +58,7 @@ public class RestaureService {
 
         while (running.get()) {
             try {
-                restaure(paramSyncFilesId, remotePath, localPath, clientId, clientSecret, port, user, pwd);
+                restore(paramSyncFiles, remotePath, localPath);
             } catch (Exception e) {
                 int randValueHour = rand.nextInt(3) + 1;
                 int randValues = rand.nextInt(1000) + 1;
@@ -92,35 +100,50 @@ public class RestaureService {
         return new File("./FileSendedNew_"+paramSyncFilesId+".txt");
     }
 
-    public void restaure(String paramSyncFilesId, String remoteHubicPath, String localPath,
-                         String clientId, String clientSecret, int port, String user, String pwd) throws IOException, InterruptedException {
-        loadFileSended(paramSyncFilesId);
+    @Async("threadPoolTaskExecutor")
+    public void restore(ParamSyncFiles paramSyncFiles, String remoteHubicPath, String localPath) throws IOException, InterruptedException {
+        String paramSyncFilesId = syncfilesSocketHandler.addNewSynchro("Synchronize", paramSyncFiles, null);
+        try {
+            syncfilesSocketHandler.addMessage(paramSyncFilesId, "Load files allready sended");
+            loadFileSended(paramSyncFiles.getId());
 
-        SwiftAccess swiftAccess = hubicService.authenticate(clientId, clientSecret, port, user, pwd);
+            syncfilesSocketHandler.addMessage(paramSyncFilesId, "Authenticate to cloud");
+            SwiftAccess swiftAccess = paramSyncFilesService.authenticate(paramSyncFiles.getId());
 
-        List<InfoHubicObject> infoHubicObjectList = listAllObjects(hubicService, remoteHubicPath);
+            syncfilesSocketHandler.addMessage(paramSyncFilesId, "Load files to restore");
+            List<InfoHubicObject> infoHubicObjectList = listAllObjects(hubicService, paramSyncFiles.getSlaveDir());
 
-        File file = getSendedNewFile(paramSyncFilesId);
-        try (BufferedWriter loadedFileWriter = new BufferedWriter(new FileWriter(file, true))) {
-            for (InfoHubicObject infoHubicObject : infoHubicObjectList) {
-                log.info("Début écriture du fichier : " + infoHubicObject.getName());
-                try (CloseableHttpResponse res = hubicService.loadObject("default", infoHubicObject.getName(), false)) {
-                    String name = localPath + "/" + infoHubicObject.getName();
-                    File fileName = new File(name);
-                    new File(Paths.get(fileName.getAbsolutePath()).getParent().toString()).mkdirs();
-                    try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(fileName))) {
-                        res.getEntity().writeTo(out);
-                        loadedFileWriter.write(infoHubicObject.getName());
-                        loadedFileWriter.write("\n");
-                        loadedFileWriter.flush();
-                        log.info("Fin écriture du fichier : " + infoHubicObject.getName());
+            File file = getSendedNewFile(paramSyncFiles.getId());
+            syncfilesSocketHandler.addMessage(paramSyncFilesId, "Start to restore files");
+            try (BufferedWriter loadedFileWriter = new BufferedWriter(new FileWriter(file, true))) {
+                for (InfoHubicObject infoHubicObject : infoHubicObjectList) {
+                    String relativeFileName = infoHubicObject.getName().substring(paramSyncFiles.getSlaveDir().length());
+                    log.info("Début écriture du fichier : " + relativeFileName);
+                    try (CloseableHttpResponse res = hubicService.loadObject("default", infoHubicObject.getName(), false)) {
+                        String name = localPath + "/" + relativeFileName;
+                        syncfilesSocketHandler.addMessage(paramSyncFilesId, "Restore file : " + name);
+                        File fileName = new File(name);
+                        new File(Paths.get(fileName.getAbsolutePath()).getParent().toString()).mkdirs();
+                        try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(fileName))) {
+                            res.getEntity().writeTo(out);
+                            loadedFileWriter.write(infoHubicObject.getName());
+                            loadedFileWriter.write("\n");
+                            loadedFileWriter.flush();
+                            log.info("Fin écriture du fichier : " + infoHubicObject.getName());
+                        }
                     }
                 }
+            } catch (Exception e) {
+                syncfilesSocketHandler.addError(paramSyncFilesId, "Unable to restore file", e);
+                log.error("Unable to download object from restore : " + e.getMessage());
+                throw e;
             }
-        } catch (Exception e) {
-            log.error("Unable to download object from restaure : " + e.getMessage());
-            throw e;
+        } finally {
+            syncfilesSocketHandler.addMessage(paramSyncFilesId, "End of restore !!!");
+            syncfilesSocketHandler.removeSynchro(paramSyncFilesId);
         }
+        getSendedFile(paramSyncFilesId).delete();
+        getSendedNewFile(paramSyncFilesId).delete();
         running.set(false);
     }
 

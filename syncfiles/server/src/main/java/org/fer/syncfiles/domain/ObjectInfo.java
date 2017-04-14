@@ -50,7 +50,11 @@ public class ObjectInfo {
         this.hash = hubicInfo.getHashMd5();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         this.lastModified = sdf.format(hubicInfo.getLastModified());
-        this.name = hubicInfo.getName().substring(prefix.length()+1);
+        if (prefix==null) {
+            this.name = hubicInfo.getName();
+        } else {
+            this.name = hubicInfo.getName().substring(prefix.length() + 1);
+        }
         this.directory = hubicInfo.isDirectory();
     }
 

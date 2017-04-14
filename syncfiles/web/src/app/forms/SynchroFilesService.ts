@@ -4,6 +4,12 @@ import { Observable } from 'rxjs/Rx';
 import {URLSearchParams} from '@angular/http';
 import {TreeNode} from 'primeng/primeng';
 
+export interface RestoreInfo {
+    idParamSyncFiles : string;
+    remoteHubicPath : string;
+    localPath : string;
+}
+
 @Injectable()
 export class SynchroFilesService {
     private headers = new Headers();
@@ -63,8 +69,16 @@ export class SynchroFilesService {
             .catch(this.handleError);
     }
 
+  public restore(restoreInfo : RestoreInfo) : Observable<Response> {
+    return this.http.post("/api/sync-files/restore", restoreInfo, {headers:this.headers})
+      .map((res: Response) => {
+        return res.text;
+      })
+      .catch(this.handleError);
+  }
 
-    public viewList(id :string, originFile : string, pageNumber : number, pageSize : number, params : URLSearchParams) : Observable<any> {
+
+  public viewList(id :string, originFile : string, pageNumber : number, pageSize : number, params : URLSearchParams) : Observable<any> {
         return this.http.get("/api/sync-files/view/list/"+id+"/"+originFile+"/"+pageNumber+"/"+pageSize
                 , {
                     headers:this.headers,

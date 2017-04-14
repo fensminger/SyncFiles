@@ -1,8 +1,16 @@
-<h2>Select file or directory to restore</h2>
+<div class="ui-g ui-fluid" style="margin-top: 10px;">
+  <div class="ui-g-9 ui-g-nopad">
+    <h2>Select file or directory to restore</h2>
+  </div>
+  <div class="ui-g-3 ui-g-nopad" style="padding-top: 10px;">
+    <button pButton type="submit" label="Restore all files"
+            (click)="startRestore()" ></button>
+  </div>
+</div>
+
 <synchro-running-tree [id]="id" originFile="TARGET" (onChange)="changeTargetDir($event)"></synchro-running-tree>
 
 <h2>Select local path where to restore file</h2>
-
 <syncfiles-dir (onChange)="changeLocalDir($event)"></syncfiles-dir>
 
 <div class="ui-g ui-fluid" style="margin-top: 10px;">

@@ -2,12 +2,14 @@ package org.fer.syncfiles.rest;
 
 import org.fer.syncfiles.domain.*;
 import org.fer.syncfiles.dto.FileInfoPage;
+import org.fer.syncfiles.dto.RestoreInfo;
 import org.fer.syncfiles.dto.ScheduleCalc;
 import org.fer.syncfiles.dto.SummaryFileInfo;
 import org.fer.syncfiles.repository.SyncfilesSynchroMsgRepository;
 import org.fer.syncfiles.security.AuthoritiesConstants;
 import org.fer.syncfiles.services.InfosFilesService;
 import org.fer.syncfiles.services.ParamSyncFilesService;
+import org.fer.syncfiles.services.RestoreService;
 import org.fer.syncfiles.services.SyncfilesSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,7 +19,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,6 +43,9 @@ public class ParamSyncFilesController {
 
     @Autowired
     private SyncfilesSynchroMsgRepository syncfilesSynchroMsgRepository;
+
+    @Autowired
+    private RestoreService restoreService;
 
     @RequestMapping(value = "/param/save",
         method = RequestMethod.POST,
@@ -84,6 +88,16 @@ public class ParamSyncFilesController {
     public void synchronize(@PathVariable String idParamSyncFiles) throws IOException {
         ParamSyncFiles paramSyncFiles = paramSyncFilesService.findParamSyncFilesById(idParamSyncFiles);
         paramSyncFilesService.synchronize(paramSyncFiles);
+    }
+
+    @RequestMapping(value = "/restore",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Secured(AuthoritiesConstants.ANONYMOUS)
+    public @ResponseBody String restore(@RequestBody RestoreInfo restoreInfo) throws IOException, InterruptedException {
+        ParamSyncFiles paramSyncFiles = paramSyncFilesService.findParamSyncFilesById(restoreInfo.getIdParamSyncFiles());
+        restoreService.restore(paramSyncFiles, restoreInfo.getRemoteHubicPath(), restoreInfo.getLocalPath());
+        return "OK";
     }
 
 

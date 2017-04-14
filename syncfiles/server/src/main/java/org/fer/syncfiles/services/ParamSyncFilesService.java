@@ -7,6 +7,7 @@ import org.fer.syncfiles.repository.FileInfoRepository;
 import org.fer.syncfiles.repository.ObjectInfoRepository;
 import org.fer.syncfiles.repository.ParamSyncFilesRepository;
 import org.fer.syncfiles.services.hubic.HubicService;
+import org.fer.syncfiles.services.hubic.SwiftAccess;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -212,7 +213,7 @@ public class ParamSyncFilesService {
         syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "Finish to analyse local files");
     }
 
-    public void authenticate(String syncfilesInfoId) {
+    public SwiftAccess authenticate(String syncfilesInfoId) {
         if (!isHubicConnected) {
             Properties properties = new Properties();
             try {
@@ -229,20 +230,22 @@ public class ParamSyncFilesService {
                 }
                 nbRetry++;
                 try {
-                    hubicService.authenticate(properties.getProperty("clientId")
-                        , properties.getProperty("clientSecret")
-                        , Integer.parseInt(properties.getProperty("port"))
-                        , properties.getProperty("user")
-                        , properties.getProperty("pwd")
+                    SwiftAccess swiftAccess = hubicService.authenticate(properties.getProperty("clientId")
+                            , properties.getProperty("clientSecret")
+                            , Integer.parseInt(properties.getProperty("port"))
+                            , properties.getProperty("user")
+                            , properties.getProperty("pwd")
                     );
                     isHubicConnected = true;
                     syncfilesSocketHandler.addMessage(syncfilesInfoId, "Connected to Hubic");
+                    return swiftAccess;
                 } catch (IOException | InterruptedException e) {
                     log.warn(e.getMessage(), e);
                     syncfilesSocketHandler.addError(syncfilesInfoId, "Unable to connect to Hubic", e);
                 }
             }
         }
+        return null;
     }
 
     public void loadHubic(ParamSyncFiles paramSyncFiles) throws IOException {
