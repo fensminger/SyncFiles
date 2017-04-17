@@ -3,19 +3,22 @@
     <h2>Select file or directory to restore</h2>
   </div>
   <div class="ui-g-3 ui-g-nopad" style="padding-top: 10px;">
-    <button pButton type="submit" label="Restore all files"
-            (click)="startRestore()" ></button>
+    <button *ngIf="!allFileRestore" pButton type="submit" label="Restore all files"
+            (click)="restoreAllFiles()" ></button>
+    <button *ngIf="allFileRestore" pButton type="submit" label="Restore file or folder"
+            (click)="restoreFileOrDirectory()" ></button>
   </div>
 </div>
 
-<synchro-running-tree [id]="id" originFile="TARGET" (onChange)="changeTargetDir($event)"></synchro-running-tree>
+<synchro-running-tree *ngIf="!allFileRestore" [id]="id" originFile="TARGET" (onChange)="changeTargetDir($event)"></synchro-running-tree>
+<h3 *ngIf="allFileRestore">Restore all files.</h3>
 
 <h2>Select local path where to restore file</h2>
 <syncfiles-dir (onChange)="changeLocalDir($event)"></syncfiles-dir>
 
 <div class="ui-g ui-fluid" style="margin-top: 10px;">
   <div class="ui-g-12 ui-g-nopad">
-    <button pButton type="submit" [disabled]="localPath==''||targetData==null" label="Restore file ou directory"
+    <button pButton type="submit" [disabled]="localPath==''||(targetData==null&&!allFileRestore)" label="Restore file or folder"
         (click)="startRestore()" ></button>
   </div>
 </div>

@@ -21,6 +21,7 @@ export class SynchroDetailRestore implements OnInit {
 
   localPath : string = null;
   targetData : any = null;
+  allFileRestore : boolean = false;
 
   constructor(private _synchroFilesService : SynchroFilesService,
               private _fb: FormBuilder,
@@ -45,10 +46,11 @@ export class SynchroDetailRestore implements OnInit {
   }
 
   public startRestore() {
-    console.log("Start restore from " + this.targetData.relativePathString + " to " + this.localPath);
+    let remoteHubicPath = (this.allFileRestore) ? null : this.targetData.relativePathString;
+    console.log("Start restore from " + remoteHubicPath + " to " + this.localPath);
     let restoreInfo : RestoreInfo = {
       idParamSyncFiles : <string> this.id,
-      remoteHubicPath : this.targetData.relativePathString,
+      remoteHubicPath : remoteHubicPath,
       localPath : this.localPath
     };
     this._synchroFilesService.restore(restoreInfo).subscribe(
@@ -60,4 +62,13 @@ export class SynchroDetailRestore implements OnInit {
       }
     );
   }
+
+  public restoreAllFiles() {
+    this.allFileRestore = true;
+  }
+
+  public restoreFileOrDirectory() {
+    this.allFileRestore = false;
+  }
+
 }

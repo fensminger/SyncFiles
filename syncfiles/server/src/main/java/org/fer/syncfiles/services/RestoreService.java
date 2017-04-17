@@ -102,7 +102,7 @@ public class RestoreService {
 
     @Async("threadPoolTaskExecutor")
     public void restore(ParamSyncFiles paramSyncFiles, String remoteHubicPath, String localPath) throws IOException, InterruptedException {
-        String paramSyncFilesId = syncfilesSocketHandler.addNewSynchro("Synchronize", paramSyncFiles, null);
+        String paramSyncFilesId = syncfilesSocketHandler.addNewSynchro("Restore", paramSyncFiles, null);
         try {
             syncfilesSocketHandler.addMessage(paramSyncFilesId, "Load files allready sended");
             loadFileSended(paramSyncFiles.getId());
@@ -111,7 +111,8 @@ public class RestoreService {
             SwiftAccess swiftAccess = paramSyncFilesService.authenticate(paramSyncFiles.getId());
 
             syncfilesSocketHandler.addMessage(paramSyncFilesId, "Load files to restore");
-            List<InfoHubicObject> infoHubicObjectList = listAllObjects(hubicService, paramSyncFiles.getSlaveDir());
+            String remotePath = (remoteHubicPath==null) ? "" : "/" + remoteHubicPath;
+            List<InfoHubicObject> infoHubicObjectList = listAllObjects(hubicService, paramSyncFiles.getSlaveDir() + remotePath);
 
             File file = getSendedNewFile(paramSyncFiles.getId());
             syncfilesSocketHandler.addMessage(paramSyncFilesId, "Start to restore files");

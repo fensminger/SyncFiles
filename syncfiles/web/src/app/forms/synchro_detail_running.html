@@ -16,7 +16,7 @@
     </p-panel>
     <br *ngIf="syncFilesinfo.msgError!=null"/>
     <!-- running -->
-    <p-dataTable [value]="syncFilesinfo.resumeNumber" [responsive]="true">
+    <p-dataTable *ngIf="syncFilesinfo.type!='Restore'" [value]="syncFilesinfo.resumeNumber" [responsive]="true">
         <header>Analyse files</header>
         <p-column field="title" header=""></p-column>
         <p-column field="numberOfFiles" header="Total of files">
