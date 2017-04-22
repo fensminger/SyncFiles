@@ -44,11 +44,12 @@ public class HubicServiceOffLine implements HubicService {
 
     @Override
     public void consumeObjects(final String container, final String prefix, final Consumer<ObjectInfo> objectConsumer) throws IOException {
-        hubicInfoRepository.findByContainer(container).forEach(h -> {
-            if (prefix==null || h.getName().startsWith(prefix)) {
-                objectConsumer.accept(new ObjectInfo(h, prefix));
-            }
-        });
+        final String realPrefix = prefix + "/";
+        hubicInfoRepository.findByContainer(container)
+                .filter(h -> prefix == null || h.getName().startsWith(realPrefix))
+                .forEach(h -> {
+                    objectConsumer.accept(new ObjectInfo(h, prefix));
+                });
     }
 
     @Override

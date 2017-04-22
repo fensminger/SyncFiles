@@ -1,5 +1,6 @@
 package org.fer.syncfiles.services;
 
+import com.mongodb.DBObject;
 import org.fer.syncfiles.config.SchedulerConfig;
 import org.fer.syncfiles.domain.*;
 import org.fer.syncfiles.dto.ScheduleCalc;
@@ -157,12 +158,12 @@ public class ParamSyncFilesService {
     }
 
     public void listDirectory(String paramSyncFilesId, OriginFile originFile) {
-        // db.fileInfo.distinct("parentPath", { "originFile": "TARGET" })
+        // db.fileInfo.distinct("parentPath", {originFile : "SOURCE", paramSyncFilesId : "58fa76cae339ca057ce020ca"});
 
         Criteria criteria = new Criteria();
-        criteria.where("originFile").is(originFile);
+        DBObject dbObject = criteria.where("originFile").is(originFile).where("paramSyncFilesId").is(paramSyncFilesId).getCriteriaObject();
         Query query = new Query(criteria);
-        List<String> directoryList = mongoTemplate.getCollection("fileInfo").distinct("parentPath", query.getQueryObject());
+        List<String> directoryList = mongoTemplate.getCollection("fileInfo").distinct("parentPath", dbObject);
         for(String directory : directoryList) {
             if (!directory.equals("/")) {
                 String relativePathString = directory.substring(1, directory.length()-1);

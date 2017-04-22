@@ -49,7 +49,7 @@ public class HubicServiceImpl implements HubicService {
     @Override
     public void consumeObjects(String container, String prefix, Consumer<ObjectInfo> objectConsumer) throws IOException {
         refreshTokenIfExpired();
-        ObjectConsumer objectConsumerObj = new ObjectConsumer(objectConsumer, prefix);
+        ObjectConsumer objectConsumerObj = new ObjectConsumer(objectConsumer, prefix + "/");
         String marker = null;
         String prevMarker = null;
         StatusLine statusLine = null;
