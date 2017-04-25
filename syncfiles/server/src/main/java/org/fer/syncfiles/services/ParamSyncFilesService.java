@@ -345,28 +345,30 @@ public class ParamSyncFilesService {
         // Search local files to copy to remote
 
         for(FileInfo localFileInfo : fileInfoRepository.findByParamSyncFilesIdAndOriginFileAndIsDirectory(paramSyncFiles.getId(), OriginFile.SOURCE, false)) {
-            Optional<FileInfo> remoteFileInfoOptional = fileInfoRepository.findByParamSyncFilesIdAndOriginFileAndRelativePathString(paramSyncFiles.getId(), OriginFile.TARGET, localFileInfo.getRelativePathString());
-            if (remoteFileInfoOptional.isPresent()) {
-                FileInfo remoteFileInfo = remoteFileInfoOptional.get();
-                if (localFileInfo.getHash().equals(remoteFileInfo.getHash())) {
-                    FileInfo nothingTargetFileInfo = new FileInfo(paramSyncFiles.getId(), OriginFile.SYNCHRO, FileInfoAction.NOTHING, localFileInfo);
-                    nothingTargetFileInfo.setSyncState(SyncState.FINISHED);
-                    fileInfoRepository.save(nothingTargetFileInfo);
-                    // syncfilesSocketHandler.getSyncfilesSynchroMsg(syncfilesInfoId).getSynchroResume().addNothingFile();
-                    syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "The file is not changed : " + nothingTargetFileInfo.getRelativePathString());
+            if (!localFileInfo.getFileInfoAction().equals(FileInfoAction.DELETE)) {
+                Optional<FileInfo> remoteFileInfoOptional = fileInfoRepository.findByParamSyncFilesIdAndOriginFileAndRelativePathString(paramSyncFiles.getId(), OriginFile.TARGET, localFileInfo.getRelativePathString());
+                if (remoteFileInfoOptional.isPresent()) {
+                    FileInfo remoteFileInfo = remoteFileInfoOptional.get();
+                    if (localFileInfo.getHash().equals(remoteFileInfo.getHash())) {
+                        FileInfo nothingTargetFileInfo = new FileInfo(paramSyncFiles.getId(), OriginFile.SYNCHRO, FileInfoAction.NOTHING, localFileInfo);
+                        nothingTargetFileInfo.setSyncState(SyncState.FINISHED);
+                        fileInfoRepository.save(nothingTargetFileInfo);
+                        // syncfilesSocketHandler.getSyncfilesSynchroMsg(syncfilesInfoId).getSynchroResume().addNothingFile();
+                        syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "The file is not changed : " + nothingTargetFileInfo.getRelativePathString());
+                    } else {
+                        FileInfo updateTargetFileInfo = new FileInfo(paramSyncFiles.getId(), OriginFile.SYNCHRO, FileInfoAction.UPDATE, localFileInfo);
+                        updateTargetFileInfo.setSyncState(SyncState.WAITING_FOR_UPDATE);
+                        fileInfoRepository.save(updateTargetFileInfo);
+                        syncfilesSocketHandler.getSyncfilesSynchroMsg(paramSyncFiles.getId()).getSynchroResume().addUpdatedFile();
+                        syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "The file is to update : " + updateTargetFileInfo.getRelativePathString());
+                    }
                 } else {
-                    FileInfo updateTargetFileInfo = new FileInfo(paramSyncFiles.getId(), OriginFile.SYNCHRO, FileInfoAction.UPDATE, localFileInfo);
-                    updateTargetFileInfo.setSyncState(SyncState.WAITING_FOR_UPDATE);
-                    fileInfoRepository.save(updateTargetFileInfo);
-                    syncfilesSocketHandler.getSyncfilesSynchroMsg(paramSyncFiles.getId()).getSynchroResume().addUpdatedFile();
-                    syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "The file is to update : " + updateTargetFileInfo.getRelativePathString());
+                    FileInfo newTargetFileInfo = new FileInfo(paramSyncFiles.getId(), OriginFile.SYNCHRO, FileInfoAction.CREATE, localFileInfo);
+                    newTargetFileInfo.setSyncState(SyncState.WAITING_FOR_UPDATE);
+                    fileInfoRepository.save(newTargetFileInfo);
+                    syncfilesSocketHandler.getSyncfilesSynchroMsg(paramSyncFiles.getId()).getSynchroResume().addNewFile();
+                    syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "New file to copy to remote : " + newTargetFileInfo.getRelativePathString());
                 }
-            } else {
-                FileInfo newTargetFileInfo = new FileInfo(paramSyncFiles.getId(), OriginFile.SYNCHRO, FileInfoAction.CREATE, localFileInfo);
-                newTargetFileInfo.setSyncState(SyncState.WAITING_FOR_UPDATE);
-                fileInfoRepository.save(newTargetFileInfo);
-                syncfilesSocketHandler.getSyncfilesSynchroMsg(paramSyncFiles.getId()).getSynchroResume().addNewFile();
-                syncfilesSocketHandler.addMessage(paramSyncFiles.getId(), "New file to copy to remote : " + newTargetFileInfo.getRelativePathString());
             }
         }
 
