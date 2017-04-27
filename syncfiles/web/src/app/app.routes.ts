@@ -31,13 +31,14 @@ export const routes: Routes = [
     { path: 'detail', component: SynchroDetail },
     { path: 'detail/:id', component: SynchroDetail },
     { path: 'detail/:id/:tabName', component: SynchroDetail },
-  
-  
+
+
     {path: 'authenticate', component: Login},
     {path: 'users', component: Users, },
     {path: 'user/:id', component: User,},
 
-    {path: '', component: DashboardDemo},
+  {path: '', component: SynchroList},
+  // {path: '', component: DashboardDemo},
     {path: 'sample', component: SampleDemo},
     {path: 'forms', component: FormsDemo},
     {path: 'data', component: DataDemo},
@@ -51,7 +52,7 @@ export const routes: Routes = [
     {path: 'file', component: FileDemo},
     {path: 'utils', component: UtilsDemo},
     {path: 'documentation', component: Documentation}
-    
+
 ];
 
 export const AppRoutes: ModuleWithProviders = RouterModule.forRoot(routes);

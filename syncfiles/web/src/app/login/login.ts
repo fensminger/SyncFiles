@@ -4,7 +4,6 @@ import {LoginService} from './login.service';
 import {Account} from '../account/account';
 import {AccountEventsService} from '../account/account.events.service';
 import {Dropdown, SelectItem, InputText,Button, Message, Messages} from 'primeng/primeng';
-import {FsqLabelComponent} from '../fsq-label';
 import {BreadCrumbService} from '../shared';
 
 @Component({

@@ -28,8 +28,6 @@ import {UtilsDemo} from './demo/view/utilsdemo';
 import {Documentation} from './demo/view/documentation';
 
 import {IsAuthorized} from './utils/is-authorized.directive';
-import {FsqLabelComponent} from './fsq-label';
-import {HomeComponent} from './home/home.component';
 import {Login} from './login/login';
 import {Users} from './users/users';
 import {User} from './users/user';
@@ -197,8 +195,7 @@ import {SynchroDetailRestore} from "./forms/synchro_detail_restore";
       DataTableModule, SharedModule, DialogModule, MessagesModule, SelectButtonModule, DropdownModule, ButtonModule, TreeTableModule, TabViewModule,
       InputTextModule, ToolbarModule, TooltipModule, CheckboxModule, FileUploadModule, ProgressBarModule, ConfirmDialogModule,
       ListboxModule, InputTextareaModule, PaginatorModule,ReactiveFormsModule],        // module dependencies
-  declarations: [ HomeComponent, Login, Users, User,
-      FsqLabelComponent,
+  declarations: [ Login, Users, User,
       SynchroSimpleMsg,
       IsAuthorized,
       SynchroList, SynchroDetail, SynchroDetailEdit, SynchroRun, SynchroDetailRun, SynchroRunningInfos,

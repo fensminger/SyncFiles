@@ -1,7 +1,7 @@
 <form class="form" #loginForm="ngForm" (submit)="authenticate($event, username.value, password.value)">
     <div class="ui-g">
         <div class="ui-g-1">
-        <fsq-label>&nbsp;</fsq-label>
+        &nbsp;
         </div>
         <div class="ui-g-11">
             <h1>Authentification avec le login et le mot de passe trifacta.</h1>
@@ -9,7 +9,7 @@
     </div>
     <div class="ui-g">
         <div class="ui-g-1">
-        <fsq-label>&nbsp;</fsq-label>
+          &nbsp;
         </div>
         <div class="ui-g-10">
             <p-messages [value]="msgs" [closable]="true"></p-messages>
@@ -17,7 +17,7 @@
     </div>
     <div class="ui-g">
         <div class="ui-g-2">
-        <fsq-label>Nom de l'utilisateur</fsq-label>
+        Nom de l'utilisateur
         </div>
         <div class="ui-g-4">
             <input pInputText type="text" required #username
@@ -26,7 +26,7 @@
     </div>
     <div class="ui-g">
         <div class="ui-g-2">
-        <fsq-label>Mot de passe</fsq-label>
+        Mot de passe
         </div>
         <div class="ui-g-4">
             <input pInputText type="password" required #password
@@ -35,7 +35,7 @@
     </div>
     <div class="ui-g">
         <div class="ui-g-2">
-        <fsq-label>&nbsp;</fsq-label>
+        &nbsp;
         </div>
         <div class="ui-g-4">
             <button pButton type="submit" [disabled]="!loginForm.valid" icon="fa-sign-in" iconPos="left" label="login"></button>
