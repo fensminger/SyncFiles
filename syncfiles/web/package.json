@@ -38,7 +38,10 @@
     "@types/crypto-js": "^3.1.32",
     "crypto-js": "3.1.6",
     "font-awesome": "^4.6.3",
-    "angular2-websocket": "^0.9.0"
+    "angular2-websocket": "^0.9.0",
+    "angular2-cookie": "1.2.6",
+    "ng-jhipster": "0.1.12",
+    "ng2-webstorage": "1.6.2"
   },
   "devDependencies": {
     "@angular/cli": "1.0.0",

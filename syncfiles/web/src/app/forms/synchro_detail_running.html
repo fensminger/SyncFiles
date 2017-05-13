@@ -8,6 +8,8 @@
     <div>Start execution job at {{syncFilesinfo.startDate | date:"dd/MM/yyyy HH:mm:ss"}}</div>
     <div>Last updated execution job at {{syncFilesinfo.lastStateDate | date:"dd/MM/yyyy HH:mm:ss"}}</div>
     <br/>
+  <p-progressBar *ngIf="syncFilesinfo.running" [value]="syncFilesinfo.percentWork" [showValue]="true" [unit]="'%'"></p-progressBar>
+  <br clear="true" *ngIf="syncFilesinfo.running"/>
 
     <p-panel *ngIf="syncFilesinfo.msgError!=null" [header]="'Error : '+syncFilesinfo.msgError" [toggleable]="true" [collapsed]="true" styleClass="header-error">
         <code>

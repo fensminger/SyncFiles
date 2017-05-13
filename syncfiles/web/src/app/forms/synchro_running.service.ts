@@ -23,6 +23,30 @@ export class SynchroRunningService implements OnDestroy {
     this.ws.getDataStream().subscribe(
       res => {
         let msg: any = JSON.parse(res.data);
+
+//        console.log("##### Socket " + res.data);
+        for(let syncFilesInfo of msg) {
+          if (syncFilesInfo.running) {
+            if (syncFilesInfo.synchroReal.numberOfFiles > 0) {
+              if (syncFilesInfo.percentWork < 20) {
+                syncFilesInfo.percentWork = 20;
+              } else {
+                let percent = syncFilesInfo.synchroReal.numberOfFiles / syncFilesInfo.synchroResume.numberOfFiles * 100;
+                syncFilesInfo.percentWork = 20 + percent*80/100;
+                // console.log("Pourcentage : " + syncFilesInfo.percentWork);
+              }
+            } else if (syncFilesInfo.synchroResume.numberOfFiles > 0) {
+              syncFilesInfo.percentWork = 15;
+            } else if (syncFilesInfo.remoteResume.numberOfFiles > 0) {
+              syncFilesInfo.percentWork = 10;
+            } else if (syncFilesInfo.localResume.numberOfFiles > 0) {
+              syncFilesInfo.percentWork = 5;
+            }
+          } else {
+            syncFilesInfo.percentWork = 100;
+          }
+        }
+
         this.syncFilesinfo = msg;
         this.syncFilesinfoSubject.next(msg);
       },
