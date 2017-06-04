@@ -5,10 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 @EnableWebMvc
@@ -26,11 +23,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/app/**").addResourceLocations("/app/");
-		registry.addResourceHandler("/vendor/**").addResourceLocations("/vendor/");
+		registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");
 		registry.addResourceHandler("/*.html").addResourceLocations("/");
 		registry.addResourceHandler("/*.ico").addResourceLocations("/");
 		registry.addResourceHandler("/*.css").addResourceLocations("/");
 		registry.addResourceHandler("/*.js").addResourceLocations("/");
+	}
+
+	@Override
+	public void addViewControllers(ViewControllerRegistry registry) {
+		registry.addViewController("/detail**").setViewName("forward:/index.html");
+		registry.addViewController("/running").setViewName("forward:/index.html");
 	}
 
 	@Bean

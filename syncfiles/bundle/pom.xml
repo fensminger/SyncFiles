@@ -22,7 +22,7 @@
 	</properties>
 	
     <build>
-        <finalName>paramtrifacta</finalName>
+        <finalName>ROOT</finalName>
         <plugins>
 
             <!-- Par défaut le plugin war va générer un war en fusionnant les dépendances (principe des overlays,

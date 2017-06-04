@@ -6,7 +6,7 @@
         <maven>3.0</maven>
     </prerequisites>
 
-    <name>Trifacta admin</name>
+    <name>SyncFiles</name>
 
     <groupId>org.fer.syncfiles</groupId>
     <artifactId>sync-main</artifactId>
