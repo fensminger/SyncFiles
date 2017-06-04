@@ -140,7 +140,7 @@ public class ParamSyncFilesService {
 
     @Async("threadPoolTaskExecutor")
     public void synchronize(ParamSyncFiles paramSyncFiles) {
-        String paramSyncFilesId = syncfilesSocketHandler.addNewSynchro("Synchronize", paramSyncFiles, null);
+        String paramSyncFilesId = syncfilesSocketHandler.addNewSynchro("Synchronize", paramSyncFiles, null, false);
         try {
             authenticate(paramSyncFilesId);
             updateFilesTree(paramSyncFiles);
@@ -149,6 +149,36 @@ public class ParamSyncFilesService {
             synchronizeToRemote(paramSyncFiles);
             loadHubicAfterSynchro(paramSyncFiles);
 //            throw new RuntimeException("Ma belle erreur....");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            syncfilesSocketHandler.addError(paramSyncFilesId, "Unable to Synchronize", e);
+        } finally {
+            syncfilesSocketHandler.removeSynchro(paramSyncFilesId);
+        }
+    }
+
+    @Async("threadPoolTaskExecutor")
+    public void simulation(ParamSyncFiles paramSyncFiles) {
+        String paramSyncFilesId = syncfilesSocketHandler.addNewSynchro("Simulation", paramSyncFiles, null, true);
+        try {
+            authenticate(paramSyncFilesId);
+            updateFilesTree(paramSyncFiles);
+            loadHubic(paramSyncFiles);
+            simulate(paramSyncFiles);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            syncfilesSocketHandler.addError(paramSyncFilesId, "Unable to Synchronize", e);
+        } finally {
+            syncfilesSocketHandler.removeSynchro(paramSyncFilesId);
+        }
+    }
+
+    @Async("threadPoolTaskExecutor")
+    public void synchronizeAfterSimulation(ParamSyncFiles paramSyncFiles) {
+        String paramSyncFilesId = syncfilesSocketHandler.addNewSynchro("Synchronize", paramSyncFiles, null, false);
+        try {
+            synchronizeToRemote(paramSyncFiles);
+            loadHubicAfterSynchro(paramSyncFiles);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             syncfilesSocketHandler.addError(paramSyncFilesId, "Unable to Synchronize", e);

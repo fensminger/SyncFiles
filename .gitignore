@@ -47,3 +47,4 @@ syncfiles/web/src/app/fileupload/fileupload.ts
 syncfiles/server/src/main/resources/hubic.properties
 syncfiles/web2/
 syncfiles/web/src/app/http-hive-import.service.ts
+syncfiles/web/package-lock.json

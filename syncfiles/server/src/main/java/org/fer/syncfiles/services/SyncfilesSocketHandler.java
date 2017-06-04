@@ -76,7 +76,7 @@ public class SyncfilesSocketHandler extends TextWebSocketHandler {
         });
     }
 
-    public String addNewSynchro(String type, ParamSyncFiles paramSyncFiles, String message) {
+    public String addNewSynchro(String type, ParamSyncFiles paramSyncFiles, String message, boolean simulation) {
         SyncfilesSynchroMsg syncfilesSynchroMsg = null;
         synchronized (syncfilesSynchroMsgMap) {
             SyncfilesSynchroMsg syncfilesSynchroMsgRunning = syncfilesSynchroMsgMap.get(paramSyncFiles.getId());
@@ -88,6 +88,7 @@ public class SyncfilesSocketHandler extends TextWebSocketHandler {
             syncfilesSynchroMsg.setLastStateDate(date);
             syncfilesSynchroMsg.setStartDate(date);
             syncfilesSynchroMsg.setRunning(true);
+            syncfilesSynchroMsg.setSimulation(simulation);
             syncfilesSynchroMsg.setChanged(false);
             if (message!=null) {
                 syncfilesSynchroMsg.addMessage(message);

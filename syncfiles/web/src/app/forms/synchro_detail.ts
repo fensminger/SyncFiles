@@ -89,6 +89,32 @@ export class SynchroDetail implements OnInit {
     );
   }
 
+  startSimulation() :void {
+    if (this.syncFilesinfo!=null) {
+      this.syncFilesinfo.running = true;
+    }
+    this.synchroFilesService.simulation(this.id).subscribe(
+      (r:any) => {
+      },
+      (e : any) => {
+        console.log("Error startSimulation : " + JSON.stringify(e));
+      }
+    );
+  }
+
+  synchronizeAfterSimulation() :void {
+    if (this.syncFilesinfo!=null) {
+      this.syncFilesinfo.running = true;
+    }
+    this.synchroFilesService.synchronizeAfterSimulation(this.id).subscribe(
+      (r:any) => {
+      },
+      (e : any) => {
+        console.log("Error synchronizeAfterSimulation : " + JSON.stringify(e));
+      }
+    );
+  }
+
   changeSyncFileInfo(s : any) {
       console.log("param changed.");
       if (this.id != s.id) {

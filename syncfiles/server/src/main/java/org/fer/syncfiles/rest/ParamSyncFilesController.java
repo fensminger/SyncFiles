@@ -90,6 +90,24 @@ public class ParamSyncFilesController {
         paramSyncFilesService.synchronize(paramSyncFiles);
     }
 
+    @RequestMapping(value = "/simulation/{idParamSyncFiles}",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Secured(AuthoritiesConstants.ANONYMOUS)
+    public void simulation(@PathVariable String idParamSyncFiles) throws IOException {
+        ParamSyncFiles paramSyncFiles = paramSyncFilesService.findParamSyncFilesById(idParamSyncFiles);
+        paramSyncFilesService.simulation(paramSyncFiles);
+    }
+
+    @RequestMapping(value = "/synchronizeAfterSimulation/{idParamSyncFiles}",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Secured(AuthoritiesConstants.ANONYMOUS)
+    public void synchronizeAfterSimulation(@PathVariable String idParamSyncFiles) throws IOException {
+        ParamSyncFiles paramSyncFiles = paramSyncFilesService.findParamSyncFilesById(idParamSyncFiles);
+        paramSyncFilesService.synchronizeAfterSimulation(paramSyncFiles);
+    }
+
     @RequestMapping(value = "/restore",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)

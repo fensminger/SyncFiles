@@ -61,13 +61,29 @@ export class SynchroFilesService {
         return this.http.delete("/api/sync-files/param/remove/"+id);
     }
 
-    public synchronize(idParamSyncFiles : string) : Observable<Response> {
-        return this.http.post("/api/sync-files/synchronize/"+idParamSyncFiles, "", {headers:this.headers})
-            .map((res: Response) => {
-                return res.text;
-            })
-            .catch(this.handleError);
-    }
+  public synchronize(idParamSyncFiles : string) : Observable<Response> {
+    return this.http.post("/api/sync-files/synchronize/"+idParamSyncFiles, "", {headers:this.headers})
+      .map((res: Response) => {
+        return res.text;
+      })
+      .catch(this.handleError);
+  }
+
+  public simulation(idParamSyncFiles : string) : Observable<Response> {
+    return this.http.post("/api/sync-files/simulation/"+idParamSyncFiles, "", {headers:this.headers})
+      .map((res: Response) => {
+        return res.text;
+      })
+      .catch(this.handleError);
+  }
+
+  public synchronizeAfterSimulation(idParamSyncFiles : string) : Observable<Response> {
+    return this.http.post("/api/sync-files/synchronizeAfterSimulation/"+idParamSyncFiles, "", {headers:this.headers})
+      .map((res: Response) => {
+        return res.text;
+      })
+      .catch(this.handleError);
+  }
 
   public restore(restoreInfo : RestoreInfo) : Observable<Response> {
     return this.http.post("/api/sync-files/restore", restoreInfo, {headers:this.headers})

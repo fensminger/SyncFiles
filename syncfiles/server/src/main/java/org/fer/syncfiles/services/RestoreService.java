@@ -102,7 +102,7 @@ public class RestoreService {
 
     @Async("threadPoolTaskExecutor")
     public void restore(ParamSyncFiles paramSyncFiles, String remoteHubicPath, String localPath) throws IOException, InterruptedException {
-        String paramSyncFilesId = syncfilesSocketHandler.addNewSynchro("Restore", paramSyncFiles, null);
+        String paramSyncFilesId = syncfilesSocketHandler.addNewSynchro("Restore", paramSyncFiles, null, false);
         try {
             syncfilesSocketHandler.addMessage(paramSyncFilesId, "Load files allready sended");
             loadFileSended(paramSyncFiles.getId());

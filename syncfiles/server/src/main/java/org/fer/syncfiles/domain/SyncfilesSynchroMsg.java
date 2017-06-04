@@ -29,6 +29,7 @@ public class SyncfilesSynchroMsg {
     private MsgLinkedBlockingQueue<SyncfilesDetailSynchroMsg> lastMsgList;
 
     private boolean running;
+    private boolean simulation;
     private Date startDate;
     private Date lastStateDate;
     private String msgError;
@@ -200,4 +201,11 @@ public class SyncfilesSynchroMsg {
         this.paramSyncFilesId = paramSyncFilesId;
     }
 
+    public boolean isSimulation() {
+        return simulation;
+    }
+
+    public void setSimulation(boolean simulation) {
+        this.simulation = simulation;
+    }
 }
