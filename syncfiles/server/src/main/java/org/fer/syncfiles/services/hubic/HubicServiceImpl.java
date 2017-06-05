@@ -55,7 +55,9 @@ public class HubicServiceImpl implements HubicService {
         StatusLine statusLine = null;
         int nbLecture = 0;
         while ((statusLine = swiftRequest.listObjects(container, 10000, marker, prefix, objectConsumerObj)).getStatusCode() == 200) {
-            marker = objectConsumerObj.getMarker().getName();
+            if (objectConsumerObj.getMarker()!=null) {
+                marker = objectConsumerObj.getMarker().getName();
+            }
             log.info("Lot number (10000) : " + (++nbLecture) + ", marker : " + marker);
             if (prevMarker == marker) {
                 break;
