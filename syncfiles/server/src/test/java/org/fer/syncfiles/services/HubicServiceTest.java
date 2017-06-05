@@ -60,8 +60,8 @@ public class HubicServiceTest extends HubicTestPassword {
 //            }
 //        }
 
-        String fileToUpload = "testFileUpload.txt";
-        File file = new File(this.getClass().getResource("/hubic/"+fileToUpload).getFile());
+        String fileToUpload = "application.yml";
+        File file = new File(this.getClass().getResource("/"+fileToUpload).getFile());
         hubicService.uploadObject("default", fileToUpload, getMd5(file), file);
 
         hubicService.refreshTokenIfExpired();
