@@ -290,7 +290,13 @@ public class ParamSyncFilesService {
                 , FileInfo.class
             );
 
-            hubicService.consumeObjects("default", paramSyncFiles.getSlaveDir(), objectInfo -> {
+            String slaveDir = paramSyncFiles.getSlaveDir();
+            if (slaveDir==null) {
+                slaveDir = "";
+            } else if (slaveDir.startsWith("/")) {
+                slaveDir = slaveDir.substring(1);
+            }
+            hubicService.consumeObjects("default", slaveDir, objectInfo -> {
                 FileInfo fileInfo = fileInfoRepository.findByParamSyncFilesIdAndOriginFileAndRelativePathString(
                     paramSyncFiles.getId(), OriginFile.TARGET, objectInfo.getName()).orElseGet(() -> new FileInfo());
 
