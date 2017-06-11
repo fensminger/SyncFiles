@@ -49,9 +49,6 @@ public class HubicServiceImpl implements HubicService {
     @Override
     public void consumeObjects(String container, String prefix, Consumer<ObjectInfo> objectConsumer) throws IOException {
         refreshTokenIfExpired();
-        if (prefix==null) {
-            prefix = "";
-        }
         ObjectConsumer objectConsumerObj = new ObjectConsumer(objectConsumer, prefix + "/");
         String marker = null;
         String prevMarker = null;
