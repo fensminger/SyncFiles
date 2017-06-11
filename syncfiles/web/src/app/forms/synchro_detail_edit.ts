@@ -102,6 +102,9 @@ export class SynchroDetailEdit implements OnInit {
         this.model.name = this.synchroForm.get('name').value;
         this.model.masterDir = this.synchroForm.get('masterDir').value;
         this.model.slaveDir = this.synchroForm.get('slaveDir').value;
+        if (this.model.slaveDir.startsWith("/")) {
+          this.model.slaveDir = this.model.slaveDir.substring(1);
+        }
         this._synchroFilesService.saveDetail(this.model).subscribe(
             (r : any) => {
                 this.isHttpRequest = false;
