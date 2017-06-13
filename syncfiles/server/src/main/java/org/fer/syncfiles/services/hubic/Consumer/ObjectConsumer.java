@@ -66,7 +66,7 @@ public class ObjectConsumer implements Consumer<InputStream> {
                                                 , isDirectory
                                                 , hashValue
                                                 , lastModifiedValue
-                                                , nameValue.substring(prefix.length()+1));
+                                                , nameValue.substring(prefix.length()));
                                         service.accept(objectInfoAccepted);
                                     }
                                     countNbField = -1;

@@ -49,11 +49,7 @@ public class HubicServiceImpl implements HubicService {
     @Override
     public void consumeObjects(String container, String prefix, Consumer<ObjectInfo> objectConsumer) throws IOException {
         refreshTokenIfExpired();
-        if (prefix==null) {
-            prefix = "";
-        } else if (prefix.startsWith("/")) {
-            prefix = prefix.substring(1);
-        }
+        prefix = removeSlash(prefix);
         ObjectConsumer objectConsumerObj = new ObjectConsumer(objectConsumer, prefix + "/");
         String marker = null;
         String prevMarker = null;
@@ -75,6 +71,15 @@ public class HubicServiceImpl implements HubicService {
         }
     }
 
+    private String removeSlash(String prefix) {
+        if (prefix==null) {
+            prefix = "";
+        } else if (prefix.startsWith("/")) {
+            prefix = prefix.substring(1);
+        }
+        return prefix;
+    }
+
     @Override
     public ObjectDetailInfo loadObjectMetaData(String container, String fileName) throws IOException {
         refreshTokenIfExpired();
@@ -94,6 +99,7 @@ public class HubicServiceImpl implements HubicService {
     @Override
     public void uploadObject(String container, String fileName, String md5, File fileToUpload) throws IOException {
         refreshTokenIfExpired();
+        fileName = removeSlash(fileName);
         swiftRequest.uploadObject(container, fileName, md5, fileToUpload);
     }
 
@@ -110,6 +116,7 @@ public class HubicServiceImpl implements HubicService {
     @Override
     public void deleteObject(String container, String fileName) throws IOException {
         refreshTokenIfExpired();
+        fileName = removeSlash(fileName);
         swiftRequest.deleteObject(container, fileName);
     }
 
