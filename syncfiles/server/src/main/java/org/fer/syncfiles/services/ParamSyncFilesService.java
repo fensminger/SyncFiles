@@ -377,7 +377,7 @@ public class ParamSyncFilesService {
         for(FileInfo localFileInfo : fileInfoRepository.findByParamSyncFilesIdAndOriginFileAndIsDirectory(paramSyncFiles.getId(), OriginFile.SOURCE, false)) {
             if (!localFileInfo.getFileInfoAction().equals(FileInfoAction.DELETE)) {
                 Optional<FileInfo> remoteFileInfoOptional = fileInfoRepository.findByParamSyncFilesIdAndOriginFileAndRelativePathString(paramSyncFiles.getId(), OriginFile.TARGET, localFileInfo.getRelativePathString());
-                if (remoteFileInfoOptional.isPresent()) {
+                if (remoteFileInfoOptional.isPresent() && !remoteFileInfoOptional.get().getFileInfoAction().equals(FileInfoAction.DELETE)) {
                     FileInfo remoteFileInfo = remoteFileInfoOptional.get();
                     if (localFileInfo.getHash().equals(remoteFileInfo.getHash())) {
                         FileInfo nothingTargetFileInfo = new FileInfo(paramSyncFiles.getId(), OriginFile.SYNCHRO, FileInfoAction.NOTHING, localFileInfo);
