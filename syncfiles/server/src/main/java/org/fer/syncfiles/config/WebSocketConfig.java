@@ -23,7 +23,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(syncfilesSocketHandler, "/websocket/syncfilesInfo").setAllowedOrigins("http://localhost:4100", "http://localhost:4200");
+        registry.addHandler(syncfilesSocketHandler, "/websocket/syncfilesInfo").setAllowedOrigins("*");
 	}
 
 }
