@@ -225,7 +225,7 @@ public class SwiftRequest implements Closeable {
         FileEntity entity = new FileEntity(fileToUpload);
         httpPut.setEntity(entity);
         CloseableHttpResponse response = httpClient.execute(httpPut);
-        log.info("Response of upload : " + response.getStatusLine());
+        log.info("Response of upload : " + response.getStatusLine() + " of file : " + fileToUpload);
     }
 
     public void deleteObject(String container, String fileName) throws IOException {

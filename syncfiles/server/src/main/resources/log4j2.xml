@@ -7,23 +7,30 @@
         <Console name="Console-Appender" target="SYSTEM_OUT">
             <PatternLayout>
                 <pattern>
-                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %C %c{1} - %msg%n
                 </pattern>>
             </PatternLayout>
         </Console>
         <File name="App-File-Appender" fileName="${log.basedir}/syncfiles.log" >
             <PatternLayout>
                 <pattern>
-                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %C %c{1} - %msg%n
                 </pattern>
             </PatternLayout>
         </File>
     </Appenders>
     <Loggers>
+
+        <Logger name="com.mongodb" level="info" additivity="false">
+            <AppenderRef ref="Console-Appender"/>
+        </Logger>
+        <Logger name="org.apache.http" level="info" additivity="false">
+            <AppenderRef ref="Console-Appender"/>
+        </Logger>
         <Logger name="org.springframework" level="info" additivity="false">
             <AppenderRef ref="Console-Appender"/>
         </Logger>
-        <Root level="debug">
+        <Root level="info">
             <AppenderRef ref="Console-Appender"/>
         </Root>
     </Loggers>
