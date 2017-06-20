@@ -227,7 +227,7 @@ import {SynchroDetailRestore} from "./forms/synchro_detail_restore";
 
   ],   // components and directives
   bootstrap: [ AppComponent ],     // root component
-  providers: [AccountEventsService, SynchroRunningService
+  providers: [AccountEventsService, SynchroRunningService,  ConfigService
 //  ,{provide : Http, useFactory :(xhrBackend: XHRBackend, requestOptions: RequestOptions,accountEventService:AccountEventsService) => {
 //            return new HmacHttpClient(xhrBackend, requestOptions,accountEventService);
 //        },

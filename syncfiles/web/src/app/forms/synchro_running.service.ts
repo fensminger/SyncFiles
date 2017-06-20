@@ -4,6 +4,8 @@ import {$WebSocket} from 'angular2-websocket/angular2-websocket';
 import {Subject}    from 'rxjs/Subject';
 import {Http, Response, Headers} from '@angular/http';
 import {Observable} from 'rxjs/Rx';
+import { ConfigService } from '../config.service';
+
 
 @Injectable()
 export class SynchroRunningService implements OnDestroy {
@@ -15,10 +17,10 @@ export class SynchroRunningService implements OnDestroy {
   public syncFilesinfo: any;
   public syncFilesinfoObservable = this.syncFilesinfoSubject.asObservable();
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private config : ConfigService) {
     this.headers.append('Content-Type', 'application/json');
 
-    this.ws = new $WebSocket("ws://localhost:9900/websocket/syncfilesInfo");
+    this.ws = new $WebSocket(config.urls.BACKEND_WEBSOCKET_API_ROOT_URL + "/websocket/syncfilesInfo");
     this.ws.send("Hello");
     this.ws.getDataStream().subscribe(
       res => {

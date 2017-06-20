@@ -11,26 +11,19 @@ export class ConfigService {
     BACKEND_WEBSOCKET_API_ROOT_URL: null};
 
   constructor(private http : Http) {
-    let host = this.getHost();
     let portStr = "";
-    if (host.port!=null) {
-      let port : number = +host.port;
-      if (port==4100) {
+    if (window.location.port) {
+      let port : number = +window.location.port;
+      if (port==4200) {
         port = 9900;
       }
       portStr = ":" + port;
     }
 
-    this.urls.BACKEND_WEBSOCKET_API_ROOT_URL = "ws://" + host.hostname + portStr;
+    this.urls.BACKEND_WEBSOCKET_API_ROOT_URL = "ws://" + window.location.hostname + portStr;
     console.log("URL WebSocket : " + this.urls.BACKEND_WEBSOCKET_API_ROOT_URL);
     this.loadConfig();
   }
-
-  getHost() {
-    var l = document.createElement("a");
-    l.href = "/";
-    return l;
-  };
 
   public loadConfig() {
     let url = '/api/config/loadAll';
@@ -38,9 +31,9 @@ export class ConfigService {
 //      url = 'http://localhost:9900' + url;
 //      this.urls.BACKEND_API_ROOT_URL = 'http://localhost:9900/api';
 //    }
-    this.http.get(url)
-        .map(this.extractData)
-        .catch(this.handleError).subscribe(config => {});
+//     this.http.get(url)
+//         .map(this.extractData)
+//         .catch(this.handleError).subscribe(config => {});
   }
 
   protected extractData(res: Response) {
