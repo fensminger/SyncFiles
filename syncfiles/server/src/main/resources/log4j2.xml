@@ -27,6 +27,9 @@
         <Logger name="org.apache.http" level="info" additivity="false">
             <AppenderRef ref="Console-Appender"/>
         </Logger>
+        <Logger name="org.springframework.web" level="debug" additivity="false">
+            <AppenderRef ref="Console-Appender"/>
+        </Logger>
         <Logger name="org.springframework" level="info" additivity="false">
             <AppenderRef ref="Console-Appender"/>
         </Logger>

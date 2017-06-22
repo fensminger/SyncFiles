@@ -31,7 +31,7 @@ import javax.annotation.PostConstruct;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -80,6 +80,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .antMatchers(HttpMethod.OPTIONS, "/**")
                 .antMatchers("/test/**")
                 .antMatchers("/vendor/**")
+                .antMatchers("/detail**")
+                .antMatchers("/running**")
                 .antMatchers("*.{ico}")
                 .antMatchers("*.{html}")
                 .antMatchers("*.{css}")
