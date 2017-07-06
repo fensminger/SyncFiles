@@ -41,6 +41,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
 		config.addAllowedOrigin("http://localhost:4100");
+		config.addAllowedOrigin("http://91.121.112.80");
+		config.addAllowedOrigin("http://127.0.0.1");
+		config.addAllowedOrigin("http://educappli.fr");
+		config.addAllowedOrigin("http://www.educappli.fr");
+		config.addAllowedOrigin("http://syncfiles.educappli.fr");
+		config.addAllowedOrigin("*");
 		config.addAllowedMethod("POST");
 		config.addAllowedMethod("GET");
 		config.addAllowedMethod("PUT");
