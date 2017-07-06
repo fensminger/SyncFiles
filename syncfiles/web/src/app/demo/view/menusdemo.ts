@@ -13,17 +13,17 @@ import {MenuItem} from 'primeng/primeng';
 export class MenusDemo implements OnInit {
 
     private breadcrumbItems: MenuItem[];
-    
+
     private tieredItems: MenuItem[];
-    
+
     private items: MenuItem[];
-    
+
     private tabMenuItems: MenuItem[];
-    
+
     private megaMenuItems: MenuItem[];
-    
+
     private panelMenuItems: MenuItem[];
-    
+
     private stepsItems: MenuItem[];
 
     ngOnInit() {
@@ -36,7 +36,7 @@ export class MenusDemo implements OnInit {
         this.breadcrumbItems.push({label:'F.C. Barcelona'});
         this.breadcrumbItems.push({label:'Squad'});
         this.breadcrumbItems.push({label:'Lionel Messi', url: 'https://en.wikipedia.org/wiki/Lionel_Messi'});
-        
+
         this.tabMenuItems = [
             {label: 'Stats', icon: 'ui-icon-insert-chart'},
             {label: 'Calendar', icon: 'ui-icon-date-range'},
@@ -44,13 +44,13 @@ export class MenusDemo implements OnInit {
             {label: 'Support', icon: 'ui-icon-help-outline'},
             {label: 'Social', icon: 'ui-icon-public'}
         ];
-        
+
         this.tieredItems = [
             {
                 label: 'File',
                 icon: 'ui-icon-folder',
                 items: [{
-                        label: 'New', 
+                        label: 'New',
                         icon: 'ui-icon-plus',
                         items: [
                             {label: 'Project'},
@@ -77,11 +77,11 @@ export class MenusDemo implements OnInit {
                         label: 'Contents'
                     },
                     {
-                        label: 'Search', 
-                        icon: 'ui-icon-search', 
+                        label: 'Search',
+                        icon: 'ui-icon-search',
                         items: [
                             {
-                                label: 'Text', 
+                                label: 'Text',
                                 items: [
                                     {
                                         label: 'Workspace'
@@ -119,7 +119,7 @@ export class MenusDemo implements OnInit {
                 label: 'Quit', icon: 'ui-icon-power-settings-new'
             }
         ];
-        
+
         this.items = [{
             label: 'File',
             items: [
@@ -134,123 +134,16 @@ export class MenusDemo implements OnInit {
                 {label: 'Redo', icon: 'ui-icon-redo'}
             ]
         }];
-        
-        this.megaMenuItems = [
-            {
-                label: 'TV', icon: 'ui-icon-tv',
-                items: [
-                    [
-                        {
-                            label: 'TV 1',
-                            items: [{label: 'TV 1.1'},{label: 'TV 1.2'}]
-                        },
-                        {
-                            label: 'TV 2',
-                            items: [{label: 'TV 2.1'},{label: 'TV 2.2'}]
-                        }
-                    ],
-                    [
-                        {
-                            label: 'TV 3',
-                            items: [{label: 'TV 3.1'},{label: 'TV 3.2'}]
-                        },
-                        {
-                            label: 'TV 4',
-                            items: [{label: 'TV 4.1'},{label: 'TV 4.2'}]
-                        }    
-                    ]
-                ]
-            },
-            {
-                label: 'Sports', icon: 'ui-icon-alarm',
-                items: [
-                    [
-                        {
-                            label: 'Sports 1',
-                            items: [{label: 'Sports 1.1'},{label: 'Sports 1.2'}]
-                        },
-                        {
-                            label: 'Sports 2',
-                            items: [{label: 'Sports 2.1'},{label: 'Sports 2.2'}]
-                        },
 
-                    ],
-                    [
-                        {
-                            label: 'Sports 3',
-                            items: [{label: 'Sports 3.1'},{label: 'Sports 3.2'}]
-                        },
-                        {
-                            label: 'Sports 4',
-                            items: [{label: 'Sports 4.1'},{label: 'Sports 4.2'}]
-                        }
-                    ],
-                    [
-                        {
-                            label: 'Sports 5',
-                            items: [{label: 'Sports 5.1'},{label: 'Sports 5.2'}]
-                        },
-                        {
-                            label: 'Sports 6',
-                            items: [{label: 'Sports 6.1'},{label: 'Sports 6.2'}]
-                        }
-                    ]
-                ]
-            },
-            {
-                label: 'Entertainment', icon: 'ui-icon-stars',
-                items: [
-                    [
-                        {
-                            label: 'Entertainment 1',
-                            items: [{label: 'Entertainment 1.1'},{label: 'Entertainment 1.2'}]
-                        },
-                        {
-                            label: 'Entertainment 2',
-                            items: [{label: 'Entertainment 2.1'},{label: 'Entertainment 2.2'}]
-                        }
-                    ],
-                    [
-                        {
-                            label: 'Entertainment 3',
-                            items: [{label: 'Entertainment 3.1'},{label: 'Entertainment 3.2'}]
-                        },
-                        {
-                            label: 'Entertainment 4',
-                            items: [{label: 'Entertainment 4.1'},{label: 'Entertainment 4.2'}]
-                        }    
-                    ]
-                ]
-            },
-            {
-                label: 'Technology', icon: 'ui-icon-phone-android',
-                items: [
-                    [
-                        {
-                            label: 'Technology 1',
-                            items: [{label: 'Technology 1.1'},{label: 'Technology 1.2'}]
-                        },
-                        {
-                            label: 'Technology 2',
-                            items: [{label: 'Technology 2.1'},{label: 'Technology 2.2'}]
-                        },
-                    ],
-                    [
-                        {
-                            label: 'Technology 4',
-                            items: [{label: 'Technology 3.1'},{label: 'Technology 3.2'}]
-                        }  
-                    ]
-                ]
-            }
+        this.megaMenuItems = [
         ];
-        
+
         this.panelMenuItems = [
             {
                 label: 'File',
                 icon: 'ui-icon-insert-drive-file',
                 items: [{
-                        label: 'New', 
+                        label: 'New',
                         icon: 'ui-icon-add',
                         items: [
                             {label: 'Project'},
@@ -277,11 +170,11 @@ export class MenusDemo implements OnInit {
                         label: 'Contents'
                     },
                     {
-                        label: 'Search', 
-                        icon: 'ui-icon-search', 
+                        label: 'Search',
+                        icon: 'ui-icon-search',
                         items: [
                             {
-                                label: 'Text', 
+                                label: 'Text',
                                 items: [
                                     {
                                         label: 'Workspace'
@@ -316,7 +209,7 @@ export class MenusDemo implements OnInit {
                 ]
             }
         ];
-        
+
         this.stepsItems = [
             {
                 label: 'Personal'

@@ -44,7 +44,7 @@
     "ng2-webstorage": "1.6.2"
   },
   "devDependencies": {
-    "@angular/cli": "1.1.1",
+    "@angular/cli": "1.2.0",
     "@angular/compiler-cli": "^4.0.0",
     "@types/jasmine": "2.5.38",
     "@types/node": "~6.0.60",
@@ -60,6 +60,6 @@
     "protractor": "~5.1.0",
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",
-    "typescript": "~2.3.4"
+    "typescript": "~2.4.1"
   }
 }
