@@ -123,6 +123,7 @@ public class SchedulerConfig {
         factoryBean.setJobDetail(jobDetail);
         factoryBean.setCronExpression(cronExpression);
         factoryBean.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY);
+        factoryBean.setName("cron"+jobDetail.getKey().getName());
         return factoryBean;
     }
 
