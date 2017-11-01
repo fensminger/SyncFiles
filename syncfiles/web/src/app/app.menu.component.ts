@@ -204,15 +204,7 @@ export class AppSubMenu {
 
         //execute command
         if(item.command) {
-            if(!item.eventEmitter) {
-                item.eventEmitter = new EventEmitter();
-                item.eventEmitter.subscribe(item.command);
-            }
-
-            item.eventEmitter.emit({
-                originalEvent: event,
-                item: item
-            });
+          item.command({originalEvent: event, item: item});
         }
 
         //prevent hash change
@@ -232,7 +224,7 @@ export class AppSubMenu {
         }
     }
 
-    isActive(index: number): boolean {
+  isActive(index: number): boolean {
         return this.activeIndex === index;
     }
 
