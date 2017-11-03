@@ -1,10 +1,11 @@
 package org.fer.syncfiles.repository;
 
 import org.fer.syncfiles.domain.User;
-
-import org.joda.time.DateTime;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,12 +16,13 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     Optional<User> findOneByActivationKey(String activationKey);
 
-    List<User> findAllByActivatedIsFalseAndCreatedDateBefore(DateTime dateTime);
+    List<User> findAllByActivatedIsFalseAndCreatedDateBefore(ZonedDateTime dateTime);
+
+    Optional<User> findOneByResetKey(String resetKey);
 
     Optional<User> findOneByEmail(String email);
 
     Optional<User> findOneByLogin(String login);
 
-    void delete(User t);
-
+    Page<User> findAllByLoginNot(Pageable pageable, String login);
 }

@@ -1,36 +1,39 @@
 package org.fer.syncfiles.domain;
 
-
-import org.joda.time.DateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.ZonedDateTime;
+
 
 /**
  * Base abstract class for entities which will hold definitions for created, last modified by and created,
  * last modified by date.
  */
-public abstract class AbstractAuditingEntity {
+public abstract class AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @CreatedBy
-    @Field("created_by")
+    @JsonIgnore
     private String createdBy;
 
     @CreatedDate
-    @Field("created_date")
-    private DateTime createdDate = DateTime.now();
+    @JsonIgnore
+    private ZonedDateTime createdDate = ZonedDateTime.now();
 
     @LastModifiedBy
-    @Field("last_modified_by")
+    @JsonIgnore
     private String lastModifiedBy;
 
     @LastModifiedDate
-    @Field("last_modified_date  ")
-    private DateTime lastModifiedDate = DateTime.now();
+    @JsonIgnore
+    private ZonedDateTime lastModifiedDate = ZonedDateTime.now();
 
     public String getCreatedBy() {
         return createdBy;
@@ -40,11 +43,11 @@ public abstract class AbstractAuditingEntity {
         this.createdBy = createdBy;
     }
 
-    public DateTime getCreatedDate() {
+    public ZonedDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(DateTime createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -56,11 +59,11 @@ public abstract class AbstractAuditingEntity {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public DateTime getLastModifiedDate() {
+    public ZonedDateTime getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(DateTime lastModifiedDate) {
+    public void setLastModifiedDate(ZonedDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 }

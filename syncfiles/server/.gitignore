@@ -1,9 +1,0 @@
-.classpath
-.gradle/
-.project
-.settings/
-bin/
-build/
-target/
-gs-actuator-service.iml
-paramtrifacta.iml

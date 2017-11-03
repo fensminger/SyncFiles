@@ -1,70 +1,143 @@
 package org.fer.syncfiles.config;
 
+import io.github.jhipster.security.Http401UnauthorizedEntryPoint;
+import org.fer.syncfiles.security.jwt.JWTConfigurer;
+import org.fer.syncfiles.security.jwt.TokenProvider;
+import org.springframework.beans.factory.BeanInitializationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
-
-import org.springframework.data.repository.query.spi.EvaluationContextExtension;
-import org.springframework.data.repository.query.spi.EvaluationContextExtensionSupport;
-import org.springframework.security.access.expression.SecurityExpressionRoot;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
 
-import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
+import javax.annotation.PostConstruct;
 
-import javax.inject.Inject;
-
+/**
+ * Security configuration
+ * Created by Michael DESIGAUD on 14/02/2016.
+ */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
-    @Inject
-    private UserDetailsService userDetailsService;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
+    private final UserDetailsService userDetailsService;
+
+    private final TokenProvider tokenProvider;
+
+    private final CorsFilter corsFilter;
+
+    public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder, UserDetailsService userDetailsService,
+                                 TokenProvider tokenProvider,
+                                 CorsFilter corsFilter) {
+
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.userDetailsService = userDetailsService;
+        this.tokenProvider = tokenProvider;
+        this.corsFilter = corsFilter;
+    }
+
+
+    @PostConstruct
+    public void init() {
+        try {
+            authenticationManagerBuilder
+                    .userDetailsService(userDetailsService)
+                    .passwordEncoder(passwordEncoder());
+        } catch (Exception e) {
+            throw new BeanInitializationException("Security configuration failed", e);
+        }
+    }
+
+    @Bean
+    public Http401UnauthorizedEntryPoint http401UnauthorizedEntryPoint() {
+        return new Http401UnauthorizedEntryPoint();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Inject
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
-    }
-
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-            .antMatchers("/scripts/**/*.{js,html}")
-            .antMatchers("/bower_components/**")
-            .antMatchers("/i18n/**")
-            .antMatchers("/assets/**")
-            .antMatchers("/swagger-ui/**")
-            .antMatchers("/api/register")
-            .antMatchers("/api/activate")
-            .antMatchers("/test/**");
+                .antMatchers(HttpMethod.OPTIONS, "/**")
+                .antMatchers("/test/**")
+                .antMatchers("/vendor/**")
+                .antMatchers("/detail**")
+                .antMatchers("/running**")
+                .antMatchers("*.{ico}")
+                .antMatchers("*.{html}")
+                .antMatchers("*.{css}")
+                .antMatchers("*.{js}")
+                .antMatchers("/app/**");
     }
 
     @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling()
+                .authenticationEntryPoint(http401UnauthorizedEntryPoint())
+                .and()
+
+                .csrf()
+                .disable()
+                .headers()
+                .frameOptions()
+                .disable()
+                .and()
+
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+
+                .authorizeRequests()
+                    .antMatchers("/api/config/**").permitAll()
+                    .antMatchers("/websocket/**").permitAll()
+                    .antMatchers("/api/authenticate").anonymous()
+                    .antMatchers("/").anonymous()
+                    .antMatchers("/favicon.ico").anonymous()
+                    .antMatchers("/api/**").permitAll()
+//                    .antMatchers("/api/**").authenticated()
+                .and()
+                .csrf()
+                    .disable()
+                    .headers()
+                    .frameOptions().disable()
+                .and()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .logout()
+                    .permitAll()
+                .and()
+                    .apply(securityConfigurerAdapter());
+    }
+
+    private JWTConfigurer securityConfigurerAdapter() {
+        return new JWTConfigurer(tokenProvider);
     }
 
     @Bean
     public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
         return new SecurityEvaluationContextExtension();
     }
+
 }

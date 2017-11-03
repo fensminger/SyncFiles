@@ -3,6 +3,7 @@ package org.fer.syncfiles.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -10,8 +11,10 @@ import java.io.Serializable;
 /**
  * An authority (a security role) used by Spring Security.
  */
-@Document(collection = "T_AUTHORITY")
+@Document(collection = "Authority")
 public class Authority implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @NotNull
     @Size(min = 0, max = 50)
@@ -52,7 +55,7 @@ public class Authority implements Serializable {
     @Override
     public String toString() {
         return "Authority{" +
-                "name='" + name + '\'' +
-                "}";
+            "name='" + name + '\'' +
+            "}";
     }
 }

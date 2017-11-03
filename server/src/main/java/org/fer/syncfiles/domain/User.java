@@ -1,8 +1,10 @@
 package org.fer.syncfiles.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.fer.syncfiles.config.Constants;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -10,49 +12,60 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 /**
  * A user.
  */
-@Document(collection = "T_USER")
+@Document(collection = "User")
 public class User extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     private String id;
 
     @NotNull
-    @Pattern(regexp = "^[a-z0-9]*$")
-    @Size(min = 1, max = 50)
+    @Pattern(regexp = Constants.LOGIN_REGEX)
+    @Size(min = 1, max = 100)
+    @Indexed
     private String login;
 
     @JsonIgnore
     @NotNull
-    @Size(min = 5, max = 100)
+    @Size(min = 60, max = 60)
     private String password;
 
     @Size(max = 50)
-    @Field("first_name")
     private String firstName;
 
     @Size(max = 50)
-    @Field("last_name")
     private String lastName;
 
     @Email
-    @Size(max = 100)
+    @Size(min = 5, max = 100)
+    @Indexed
     private String email;
 
     private boolean activated = false;
 
     @Size(min = 2, max = 5)
-    @Field("lang_key")
     private String langKey;
 
+    @Size(max = 256)
+    private String imageUrl;
+
     @Size(max = 20)
-    @Field("activation_key")
+    @JsonIgnore
     private String activationKey;
+
+    @Size(max = 20)
+    private String resetKey;
+
+    private ZonedDateTime resetDate = null;
 
     @JsonIgnore
     private Set<Authority> authorities = new HashSet<>();
@@ -69,8 +82,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
         return login;
     }
 
+    //Lowercase the login before saving it in database
     public void setLogin(String login) {
-        this.login = login;
+        this.login = login.toLowerCase(Locale.ENGLISH);
     }
 
     public String getPassword() {
@@ -105,6 +119,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.email = email;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public boolean getActivated() {
         return activated;
     }
@@ -119,6 +141,22 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setActivationKey(String activationKey) {
         this.activationKey = activationKey;
+    }
+
+    public String getResetKey() {
+        return resetKey;
+    }
+
+    public void setResetKey(String resetKey) {
+        this.resetKey = resetKey;
+    }
+
+    public ZonedDateTime getResetDate() {
+       return resetDate;
+    }
+
+    public void setResetDate(ZonedDateTime resetDate) {
+       this.resetDate = resetDate;
     }
 
     public String getLangKey() {
@@ -148,11 +186,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
         User user = (User) o;
 
-        if (!login.equals(user.login)) {
-            return false;
-        }
-
-        return true;
+        return login.equals(user.login);
     }
 
     @Override
@@ -163,14 +197,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-                "login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", activated='" + activated + '\'' +
-                ", langKey='" + langKey + '\'' +
-                ", activationKey='" + activationKey + '\'' +
-                "}";
+            "login='" + login + '\'' +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", email='" + email + '\'' +
+            ", imageUrl='" + imageUrl + '\'' +
+            ", activated='" + activated + '\'' +
+            ", langKey='" + langKey + '\'' +
+            ", activationKey='" + activationKey + '\'' +
+            "}";
     }
 }
